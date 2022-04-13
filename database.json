@@ -1,0 +1,14 @@
+{
+  "development": {
+    "url": { "ENV": "DATABASE_URL" }
+  },
+  "production": {
+    "url": { "ENV": "DATABASE_URL" },
+    "addIfNoteExists": {
+      "sslmode": "require"
+    },
+    "overwrite": {
+      "native": true
+    }
+  }
+}
