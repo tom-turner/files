@@ -147,7 +147,6 @@ class Model {
     }
 
     return result.rows
-
   }
 }
 
