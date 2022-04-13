@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
-import CreateDirectory from "./CreateDirectory"
 import { Link } from "react-router-dom"
+import CreateDirectory from "./CreateDirectory"
+import ServerCheck from "./ServerCheck"
+import FileUpload from "./FileUpload"
 
-let view = "grid"
-
-let GenerateDeleteButton = (props) => {
-  return <button onClick={props.onClick} id={props.id} className="border border-black rounded px-2 text-sm"> Delete</button>
-}
+  let fileDelete = (url, id) => {
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id })
+    })
+    window.location.reload()
+  }
 
 const FileLink = ({ to, name, className }) => (
   <Link className={"my-auto p-2 text-left " + className} to={to}>{name}</Link>
@@ -37,39 +42,31 @@ let FileExplorer = ({ path }) => {
   const listFiles = files.map((file) =>
     <div className="w-full bg-gray-100 rounded flex flex-col p-4 justify-between max-w-sm mx-auto">
       <FileLink to={'/file:/'+file.id } name={file.user_file_name} />
-      <GenerateDeleteButton id={file.id} />
+      <button onClick={ () => { fileDelete('/deleteFile', file.id) } } className="border border-black rounded px-2 text-sm"> Delete </button>
     </div>
   );
 
   const listDirs = dirs.map((file) =>
     <div className="w-full bg-gray-200 rounded flex flex-col p-4 justify-between max-w-sm mx-auto">
       <DirectoryLink to={ file.user_file_path + file.user_file_name } name={file.user_file_name}/>
-      <GenerateDeleteButton />
+      <button onClick={ () => { fileDelete('/deleteDir', file.id) } } className="border border-black rounded px-2 text-sm"> Delete </button>
     </div>
   );
 
-  switch(view){
-    case 'grid':
-      return (
-        <div className="w-full flex flex-col space-y-2">
-          <div className="w-full grid grid-cols-3 gap-2">
-            <CreateDirectory />
-            {listDirs}
-          </div>
-          <div className="w-full grid grid-cols-3 gap-2">{listFiles}</div>
-        </div>
-      )
-      break;
-    case 'list':
-      return (
-        <div className="w-full flex flex-col">
-          <div className="w-full flex flex-col">{listDirs}</div>
-          <div className="w-full flex flex-col">{listFiles}</div>
-        </div>
-      )
-      break;
-    default:
-  }
+  return (
+    <div className="w-full max-w-5xl mx-auto flex flex-col space-y-2">
+      <FileUpload />
+
+      <div className="w-full grid grid-cols-3 gap-2">
+        <CreateDirectory />
+        {listDirs}
+      </div>
+
+      <div className="w-full grid grid-cols-3 gap-2">{listFiles}</div>
+
+    </div>
+  )
+
 }
 
 

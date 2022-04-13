@@ -6,6 +6,8 @@ const { Files, Directories } = require('../models')
 
 routes.post('/explorer', require('./routes/getFilesList'));
 
+routes.post('/getFile', require('./routes/getFile'));
+
 routes.post('/uploadFile', require('./routes/uploadFile'));
 
 routes.post('/deleteFile', require('./routes/deleteFile'));
