@@ -12,7 +12,7 @@ module.exports = (req,res) => {
 
   Directories.create({
     user_id: 0,
-    user_file_name: '/' + upload.fileName,
+    user_file_name: upload.fileName,
     user_file_path: upload.path.substring(1),
     last_modified: new Date()
   })
