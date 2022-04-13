@@ -1,33 +1,31 @@
 import { useState, useEffect } from "react";
+import { uploadFile, uploadFiles } from "../lib/fileUploader"
 
-let uploadFile = (file) => {
-    fetch("/uploadFile", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-      	fileName: file.name,
-      	path: window.location.pathname,
-      	fileType: file.type
-      })
-    })
-    .then((res) => res.json())
-    .then((data) => { return window.location.reload() })
-    .catch((error) => { return alert(`error: ${error}`) })
+let ProgressBar = ({progress, hidden}) => {
+	return (
+		<div className={"w-full bg-gray-200 m-2 mx-auto rounded-full overflow-hidden "+hidden}> 
+			<div className="w-0 h-2 bg-green-600" style={{width: progress+"%"}}>  </div>
+		</div>
+	)
 }
 
 let FileUploadButton = (props) => {
-
-	const [file, setFile] = useState(null)
+	const [ progress, setProgress ] = useState(0)
+	const [ hidden, setHidden ] = useState('hidden')
 
 	return (
 		<div className="">
 			<lable> Upload: </lable>
 			<input type="file" className="" onChange={ (event) => {
-				setFile(event.target.files[0])
-				uploadFile(event.target.files[0])
-				
-			}} />
+				uploadFiles(event.target.files, (progress) => {
+					setProgress(progress)
+					setHidden('')
+				})
+			}} multiple />
+			<ProgressBar progress={progress} hidden={hidden} />
+			<p className={hidden} > {progress}% done </p>
 		</div>
+
 	)
 }
 
