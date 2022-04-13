@@ -1,7 +1,19 @@
-let streamBinary = (file, serverData, callback) => {
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+let streamBinary = async (file, serverData, callback) => {
 	window.localStorage.setItem( 'fileUpload', JSON.stringify({ inProgress: true, data: serverData }) )
 	
 	// then stream file to server somehow ¯\_(ツ)_/¯
+
+  const stream = new ReadableStream({file})
+
+  fetch('/streamBinary', {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: stream,
+  });
 
   let progress = 0
   let count = setInterval( () => {
@@ -9,22 +21,22 @@ let streamBinary = (file, serverData, callback) => {
     progress ++
     if(progress > 100) {
       clearInterval(count)
-      window.location.reload()
+
     }
-  }, 500)
-  
+  }, 10)
 
 }
 
-let uploadFile = async (file, callback) => {
-    let res = await fetch("/uploadFile", {
+let uploadFile = async (file, callback) =>{
+  console.log(file)
+  let res = await fetch("/uploadFile", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-      	fileName: file.name,
-      	path: window.location.pathname,
-      	fileType: file.type,
-      	size: file.size
+        fileName: file.name,
+        path: window.location.pathname,
+        fileType: file.type,
+        size: file.size
       })
     })
     let data = await res.json()
@@ -34,4 +46,14 @@ let uploadFile = async (file, callback) => {
     })
 }
 
+let uploadFiles = async (files, callback) => {
+    Array.prototype.forEach.call(files, (file) => {
+      uploadFile(file, (progress) =>{
+        callback(progress)
+      })
+    })
+}
+
+
 module.exports.uploadFile = uploadFile
+module.exports.uploadFiles = uploadFiles

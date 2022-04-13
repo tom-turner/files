@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { uploadFile } from "../lib/fileUploader"
+import { uploadFile, uploadFiles } from "../lib/fileUploader"
 
 let ProgressBar = ({progress, hidden}) => {
 	return (
-		<div className={"w-full bg-gray-200 m-2 "+hidden}> 
+		<div className={"w-full bg-gray-200 m-2 mx-auto rounded-full overflow-hidden "+hidden}> 
 			<div className="w-0 h-2 bg-green-600" style={{width: progress+"%"}}>  </div>
 		</div>
 	)
@@ -17,12 +17,11 @@ let FileUploadButton = (props) => {
 		<div className="">
 			<lable> Upload: </lable>
 			<input type="file" className="" onChange={ (event) => {
-				uploadFile(event.target.files[0], (progress) => {
-					console.log(progress)
+				uploadFiles(event.target.files, (progress) => {
 					setProgress(progress)
 					setHidden('')
 				})
-			}} />
+			}} multiple />
 			<ProgressBar progress={progress} hidden={hidden} />
 			<p className={hidden} > {progress}% done </p>
 		</div>
