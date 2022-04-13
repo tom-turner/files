@@ -1,6 +1,5 @@
 let express = require('express');
 let routes = express.Router();
-let files = require('../lib/fileSystem')
 
 const { Files, Directories } = require('../models')
 
@@ -9,6 +8,8 @@ routes.post('/explorer', require('./routes/getFilesList'));
 routes.post('/getFile', require('./routes/getFile'));
 
 routes.post('/uploadFile', require('./routes/uploadFile'));
+
+routes.post('/streamBinary', require('./routes/streamBinary'));
 
 routes.post('/deleteFile', require('./routes/deleteFile'));
 

@@ -4,14 +4,14 @@ import CreateDirectory from "./CreateDirectory"
 import ServerCheck from "./ServerCheck"
 import FileUpload from "./FileUpload"
 
-  let fileDelete = (url, id) => {
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: id })
-    })
-    window.location.reload()
-  }
+let fileDelete = (url, id) => {
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: id })
+  })
+  window.location.reload()
+}
 
 const FileLink = ({ to, name, className }) => (
   <Link className={"my-auto p-2 text-left " + className} to={to}>{name}</Link>
