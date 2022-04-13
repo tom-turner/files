@@ -1,0 +1,5 @@
+node_modules/*
+.env
+*.swp
+file_storage/*
+.DS_Store
