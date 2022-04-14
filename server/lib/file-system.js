@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path');
-
-const { Files } = require('../models')
+const { Files } = require('../../models')
 const directory = './file_storage'
 
 

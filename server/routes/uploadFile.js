@@ -1,5 +1,5 @@
 const { Files } = require('../../models')
-let files = require('../../lib/file-system')
+let files = require('../lib/file-system')
 
 module.exports = async (req,res) => {
   let upload = req.body

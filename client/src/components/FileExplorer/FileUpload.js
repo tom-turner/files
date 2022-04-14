@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { uploadFile, uploadFiles } from "../lib/fileUploader"
+import { uploadFile, uploadFiles } from "../../lib/api"
 
 let ProgressBar = ({progress, hidden}) => {
 	return (

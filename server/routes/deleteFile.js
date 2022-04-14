@@ -1,8 +1,8 @@
 const { Files } = require('../../models')
 
-module.exports = (req,res) => {
-  console.log("delete:",req.body)
-  Files.delete({id: req.body.id, user_id: 0 })
+module.exports = async (req,res) => {
+  let deletedFile = await Files.delete({id: req.params.id, user_id: 0 })
+  console.log(deletedFile)
   // then delete on disk
-  res.json({ message: "file deleted"})
+  res.json({ deletedFile: deletedFile })
 }

@@ -1,8 +1,8 @@
 import React from "react";
 import ServerCheck from "./components/ServerCheck"
-import FileExplorer from "./components/FileExplorer"
+import FileExplorer from "./components/FileExplorer/FileExplorer"
 import Login from "./components/Login"
-import FileViewer from "./components/FileViewer"
+import FilePreview from "./components/FilePreview"
 import { Routes, Route, BrowserRouter, useParams } from "react-router-dom";
 
 function Explorer() {
@@ -20,7 +20,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={ <Login /> } />
-        <Route path="/file:/*" element={ <FileViewer /> } />
+        <Route path="/file:/*" element={ <FilePreview /> } />
         <Route path="/*" root element={ <Explorer /> } />
       </Routes>
     </BrowserRouter>
