@@ -8,12 +8,12 @@ let getNewFileLocation = async () => {
 	let id = () => {
 		return Math.random().toString(36).toUpperCase().substring(2, 36) + Math.random().toString(36).toUpperCase().substring(2, 36);
 	}
-	let exists = await Files.findBy({ location_on_disk : path.join(directory, id()) })
+	let exists = await Files.findBy({ location_on_disk : id() })
 
 	if(exists){
 		return this.generateId()
 	} else {
-		return path.join(directory, id())
+		return id()
 	}
 }
 

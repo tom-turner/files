@@ -1,6 +1,8 @@
 let express = require('express');
 let routes = express.Router();
 
+routes.options('*', (req, res) => res.send())
+
 routes.post('/getFiles',
   require('./routes/getFiles')
 );
@@ -10,7 +12,7 @@ routes.post('/getFile/:id',
   require('./routes/getFile')
 );
 
-routes.post('/getFile/:id/content',
+routes.get('/getFile/:id/content',
   require('./middleware/fileWithIdExists'),
   require('./routes/getFileContent')
 );
@@ -24,7 +26,7 @@ routes.post('/uploadFile',
   require('./routes/uploadFile')
 );
 
-routes.post('/uploadFile/:id/content',
+routes.put('/uploadFile/:id/content',
   require('./routes/uploadFileContent')
 );
 

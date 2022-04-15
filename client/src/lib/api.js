@@ -1,30 +1,30 @@
+let UpChunk = require('@mux/upchunk')
+
+const apiBase = "http://localhost:5001"
+
 let uploadFileContent = async (file, serverData, callback) => {
-	window.localStorage.setItem( 'fileUpload', JSON.stringify({ inProgress: true, data: serverData }) )
-	
-	// then stream file to server somehow ¯\_(ツ)_/¯
-
-  const stream = new ReadableStream({file})
-
-  fetch(`/uploadFile/${serverData.id}/content`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain' },
-    body: stream,
+  const upload = UpChunk.createUpload({
+    endpoint:`${apiBase}/uploadFile/${serverData.id}/content`,
+    file: file,
+    chunkSize: 30720, // Uploads the file in ~30 MB chunks
   });
 
-  let progress = 0
-  let count = setInterval( () => {
-    callback(progress)
-    progress ++
-    if(progress > 100) {
-      clearInterval(count)
+  // subscribe to events
+  upload.on('error', err => {
+    console.error('💥 🙀', err.detail);
+  });
 
-    }
-  }, 10)
-}
+  upload.on('progress', progress => {
+    console.log(`So far we've uploaded ${progress.detail}% of this file.`);
+  });
+
+  upload.on('success', () => {
+    console.log("Wrap it up, we're done here. 👋");
+  });
+};
 
 let uploadFile = async (file, callback) =>{
-  console.log(file)
-  let res = await fetch("/uploadFile", {
+  let res = await fetch(`${apiBase}/uploadFile`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -50,7 +50,7 @@ let uploadFiles = async (files, callback) => {
 }
 
 let createDir = (fileName) => {
-    fetch("/createDir", {
+    fetch(`${apiBase}/createDir`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -64,7 +64,7 @@ let createDir = (fileName) => {
 }
 
 let deleteFile = (id) => {
-  fetch(`/deleteFile/${id}`, {
+  fetch(`${apiBase}/deleteFile/${id}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' }
   })
@@ -72,7 +72,7 @@ let deleteFile = (id) => {
 }
 
 let deleteDir = (id) => {
-  fetch(`/deleteDir/${id}`, {
+  fetch(`${apiBase}/deleteDir/${id}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' }
   })
@@ -80,7 +80,7 @@ let deleteDir = (id) => {
 }
 
 let getFiles = async (path) => {
-  const result = await fetch("/getFiles", {
+  const result = await fetch(`${apiBase}/getFiles`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ path })
@@ -90,7 +90,7 @@ let getFiles = async (path) => {
 }
 
 let getFileData = async (fileId) => {
-  const result = await fetch(`/getFile/${fileId}`, {
+  const result = await fetch(`${apiBase}/getFile/${fileId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
   });
@@ -99,7 +99,7 @@ let getFileData = async (fileId) => {
 }
 
 let getFileContent = async (fileId) => {
-  const result = await fetch(`/getFile/${fileId}/content`);
+  const result = await fetch(`${apiBase}/getFile/${fileId}/content`);
   const reader = result.body
   return reader
 }

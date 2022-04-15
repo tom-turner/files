@@ -5,7 +5,9 @@ const app = express()
 const http = require('http').Server(app);
 const routes = require("./routes")
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
+app.use(cors())
 app.use(bodyParser.json())
 app.use(routes)
 
