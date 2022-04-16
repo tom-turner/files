@@ -8,9 +8,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const cookieSession = require('cookie-session');
 
-app.use(bodyParser.json())
-app.use(express.urlencoded());
-
 app.use(cors({
   origin: 'http://localhost:5000',   
   methods: "GET,HEAD,POST,PATCH,DELETE,OPTIONS,PUT",
@@ -22,6 +19,9 @@ app.use(cookieSession({
   keys: ['user_id'],
   secret: process.env.COOKIE_SECRET,
 }));
+
+app.use(bodyParser.json())
+app.use(express.urlencoded());
 
 app.use(routes)
 

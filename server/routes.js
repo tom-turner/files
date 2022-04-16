@@ -30,12 +30,10 @@ routes.get('/deleteFile/:id',
 );
 
 routes.get('/deleteDir/:id',
-  require('./middleware/is-owner'),
   require('./routes/delete-directory')
 );
 
 routes.put('/uploadFile/:id/content',
-  require('./middleware/is-owner'),
   require('./routes/upload-file-content')
 );
 

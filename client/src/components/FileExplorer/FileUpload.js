@@ -18,10 +18,14 @@ let FileUploadButton = (props) => {
 			<lable> Upload: </lable>
 			<input type="file" className="" onChange={ (event) => {
 				uploadFiles(event.target.files, (e) => {
-					setProgress(e.progress)
+					if(e.error){
+						alert(e.error.message)
+						window.location.reload()
+					}
 					if(e.success){
 						window.location.reload()
 					}
+					setProgress(e.progress)
 					setHidden('')
 				})
 			}} />

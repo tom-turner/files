@@ -17,15 +17,12 @@ let uploadFileContent = async (file, serverData, callback) => {
     endpoint:`${apiBase}/uploadFile/${serverData.id}/content`,
     file: file,
     chunkSize: 30720, // Uploads the file in ~30 MB chunks
-    headers: {
-      method:"PUT",
-      credentials: "include"
-    }
+    method:'PUT',
   });
 
   // subscribe to events
   upload.on('error', err => {
-    callback({error: err})
+    callback({error: err.detail})
     console.error(err.detail);
   });
 
