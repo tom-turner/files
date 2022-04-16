@@ -5,7 +5,6 @@ module.exports = async (req,res) => {
   let upload = req.body
 
   let fileId = await Files.create({
-    user_id: req.session.user_id,
     user_file_name: upload.fileName,
     user_file_path: upload.path,
     file_type: upload.fileType,

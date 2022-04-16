@@ -22,7 +22,6 @@ app.use(cookieSession({
 
 app.use(bodyParser.json())
 app.use(express.urlencoded());
-
 app.use(routes)
 
 // Starting the App
