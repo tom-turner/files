@@ -3,6 +3,8 @@ import { Link } from "react-router-dom"
 import { deleteFile, deleteDir, getFiles } from '../../lib/api'
 import CreateDirectory from "./CreateDirectory"
 import FileUpload from "./FileUpload"
+import Header from "./Header"
+import ServerCheck from "../ServerCheck"
 
 const FileLink = ({ to, name, className }) => (
   <Link className={"my-auto p-2 text-left " + className} to={to}>{name}</Link>
@@ -44,7 +46,9 @@ let FileExplorer = ({ path }) => {
   );
 
   return (
-    <div className="w-full max-w-5xl mx-auto flex flex-col space-y-2">
+    <div className="w-full mx-auto flex flex-col">
+      <ServerCheck />
+      <Header />
       <FileUpload />
       <div className="w-full grid grid-cols-3 gap-2">
         <CreateDirectory />

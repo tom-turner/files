@@ -2,8 +2,14 @@ import { useState, useEffect } from "react";
 import { serverCheck } from '../lib/api'
 
 let ServerOkMsg = (data) => {
+  let [ className, setClassName ] = useState('')
+
+  setTimeout(() =>{
+    setClassName('hidden')
+  }, 1500) 
+
   return (
-    <div className="w-full bg-green-400 p-2">
+    <div className={"w-full bg-green-400 p-2 " + className}>
       <p className="text-white text-lg"> Server OK :) </p>
     </div>
   )
