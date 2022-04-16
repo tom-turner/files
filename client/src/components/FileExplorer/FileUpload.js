@@ -17,11 +17,14 @@ let FileUploadButton = (props) => {
 		<div className="">
 			<lable> Upload: </lable>
 			<input type="file" className="" onChange={ (event) => {
-				uploadFiles(event.target.files, (progress) => {
-					setProgress(progress)
+				uploadFiles(event.target.files, (e) => {
+					setProgress(e.progress)
+					if(e.success){
+						window.location.reload()
+					}
 					setHidden('')
 				})
-			}} multiple />
+			}} />
 			<ProgressBar progress={progress} hidden={hidden} />
 			<p className={hidden} > {progress}% done </p>
 		</div>

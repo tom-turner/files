@@ -25,7 +25,7 @@ exports.up = async function(db) {
     file_size:'bigint',
     bytes_uploaded:'bigint',
     meta_data:'json',
-    location_on_disk:'string',
+    checksum:'string',
     last_modified:'string'
   })
   await db.createTable('directories', {

@@ -157,3 +157,4 @@ exports.generateUpdate = generateUpdate
 exports.Model = Model
 exports.Files = new Model('files')
 exports.Directories = new Model('directories')
+exports.Users = new Model('users')

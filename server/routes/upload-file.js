@@ -5,7 +5,7 @@ module.exports = async (req,res) => {
   let upload = req.body
 
   let fileId = await Files.create({
-    user_id: 0,
+    user_id: req.session.user_id,
     user_file_name: upload.fileName,
     user_file_path: upload.path,
     file_type: upload.fileType,
@@ -13,7 +13,7 @@ module.exports = async (req,res) => {
     file_size: upload.size,
     bytes_uploaded: 0,
     last_modified: new Date(),
-    location_on_disk: await files.getNewFileLocation()
+    checksum: await files.getChecksum()
   })
 
   let file = await Files.findBy({ id: fileId })
