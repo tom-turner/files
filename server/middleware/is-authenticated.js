@@ -1,10 +1,7 @@
-const { Users } = require('../../models')
-
 let isAuthenticated = async (req, res, next) => {
-  console.log('is-auth user_id:', req.session.user_id)
-  const user = await Users.findBy({ id: req.session.user_id});
+  console.log('is-auth user_id:', req.header('Authorization'))
 
-  if (!user)
+  if (req.header('Authorization') !== 'test')
     return res.status(401).send()
 
   next();
