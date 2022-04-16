@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { serverCheck } from '../lib/api'
 
 let ServerOkMsg = (data) => {
   return (
@@ -21,15 +22,10 @@ let ServerCheck = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-
-    fetch("/servercheck", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message:'hello server'})
+    serverCheck((response) => {
+      setData(response.data)
+      setError(response.error)
     })
-    .then((res) => res.json())
-    .then((data) => { setData(data) })
-    .catch((error) => { setError(error) })
   }, []);
 
   if(!error){

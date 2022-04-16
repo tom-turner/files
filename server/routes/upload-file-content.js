@@ -2,10 +2,14 @@ const { Files } = require('../../models')
 const fs = require('fs')
 
 module.exports = async (req, res) => {
+  console.log("user id: ", req.session.user_id )
   const file = await Files.findBy({ id: req.params.id })
 
+  if(!file)
+    return
+
   let writeStream = fs.createWriteStream(
-    __dirname + `/../../file_storage/${file.location_on_disk}`,
+    __dirname + `/../../file_storage/${file.checksum}`,
     { flags: 'a' }
   ).on('error', () => {
     console.log('error')

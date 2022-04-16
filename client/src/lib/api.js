@@ -2,23 +2,37 @@ let UpChunk = require('@mux/upchunk')
 
 const apiBase = "http://localhost:5001"
 
+let serverCheck = async (callback) => {
+  fetch(`${apiBase}/servercheck`, {
+    credentials: "include"
+  })
+    .then((res) => res.json())
+    .then((data) => { callback({ data: data }) })
+    .catch((error) => { callback({ error: error }) })
+  return
+}
+
 let uploadFileContent = async (file, serverData, callback) => {
   const upload = UpChunk.createUpload({
     endpoint:`${apiBase}/uploadFile/${serverData.id}/content`,
     file: file,
     chunkSize: 30720, // Uploads the file in ~30 MB chunks
+    method:'PUT',
   });
 
   // subscribe to events
   upload.on('error', err => {
-    console.error('💥 🙀', err.detail);
+    callback({error: err.detail})
+    console.error(err.detail);
   });
 
   upload.on('progress', progress => {
+    callback({progress: progress.detail})
     console.log(`So far we've uploaded ${progress.detail}% of this file.`);
   });
 
   upload.on('success', () => {
+    callback({success: true})
     console.log("Wrap it up, we're done here. 👋");
   });
 };
@@ -27,6 +41,7 @@ let uploadFile = async (file, callback) =>{
   let res = await fetch(`${apiBase}/uploadFile`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: "include",
       body: JSON.stringify({
         fileName: file.name,
         path: window.location.pathname,
@@ -36,15 +51,15 @@ let uploadFile = async (file, callback) =>{
     })
     let data = await res.json()
 
-    uploadFileContent(file, data, (progress) => {
-      callback(progress)
+    uploadFileContent(file, data, (e) => {
+      callback(e)
     })
 }
 
 let uploadFiles = async (files, callback) => {
     Array.prototype.forEach.call(files, (file) => {
-      uploadFile(file, (progress) =>{
-        callback(progress)
+      uploadFile(file, (e) =>{
+        callback(e)
       })
     })
 }
@@ -53,6 +68,7 @@ let createDir = (fileName) => {
     fetch(`${apiBase}/createDir`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({
         fileName: fileName,
         path: window.location.pathname,
@@ -63,47 +79,52 @@ let createDir = (fileName) => {
     .catch((error) => { return alert(`error: ${error}`) })
 }
 
-let deleteFile = (id) => {
-  fetch(`${apiBase}/deleteFile/${id}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' }
+let deleteFile = async (id) => {
+  let result = await fetch(`${apiBase}/deleteFile/${id}`, {
+    credentials: "include"
   })
-  window.location.reload()
+  let body = await result.json()
+  if(body)
+    console.log(body)
+    return window.location.reload()
 }
 
-let deleteDir = (id) => {
-  fetch(`${apiBase}/deleteDir/${id}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' }
+let deleteDir = async (id) => {
+  let result = await fetch(`${apiBase}/deleteDir/${id}`,{
+    credentials: "include"
   })
-  window.location.reload()
+  let body = await result.json()
+  if(body)
+    console.log(body)
+    return window.location.reload()
 }
 
 let getFiles = async (path) => {
-  const result = await fetch(`${apiBase}/getFiles`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ path })
+  const result = await fetch(`${apiBase}/getFiles/${path}`,{
+    credentials: "include"
   });
   let body = await result.json()
   return body
 }
 
 let getFileData = async (fileId) => {
-  const result = await fetch(`${apiBase}/getFile/${fileId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+  const result = await fetch(`${apiBase}/getFile/${fileId}`,{
+    credentials: "include"
   });
   let body = await result.json()
   return body.fileData
 }
 
 let getFileContent = async (fileId) => {
-  const result = await fetch(`${apiBase}/getFile/${fileId}/content`);
+  const result = await fetch(`${apiBase}/getFile/${fileId}/content`,{
+    credentials: "include"
+  });
   const reader = result.body
   return reader
 }
 
+module.exports.apiBase = apiBase
+module.exports.serverCheck = serverCheck
 module.exports.uploadFile = uploadFile
 module.exports.uploadFiles = uploadFiles
 module.exports.createDir = createDir

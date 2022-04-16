@@ -4,16 +4,16 @@ const { Files } = require('../../models')
 const directory = './file_storage'
 
 
-let getNewFileLocation = async () => {
-	let id = () => {
+let getChecksum = async () => {
+	let checksum = () => {
 		return Math.random().toString(36).toUpperCase().substring(2, 36) + Math.random().toString(36).toUpperCase().substring(2, 36);
 	}
-	let exists = await Files.findBy({ location_on_disk : id() })
+	let exists = await Files.findBy({ checksum : checksum() })
 
 	if(exists){
-		return this.generateId()
+		return this.getChecksum()
 	} else {
-		return id()
+		return checksum()
 	}
 }
 
@@ -25,6 +25,6 @@ let joinPath = (dir, base) => {
 	return path.join(dir, base)
 }
 
-module.exports.getNewFileLocation = getNewFileLocation
+module.exports.getChecksum = getChecksum
 module.exports.parseDir = parseDir
 module.exports.joinPath = joinPath
