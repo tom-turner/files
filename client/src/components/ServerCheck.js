@@ -5,19 +5,21 @@ let ServerOkMsg = (data) => {
   let [ className, setClassName ] = useState('')
 
   setTimeout(() =>{
-    setClassName('hidden')
-  }, 1500) 
+    setClassName('translate-y-full')
+  }, 3500) 
 
   return (
-    <div className={"w-full bg-green-400 p-2 " + className}>
+    <div className={"absolute bottom-0 w-full bg-green-400 p-2 duration-300 " + className}>
       <p className="text-white text-lg"> Server OK :) </p>
     </div>
   )
 }
 
 let ServerErrorMsg = (error) => {
+  let [ className, setClassName ] = useState('')
+
   return (
-    <div className="w-full bg-red-400 p-2">
+    <div className={"absolute bottom-0 w-full bg-red-400 p-2 duration-300 " + className}>
       <p className="text-white text-lg"> Error Connecting To Server </p>
     </div>
   )
