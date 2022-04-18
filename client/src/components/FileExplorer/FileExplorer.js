@@ -5,6 +5,7 @@ import CreateDirectory from "./CreateDirectory"
 import FileUpload from "./FileUpload"
 import Header from "./Header"
 import Actions from "./Actions"
+import FileComponent from "./FileComponent"
 import ServerCheck from "../ServerCheck"
 
 const DirectoryLink = ({ to, name, className }) => (
@@ -12,11 +13,11 @@ const DirectoryLink = ({ to, name, className }) => (
 )
 
 let FileExplorer = ({ path }) => {
+  const [ viewType, setViewType ]= useState(null)
   const [ files, setFiles ]= useState([])
   const [ dirs, setDirs ]= useState([])
-  const [ selectedFileName, setSelectedFileName ]= useState(null)
-  const [ selectedFileId, setSelectedFileId ]= useState(null)
-  const [ linkUrl, setLinkUrl ]= useState(null)
+  const [ selectedFiles, setSelectedFiles ]= useState([])
+
 
   useEffect( () => {
     ;(async () => {
@@ -28,24 +29,8 @@ let FileExplorer = ({ path }) => {
   }, [path]);
 
   const listFiles = files.map((file) => {
-    let clicked = 0
-    return (<div className={"w-full border rounded-lg justify-between flex flex-col p-4 mx-auto h-40 cursor-pointer"} onClick={
-      () => {
-        if(clicked > 0){
-          return window.location.href = '/file:/'+file.id
-        }
-        clicked ++
-        setTimeout(() => {
-          clicked = 0
-        },1000)
-        setSelectedFileName(file.user_file_name)
-        setSelectedFileId(file.id)
-        setLinkUrl('/file:/'+file.id)
-        
-      }
-    }>
-      <p>{file.user_file_name}</p>
-    </div>
+    return (
+      <FileComponent file={file} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} className={''}  />
     )
   });
 
@@ -56,13 +41,13 @@ let FileExplorer = ({ path }) => {
   );
 
   return (
-    <div className="w-full mx-auto flex flex-col">
+    <div className="w-full relative h-screen overflow-hidden mx-auto flex flex-col">
       <ServerCheck />
       <Header />
       
       <div className="px-6">
-        <Actions fileName={selectedFileName} fileId={selectedFileId} to={linkUrl} />
-        <div className="w-full grid grid-cols-6 gap-2">
+        <Actions selectedFiles={selectedFiles[0]} />
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
           {listFiles}
         </div>
       </div>

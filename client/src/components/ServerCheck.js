@@ -9,7 +9,7 @@ let ServerOkMsg = (data) => {
   }, 3500) 
 
   return (
-    <div className={"absolute bottom-0 w-full bg-green-400 p-2 duration-300 " + className}>
+    <div className={"absolute bottom-0 w-full bg-green-500 p-2 duration-300 " + className}>
       <p className="text-white text-lg"> Server OK :) </p>
     </div>
   )

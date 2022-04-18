@@ -7,19 +7,21 @@ import {ReactComponent as LinkIcon}  from './assets/link.svg';
 import {ReactComponent as Grid}  from './assets/grid.svg';
 import {ReactComponent as List}  from './assets/list.svg';
 
-let ActionButtons = ({ fileName, fileId, to }) => {
-	if(!fileId)
+let ActionButtons = ({ selectedFiles }) => {
+	if(!selectedFiles)
 		return
+
+	console.log(selectedFiles)
 
 	return (
 		<div className="flex space-x-3">
-				<p>{fileName}</p>
-				<Link to={to} className="fill-gray-600 w-8 h-8" > 
+				<p>{selectedFiles.user_file_name}</p>
+				<Link to={'/file:/'+selectedFiles.id} className="fill-gray-600 w-8 h-8" > 
 					<LinkIcon />
 				</Link>
 				
 				<button>
-					<Delete onClick={ () => { deleteFile(fileId) }
+					<Delete onClick={ () => { deleteFile(selectedFiles.id) }
 					} className="fill-gray-600 w-8 h-8" />
 				</button>
 			</div>
@@ -41,13 +43,13 @@ let ToggleViewMode = () => {
 	)
 }
 
-let Actions = ({ fileName, fileId, to }) => {
+let Actions = ({ selectedFiles }) => {
 
 	return (
 		<div className="w-full flex justify-between py-3 space-x-6">
 			<FileUpload />
 			<div className="flex flex-grow justify-end space-x-6">
-				<ActionButtons fileName={fileName} fileId={fileId} to={to} />
+				<ActionButtons selectedFiles={selectedFiles}/>
 				<ToggleViewMode />
 			</div>
 		</div>
