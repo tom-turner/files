@@ -38,6 +38,8 @@ let uploadFileContent = async (file, serverData, callback) => {
 };
 
 let uploadFile = async (file, callback) =>{
+  console.log(file)
+
   let res = await fetch(`${apiBase}/uploadFile`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -46,7 +48,8 @@ let uploadFile = async (file, callback) =>{
         fileName: file.name,
         path: window.location.pathname,
         fileType: file.type,
-        size: file.size
+        size: file.size,
+        lastModified: file.lastModifiedDate,
       })
     })
     let data = await res.json()
