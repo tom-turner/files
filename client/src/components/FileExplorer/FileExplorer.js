@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { deleteFile, deleteDir, getFiles } from '../../lib/api'
 import CreateDirectory from "./CreateDirectory"
 import FileUpload from "./FileUpload"
+import { uploadFile, uploadFiles } from "../../lib/api"
 import Header from "./Header"
 import Actions from "./Actions"
 import FileComponent from "./FileComponent"
@@ -12,12 +13,17 @@ const DirectoryLink = ({ to, name, className }) => (
   <Link className={"my-auto p-2 text-left " + className} to={to}>{name}</Link>
 )
 
+let handleDrop = (e) => {
+  e.preventDefault()
+  uploadFiles(e.dataTransfer.files)
+}
+
 let FileExplorer = ({ path }) => {
   const [ viewType, setViewType ]= useState(null)
   const [ files, setFiles ]= useState([])
   const [ dirs, setDirs ]= useState([])
   const [ selectedFiles, setSelectedFiles ]= useState([])
-
+  const [ viewMode, setViewMode]= useState('grid')
 
   useEffect( () => {
     ;(async () => {
@@ -30,7 +36,7 @@ let FileExplorer = ({ path }) => {
 
   const listFiles = files.map((file) => {
     return (
-      <FileComponent file={file} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} className={''}  />
+      <FileComponent file={file} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} className={''} viewMode={viewMode}  />
     )
   });
 
@@ -41,13 +47,13 @@ let FileExplorer = ({ path }) => {
   );
 
   return (
-    <div className="w-full relative h-screen overflow-hidden mx-auto flex flex-col">
+    <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-scroll mx-auto flex flex-col">
       <ServerCheck />
       <Header />
       
       <div className="px-6">
-        <Actions selectedFiles={selectedFiles[0]} />
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+        <Actions selectedFiles={selectedFiles[0]} setViewMode={setViewMode} />
+        <div className={"w-full grid " + ( viewMode == "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
           {listFiles}
         </div>
       </div>

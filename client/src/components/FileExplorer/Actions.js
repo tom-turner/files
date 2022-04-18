@@ -28,29 +28,29 @@ let ActionButtons = ({ selectedFiles }) => {
 	)
 }
 
-let ToggleViewMode = () => {
-	let [icon, setIcon] = useState('')
+let ToggleViewMode = ({setViewMode}) => {
+	let [toggle, setToggle] = useState(false)
 
 	let grid = <Grid className="fill-gray-600 w-8 h-8" />
 	let list = <List className="fill-gray-600 w-8 h-8" />
 
 	return ( 
 		<div className="flex space-x-3 px-1">
-			<button>
-				{list}
+			<button onClick={() => { setToggle(!toggle); setViewMode(toggle ? 'grid' : 'list') }}>
+				{toggle ? list : grid}
 			</button>
 		</div>
 	)
 }
 
-let Actions = ({ selectedFiles }) => {
+let Actions = ({ selectedFiles, setViewMode }) => {
 
 	return (
 		<div className="w-full flex justify-between py-3 space-x-6">
 			<FileUpload />
-			<div className="flex flex-grow justify-end space-x-6">
+			<div className="flex justify-end space-x-3">
 				<ActionButtons selectedFiles={selectedFiles}/>
-				<ToggleViewMode />
+				<ToggleViewMode setViewMode={setViewMode} />
 			</div>
 		</div>
 	)

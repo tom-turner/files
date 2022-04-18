@@ -4,6 +4,8 @@ let files = require('../lib/file-system')
 module.exports = async (req,res) => {
   let upload = req.body
 
+  console.log(upload)
+
   let fileId = await Files.create({
     user_id: req.session.user_id,
     user_file_name: upload.fileName,
@@ -12,7 +14,7 @@ module.exports = async (req,res) => {
     file_ext: files.parseDir(upload.fileName).ext,
     file_size: upload.size,
     bytes_uploaded: 0,
-    last_modified: new Date(),
+    last_modified: upload.lastModified,
     checksum: await files.getChecksum()
   })
 

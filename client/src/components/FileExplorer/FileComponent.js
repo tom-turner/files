@@ -1,13 +1,53 @@
 import { useState, useEffect } from "react";
-import {ReactComponent as FileIcon}  from './assets/fileicon.svg';
 
-let ActiveBackground = ({ active }) => {
-	return (
-		<div>
-			<div className={"absolute z-10 left-0 top-0 flex w-48 h-96 bg-indigo-500 animate-[spin_20s_linear_infinite] blur-2xl " + ( active ? '' : 'hidden' )}></div>
-			<div className={"absolute z-0 right-0 top-0 flex  w-96 h-96 bg-green-500 animate-[spin_30s_linear_infinite] blur-2xl " + ( active ? '' : 'hidden' )}></div>
-		</div>
-	)
+// https://www.svgrepo.com/collection/file-type-doctype-vectors/
+import {ReactComponent as DefaultFileIcon}  from './assets/fileicon.svg';
+import {ReactComponent as Audio}  from './assets/audio.svg';
+import {ReactComponent as Csv}  from './assets/csv.svg';
+import {ReactComponent as Text}  from './assets/text.svg';
+import {ReactComponent as Zip}  from './assets/zip.svg';
+import {ReactComponent as Image}  from './assets/image.svg';
+import {ReactComponent as Pdf}  from './assets/pdf.svg';
+import {ReactComponent as Video}  from './assets/video.svg';
+
+let IconByBroadType = ({className, fileType}) => {
+	let broadType = fileType.split('/')[0]
+
+	switch (broadType){
+		case 'text':
+			return <Text className={className} />
+			break;
+		case 'audio':
+			return <Audio className={className} />
+			break;
+		case 'image':
+			return <Image className={className} />
+			break;
+		case 'video':
+			return <Video className={className} />
+			break;
+		default: 
+			return <DefaultFileIcon className={className} fileType={fileType} />
+	}
+}
+
+let IconByType = ({className, fileType}) => {
+	console.log(fileType)
+	switch (fileType){
+		case 'text/csv':
+			return <Csv className={className} />
+			break;
+		case 'application/zip':
+			return <Zip className={className} />
+			break;
+		case 'application/pdf':
+			return <Pdf className={className} />
+			break;
+		default: 
+			return <IconByBroadType className={className} fileType={fileType} />
+	}
+	
+
 }
 
 let FileComponent = (props) => {
@@ -32,16 +72,17 @@ let FileComponent = (props) => {
       	props.setSelectedFiles([props.file])
       }
 	}
+
+	let dragFunc = (e) => {
+		setActive(true)
+      	props.setSelectedFiles([props.file])
+	}
 	
 	return (
-		<div className={"relative bg-gray-100 overflow-hidden shadow-md break-words rounded-lg border cursor-pointer"} onClick={clickFunc}>
-			<ActiveBackground active={active} />
-			<div className="z-50 flex items-center justify-center">
-				<FileIcon className={"z-50 p-2 w-12 sm:w-16 md:w-20 " + ( active ? 'fill-white' : 'fill-gray-800' )} />
-			</div>
-			<div className="flex h-full w-full bg-white z-50 rounded-lg overflow-hidden">	
-				<p className={"z-50 w-full font-bold text-white underline p-2 "+ ( active ? 'bg-indigo-500' : 'bg-green-500' ) }>{props.file.user_file_name}</p>
-			</div>
+		<div draggable="true" onDragStart={dragFunc} className={"relative flex overflow-hidden break-words cursor-pointer " + ( active ? ' bg-green-500 rounded-lg ' : '' )+(props.viewMode == 'grid' ? 'flex-col' : 'flex-row' ) } onClick={clickFunc}>
+			<IconByType fileType={props.file.file_type} className={"z-50 p-2 mx-auto w-12 md:w-24 rounded-lg " + ( active ? 'bg-green-200 shadow-lg ' : 'bg-gray-100 ' ) + (props.viewMode == 'grid' ? 'w-16 md:w-24 m-2' : 'w-20 md:w-36' )} />
+			<p className={"my-auto z-50 w-full text-gray-800 underline p-4 "+ ( active ? 'text-white ' : '' ) + (props.viewMode == 'grid' ? 'text-center' : 'text-left' )}>{props.file.user_file_name}</p>
+			<p className={"text-right my-auto mx-auto z-50 w-full text-gray-800 p-4 hidden md:block" + (props.viewMode == 'grid' ? 'hidden' : '' ) + ( active ? ' text-white ' : '' ) }>{'Last Modified: ' +  new Date(props.file.last_modified).toLocaleDateString() }</p>
 		</div>
 	)
 }

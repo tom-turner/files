@@ -9,26 +9,30 @@ let ProgressBar = ({progress, hidden}) => {
 	)
 }
 
+
 let FileUploadButton = (props) => {
 	const [ progress, setProgress ] = useState(0)
 	const [ hidden, setHidden ] = useState('hidden')
 
+
+	let handleFileUpload = (event, callback) =>{
+		uploadFiles(event.target.files, (e) => {
+			if(e.error){
+				alert(e.error.message)
+				window.location.reload()
+			}
+			if(e.success){
+				window.location.reload()
+			}
+			setProgress(e.progress)
+			setHidden('')
+		})
+	}
+
 	return (
 		<div className="">
 			<lable> Upload: </lable>
-			<input type="file" className="" onChange={ (event) => {
-				uploadFiles(event.target.files, (e) => {
-					if(e.error){
-						alert(e.error.message)
-						window.location.reload()
-					}
-					if(e.success){
-						window.location.reload()
-					}
-					setProgress(e.progress)
-					setHidden('')
-				})
-			}} />
+			<input type="file" className="" onChange={handleFileUpload} />
 			<ProgressBar progress={progress} hidden={hidden} />
 			<p className={hidden} > {progress}% done </p>
 		</div>
