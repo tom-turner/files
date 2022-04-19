@@ -51,5 +51,9 @@ routes.post('/session',
   require('./routes/session')
 );
 
+routes.post('/register',
+  require('./routes/register')
+);
+
 
 module.exports = routes

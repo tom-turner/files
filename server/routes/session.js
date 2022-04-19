@@ -2,20 +2,21 @@ const { Users } = require('../../models')
 const bcrypt = require('bcrypt');
 
 module.exports = async function (req, res) {
-  const user = await Users.findBy({ email : req.body.email.toLowerCase() });
+  const user = await Users.findBy({ email : req.body.username });
 
-  if (!user) {
-    return res.end();
-  }
+  if (!user)
+    return res.status(500).json({error: 'Invalid Inputs'})
 
-  const match = await bcrypt.compare(req.body.password, user.hashed_password);
-
-  /*
-  if (!match) {
-    return res.end()
-  }
-  */
-
-  req.session.user_id = user.id;
-  res.end();
+  bcrypt.compare(req.body.password, user.hashed_password, (err, result) => {
+    if(err) { return res.status(500).json({error: 'An error occoured'}) }
+    
+    if(!result) { 
+      return res.status(500).json({error: 'Invalid Inputs'})
+    } else {
+      // set validator
+      console.log(`logged in as ${user.email}`)
+      req.session.user_id = user.id;
+      res.json({success: true});
+    }
+  });  
 }

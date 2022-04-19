@@ -2,7 +2,6 @@ const { Files } = require('../../models')
 const fs = require('fs')
 
 module.exports = async (req, res) => {
-  console.log("user id: ", req.session.user_id )
   const file = await Files.findBy({ id: req.params.id })
 
   if(!file)

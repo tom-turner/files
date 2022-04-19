@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link } from "react-router-dom"
-import FileUpload from "./FileUpload"
 import { deleteFile, deleteDir, getFiles } from '../../lib/api'
 import {ReactComponent as Delete}  from './assets/delete.svg';
 import {ReactComponent as LinkIcon}  from './assets/link.svg';
@@ -28,8 +27,8 @@ let ActionButtons = ({ selectedFiles }) => {
 	)
 }
 
-let ToggleViewMode = ({setViewMode}) => {
-	let [toggle, setToggle] = useState(false)
+let ToggleViewMode = ({setViewMode, viewMode}) => {
+	let [toggle, setToggle]= useState(viewMode == 'list' ? true : false)
 
 	let grid = <Grid className="fill-gray-600 w-8 h-8" />
 	let list = <List className="fill-gray-600 w-8 h-8" />
@@ -37,20 +36,19 @@ let ToggleViewMode = ({setViewMode}) => {
 	return ( 
 		<div className="flex space-x-3 px-1">
 			<button onClick={() => { setToggle(!toggle); setViewMode(toggle ? 'grid' : 'list') }}>
-				{toggle ? list : grid}
+				{ viewMode === 'list' ? list : grid} 
 			</button>
 		</div>
 	)
 }
 
-let Actions = ({ selectedFiles, setViewMode }) => {
+let Actions = ({ selectedFiles, setViewMode, viewMode }) => {
 
 	return (
 		<div className="w-full flex justify-between py-3 space-x-6">
-			<FileUpload />
 			<div className="flex justify-end space-x-3">
 				<ActionButtons selectedFiles={selectedFiles}/>
-				<ToggleViewMode setViewMode={setViewMode} />
+				<ToggleViewMode setViewMode={setViewMode} viewMode={viewMode} />
 			</div>
 		</div>
 	)

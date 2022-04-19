@@ -38,8 +38,6 @@ let uploadFileContent = async (file, serverData, callback) => {
 };
 
 let uploadFile = async (file, callback) =>{
-  console.log(file)
-
   let res = await fetch(`${apiBase}/uploadFile`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -126,6 +124,35 @@ let getFileContent = async (fileId) => {
   return reader
 }
 
+let register = async (input) => {
+  const result = await fetch(`${apiBase}/register`,{
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: "include",
+    body: JSON.stringify({
+      username: input.username,
+      password: input.password,
+      token: input.token
+    })
+  });
+  const body = await result.json()
+  return body
+}
+
+let session = async (input) => {
+  const result = await fetch(`${apiBase}/session`,{
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: "include",
+    body: JSON.stringify({
+      username: input.username,
+      password: input.password
+    })
+  });
+  const body = await result.json()
+  return body
+}
+
 module.exports.apiBase = apiBase
 module.exports.serverCheck = serverCheck
 module.exports.uploadFile = uploadFile
@@ -136,3 +163,7 @@ module.exports.deleteDir = deleteDir
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
+module.exports.register = register
+module.exports.session = session
+
+

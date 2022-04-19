@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { serverCheck } from '../lib/api'
 
 let ServerOkMsg = (data) => {
