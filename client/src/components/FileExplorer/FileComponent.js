@@ -69,13 +69,13 @@ let FileComponent = (props) => {
       	props.setSelectedFiles([])
       } else{
       	setActive(true)
-      	props.setSelectedFiles([props.file])
+      	props.setSelectedFiles([ ...props.selectedFiles ,props.file])
       }
 	}
 
 	let dragFunc = (e) => {
 		setActive(true)
-      	props.setSelectedFiles([props.file])
+      	props.setSelectedFiles([ ...props.selectedFiles, props.file])
 	}
 	
 	return (

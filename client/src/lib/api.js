@@ -80,14 +80,16 @@ let createDir = (fileName) => {
     .catch((error) => { return alert(`error: ${error}`) })
 }
 
-let deleteFile = async (id) => {
-  let result = await fetch(`${apiBase}/deleteFile/${id}`, {
-    credentials: "include"
-  })
-  let body = await result.json()
-  if(body)
-    console.log(body)
-    return window.location.reload()
+let deleteFiles = async (files) => {
+   Array.prototype.forEach.call(files, async (file) => {
+    let result = await fetch(`${apiBase}/deleteFile/${file.id}`, {
+      credentials: "include"
+    })
+    let body = await result.json()
+    if(body)
+      console.log(body)
+      return window.location.reload()  
+  });
 }
 
 let deleteDir = async (id) => {
@@ -120,8 +122,7 @@ let getFileContent = async (fileId) => {
   const result = await fetch(`${apiBase}/getFile/${fileId}/content`,{
     credentials: "include"
   });
-  const reader = result.body
-  return reader
+  return result
 }
 
 let register = async (input) => {
@@ -158,7 +159,7 @@ module.exports.serverCheck = serverCheck
 module.exports.uploadFile = uploadFile
 module.exports.uploadFiles = uploadFiles
 module.exports.createDir = createDir
-module.exports.deleteFile = deleteFile
+module.exports.deleteFiles = deleteFiles
 module.exports.deleteDir = deleteDir
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
