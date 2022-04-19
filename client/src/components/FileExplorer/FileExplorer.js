@@ -73,7 +73,7 @@ let FileExplorer = ({ path }) => {
 
   return (
     <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-scroll mx-auto flex flex-col">
-      
+  
       <Header />
       <div className="flex-grow px-6 py-3 flex flex-col space-y-6">
         <Actions selectedFiles={selectedFiles} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} />

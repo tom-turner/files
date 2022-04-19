@@ -1,5 +1,5 @@
-import {ReactComponent as Avatar}  from './assets/avatar.svg';
-import {ReactComponent as SearchIcon}  from './assets/searchicon.svg';
+import {ReactComponent as Avatar}  from '../../assets/avatar.svg';
+import {ReactComponent as SearchIcon}  from '../../assets/searchicon.svg';
 
 let SearchBar = ({className}) => {
 	return (

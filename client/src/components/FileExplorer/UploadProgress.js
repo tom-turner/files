@@ -1,4 +1,4 @@
-import {ReactComponent as DefaultFileIcon}  from './assets/fileicon.svg';
+import {ReactComponent as DefaultFileIcon}  from '../../assets/fileicon.svg';
 
 let ProgressBar = ({progress, className }) => {
 	return (

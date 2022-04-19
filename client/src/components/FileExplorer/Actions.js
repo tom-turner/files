@@ -1,18 +1,17 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom"
 import { deleteFiles, deleteDir, getFiles, getFileContent } from '../../lib/api'
-import {ReactComponent as Delete}  from './assets/delete.svg';
-import {ReactComponent as LinkIcon}  from './assets/link.svg';
-import {ReactComponent as Grid}  from './assets/grid.svg';
-import {ReactComponent as List}  from './assets/list.svg';
-import {ReactComponent as UploadIcon}  from './assets/upload.svg';
+import {ReactComponent as Delete}  from '../../assets/delete.svg';
+import {ReactComponent as LinkIcon}  from '../../assets/link.svg';
+import {ReactComponent as Grid}  from '../../assets/grid.svg';
+import {ReactComponent as List}  from '../../assets/list.svg';
+import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
 
 function download(blob, filename) {
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
-  // the filename you want
   a.download = filename;
   document.body.appendChild(a);
   a.click();
