@@ -1,12 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from "react-router-dom"
 import { deleteFiles, deleteDir, getFiles, getFileContent } from '../../lib/api'
 import {ReactComponent as Delete}  from './assets/delete.svg';
 import {ReactComponent as LinkIcon}  from './assets/link.svg';
 import {ReactComponent as Grid}  from './assets/grid.svg';
 import {ReactComponent as List}  from './assets/list.svg';
-import FileUploadButton from "./FileUploadButton"
-
+import {ReactComponent as UploadIcon}  from './assets/upload.svg';
 
 function download(blob, filename) {
   const url = window.URL.createObjectURL(blob);
@@ -28,20 +27,33 @@ let downloadFiles = (files) => {
 	})
 }
 
+let FileUploadButton = (props) => {
+	let fileUpload = useRef()
+	return (
+		<div onClick={() => { fileUpload.current.click() }} className="flex space-x-3 bg-green-500 hover:bg-indigo-500 px-4 py-2 rounded-lg cursor-pointer">
+			<UploadIcon className={'w-6 h-6 my-auto fill-white'} />
+			<p className="my-auto text-white"> Upload Files </p>
+			<input type="file" ref={fileUpload} className={'hidden ' + props.className} onChange={props.onChange} />
+		</div>
+
+	)
+}
+
 let ActionButtons = ({ selectedFiles }) => {
 	if(selectedFiles.length === 0)
 		return
 
 	return (
 		<div className="flex space-x-3">
-			<button onClick={ () => { downloadFiles(selectedFiles) } } className="fill-gray-600 w-8 h-8 my-auto" > 
-				<LinkIcon />
+			
+			<button onClick={ () => { downloadFiles(selectedFiles) } } > 
+				<LinkIcon className="fill-gray-600 w-8 h-8  my-auto" />
 			</button>
 			
 			<button>
-				<Delete onClick={ () => { deleteFiles(selectedFiles) }
-				} className="fill-gray-600 w-8 h-8  my-auto" />
+				<Delete onClick={ () => { deleteFiles(selectedFiles) }} className="fill-gray-600 w-8 h-8  my-auto" />
 			</button>
+
 		</div>
 	)
 }

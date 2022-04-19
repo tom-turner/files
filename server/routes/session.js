@@ -2,7 +2,7 @@ const { Users } = require('../../models')
 const bcrypt = require('bcrypt');
 
 module.exports = async function (req, res) {
-  const user = await Users.findBy({ email : req.body.username });
+  const user = await Users.findBy({ username : req.body.username });
 
   if (!user)
     return res.status(500).json({error: 'Invalid Inputs'})
@@ -14,7 +14,7 @@ module.exports = async function (req, res) {
       return res.status(500).json({error: 'Invalid Inputs'})
     } else {
       // set validator
-      console.log(`logged in as ${user.email}`)
+      console.log(`logged in as ${user.username}`)
       req.session.user_id = user.id;
       res.json({success: true});
     }

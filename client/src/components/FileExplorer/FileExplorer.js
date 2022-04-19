@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"
 import { deleteFile, deleteDir, getFiles } from '../../lib/api'
-import CreateDirectory from "./CreateDirectory"
 import UploadProgress from "./UploadProgress"
 import { uploadFile, uploadFiles } from "../../lib/api"
 import Header from "./Header"
@@ -65,17 +64,18 @@ let FileExplorer = ({ path }) => {
     )
   });
 
-  const listDirs = dirs.map((file) =>
-    <div className="w-full bg-gray-200 rounded flex flex-col p-4 mx-auto">
-      <FileComponent file={file} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} className={''} viewMode={viewMode}  />
-    </div>
-  );
+  const listDirs = dirs.map((file) => {
+    file.file_type = 'directory'
+    return (
+      ''
+    )
+  });
 
   return (
     <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-scroll mx-auto flex flex-col">
-      <ServerCheck />
+      
       <Header />
-      <div className="px-6 py-3 flex flex-col space-y-3">
+      <div className="flex-grow px-6 py-3 flex flex-col space-y-6">
         <Actions selectedFiles={selectedFiles} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} />
         <div className={"w-full grid " + ( viewMode == "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
           {listDirs}
@@ -83,6 +83,8 @@ let FileExplorer = ({ path }) => {
           <UploadProgress progress={progress} viewMode={viewMode} />
         </div>
       </div>
+
+      <ServerCheck />
 
     </div>
   )

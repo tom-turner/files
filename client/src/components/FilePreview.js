@@ -7,6 +7,7 @@ let FilePreview = () => {
 	const params = useParams()
 	const fileId = params['*']
 	const [ fileData, setFileData ] = useState({})
+	const [ fileContent, setFileContent ] = useState({})
 
 	useEffect( () => {
 		;(async () => {
@@ -18,14 +19,15 @@ let FilePreview = () => {
 	useEffect( () => {
 		;(async () => {
 	    let fileContent = await getFileContent(fileId)
-	    // do something with fileContent
+	   	setFileContent(fileContent)
+	   	console.log(fileContent)
 		})()
 	},[fileId])
 
 	return (
 		<div>
-			<ServerCheck />
 			<p> {fileData.user_file_name} </p>
+			<img className="max-h-screen" src={fileContent.url} />
 		</div>
 		)
 }

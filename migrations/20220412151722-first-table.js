@@ -38,7 +38,7 @@ exports.up = async function(db) {
 
   await db.createTable('users', {
     id: { type: 'bigint', primaryKey: true, autoIncrement: true },
-    email:'string',
+    username:'string',
     hashed_password:'string',
     created_at:'string'
   })

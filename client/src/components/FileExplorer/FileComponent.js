@@ -9,6 +9,7 @@ import {ReactComponent as Zip}  from './assets/zip.svg';
 import {ReactComponent as Image}  from './assets/image.svg';
 import {ReactComponent as Pdf}  from './assets/pdf.svg';
 import {ReactComponent as Video}  from './assets/video.svg';
+import {ReactComponent as Dir}  from './assets/directory.svg';
 
 let IconByBroadType = ({className, fileType}) => {
 	let broadType = fileType.split('/')[0]
@@ -25,6 +26,9 @@ let IconByBroadType = ({className, fileType}) => {
 			break;
 		case 'video':
 			return <Video className={className} />
+			break;
+		case 'directory':
+			return <Dir className={className} />
 			break;
 		default: 
 			return <DefaultFileIcon className={className} fileType={fileType} />
