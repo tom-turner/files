@@ -1,22 +1,23 @@
 const { Users } = require('../../models')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const tokenSecret = process.env.TOKEN_SECRET
 
 module.exports = async function (req, res) {
+  const user = await Users.findBy({ username : req.body.username });
 
-  const user = await Users.findBy({ email : req.body.email.toLowerCase() });
+  if (!user)
+    return res.status(401).json({error: 'Invalid Inputs'})
 
-  /*
-  if (!user) {
-    return res.redirect('http://localhost:5000/login');
-  }
-  const match = await bcrypt.compare(req.body.password, user.hashed_password);
+  bcrypt.compare(req.body.password, user.hashed_password, (err, result) => {
+    if(err) { return res.status(500).json({error: 'An error occoured'}) }
+    
+    if(!result) { 
+      return res.status(401).json({error: 'Invalid Inputs'})
+    } else { 
+      let token = jwt.sign( user , tokenSecret)
 
-  if (!match) {
-    return res.redirect('http://localhost:5000/login')
-  }
-
-  */
-  console.log(user)
-  req.session.user_id = user.id;
-  res.redirect('http://localhost:5000/');
+      res.json({ token: token });
+    }
+  });  
 }

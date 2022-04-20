@@ -6,21 +6,15 @@ const http = require('http').Server(app);
 const routes = require("./routes")
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser')
 
 app.use(cors({
   origin: 'http://localhost:5002',
   methods: "GET,HEAD,POST,PATCH,DELETE,OPTIONS,PUT",
-  credentials: true,               
+  credentials: true,
   allowedHeaders: "Content-Type, Content-Range, Content-Length, Authorization, X-Requested-With, Accept",
 }))
-
-app.use(cookieSession({
-  name: 'session',
-  keys: ['user_id'],
-  secret: process.env.COOKIE_SECRET,
-}));
-
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.urlencoded());
 app.use(routes)

@@ -27,7 +27,7 @@ class Http {
 
 const http = new Http('http://localhost:5001', {
   'Content-Type': 'application/json',
-  'Authorization': 'test'
+  'Authorization': window.localStorage.getItem('token')
 })
 
 let serverCheck = async (callback) => {
@@ -41,17 +41,18 @@ let uploadFileContent = async (file, serverData, callback) => {
   const upload = UpChunk.createUpload({
     endpoint:`${apiBase}/uploadFile/${serverData.id}/content`,
     headers: {
-      'Authorization': 'test'
+      'Content-Type': 'application/json',
+      'Authorization': window.localStorage.getItem('token')
     },
     file: file,
     chunkSize: 30720, // Uploads the file in ~30 MB chunks
-    method:'PUT',
+    method:'PUT'
   });
 
   // subscribe to events
-  upload.on('error', err => {
-    callback({error: err.detail})
-    console.error(err.detail);
+  upload.on('error', error => {
+    callback({error: error.detail})
+    console.error(error.detail);
   });
 
   upload.on('progress', progress => {
@@ -70,7 +71,8 @@ let uploadFile = async (file, callback) =>{
     fileName: file.name,
     path: window.location.pathname,
     fileType: file.type,
-    size: file.size
+    size: file.size,
+    lastModified: file.lastModifiedDate,
   })).then(res => res.json())
 
   uploadFileContent(file, data, (e) => {
@@ -97,7 +99,7 @@ let createDir = (fileName) => {
 }
 
 let deleteFile = async (id) => {
-  const response = http.get(`/deleteFile/${id}`)
+  const response = http.delete(`/deleteFile/${id}`)
     .then(res => res.json())
 
   if (response)
@@ -106,7 +108,7 @@ let deleteFile = async (id) => {
 }
 
 let deleteDir = async (id) => {
-  const response = http.get(`/deletedir/${id}`)
+  const response = http.delete(`/deletedir/${id}`)
     .then(res => res.json())
 
   if (response)
@@ -130,13 +132,40 @@ let getFileContent = async (fileId) => {
     .then(res => res.body)
 }
 
+let deleteFiles = async (files) => {
+   Array.prototype.forEach.call(files, async (file) => {
+     http.post(`${apiBase}/deleteFile/${file.id}`)
+       .then(res => res.json())
+       .then(() => window.location.reload())
+  });
+}
+
+let register = async (input) => {
+  return http.post('/register', null, JSON.stringify({
+    username: input.username,
+    password: input.password,
+    token: input.token
+  })).then(res => res.json())
+}
+
+let session = async (input) => {
+  return http.post('/session', null, JSON.stringify({
+    username: input.username,
+    password: input.password
+  })).then(res => res.json())
+}
+
 module.exports.apiBase = apiBase
 module.exports.serverCheck = serverCheck
 module.exports.uploadFile = uploadFile
 module.exports.uploadFiles = uploadFiles
 module.exports.createDir = createDir
-module.exports.deleteFile = deleteFile
+module.exports.deleteFiles = deleteFiles
 module.exports.deleteDir = deleteDir
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
+module.exports.register = register
+module.exports.session = session
+
+

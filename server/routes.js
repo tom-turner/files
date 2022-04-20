@@ -2,7 +2,6 @@ let express = require('express');
 let routes = express.Router();
 
 routes.get('/servercheck',
-  require('./middleware/is-authenticated'),
   require('./routes/server-check')
 );
 
@@ -12,24 +11,29 @@ routes.get('/getFiles/*',
 );
 
 routes.get('/getFile/:id',
-  //  require('./middleware/is-owner'),
   require('./middleware/file-with-id-exists'),
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-owner'),
   require('./routes/get-file')
 );
 
 routes.get('/getFile/:id/content',
-  //  require('./middleware/is-owner'),
   require('./middleware/file-with-id-exists'),
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-owner'),
   require('./routes/get-file-content')
 );
 
-routes.get('/deleteFile/:id',
-  //  require('./middleware/is-owner'),
+routes.delete('/deleteFile/:id',
   require('./middleware/file-with-id-exists'),
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-owner'),
   require('./routes/delete-file')
 );
 
-routes.get('/deleteDir/:id',
+routes.delete('/deleteDir/:id',
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-owner'),
   require('./routes/delete-directory')
 );
 
@@ -50,6 +54,10 @@ routes.post('/createDir',
 
 routes.post('/session',
   require('./routes/session')
+);
+
+routes.post('/register',
+  require('./routes/register')
 );
 
 module.exports = routes

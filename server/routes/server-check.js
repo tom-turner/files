@@ -1,4 +1,4 @@
 module.exports = (req,res) => {
-  console.log('client connected')
+  console.log('server check')
   res.send({ up: true })
 }

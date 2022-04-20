@@ -1,9 +1,18 @@
+const jwt = require('jsonwebtoken');
+const tokenSecret = process.env.TOKEN_SECRET
+
 let isAuthenticated = async (req, res, next) => {
-  console.log('is-auth user_id:', req.header('Authorization'))
+  const token = req.header('Authorization')
 
-  if (req.header('Authorization') !== 'test')
-    return res.status(401).send()
+  if(!token)
+    return res.status(401).json({ auth: false, error: 'User not authenticated', redirect: '/login'});
 
+  const user = jwt.verify(token, tokenSecret);
+
+  if(!user)
+    return res.status(401).json({ auth: false, error: 'User not authenticated', redirect: '/login'});
+
+  res.locals.user = user
   next();
 }
 
