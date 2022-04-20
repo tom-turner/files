@@ -3,30 +3,19 @@ import { Link } from "react-router-dom"
 import { deleteFile, deleteDir, getFiles } from '../../lib/api'
 import UploadProgress from "./UploadProgress"
 import { uploadFile, uploadFiles } from "../../lib/api"
+import useStickyState from "../../lib/useStickyState"
 import Header from "./Header"
 import Actions from "./Actions"
 import FileComponent from "./FileComponent"
 import ServerCheck from "../ServerCheck"
 
-let useStickyState = (defaultValue, key) => {
-  const [value, setValue] = useState(() => {
-    const stickyValue = window.localStorage.getItem(key);
-    return stickyValue !== null
-      ? JSON.parse(stickyValue)
-      : defaultValue;
-  });
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);
-  return [value, setValue];
-}
 
 let FileExplorer = ({ path }) => {
   const [ viewType, setViewType ]= useState(null)
   const [ files, setFiles ]= useState([])
   const [ dirs, setDirs ]= useState([])
   const [ selectedFiles, setSelectedFiles ]= useState([])
-  const [ viewMode, setViewMode]= useStickyState('grid')
+  const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
   const [ progress, setProgress ] = useState(0)
 
   useEffect( () => {

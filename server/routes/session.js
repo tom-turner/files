@@ -1,22 +1,23 @@
 const { Users } = require('../../models')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const tokenSecret = process.env.TOKEN_SECRET
 
 module.exports = async function (req, res) {
   const user = await Users.findBy({ username : req.body.username });
 
   if (!user)
-    return res.status(500).json({error: 'Invalid Inputs'})
+    return res.status(401).json({error: 'Invalid Inputs'})
 
   bcrypt.compare(req.body.password, user.hashed_password, (err, result) => {
     if(err) { return res.status(500).json({error: 'An error occoured'}) }
     
     if(!result) { 
-      return res.status(500).json({error: 'Invalid Inputs'})
-    } else {
-      // set validator
-      console.log(`logged in as ${user.username}`)
-      req.session.user_id = user.id;
-      res.json({success: true});
+      return res.status(401).json({error: 'Invalid Inputs'})
+    } else { 
+      let token = jwt.sign( user , tokenSecret)
+
+      res.json({ token: token });
     }
   });  
 }

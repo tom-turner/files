@@ -2,7 +2,6 @@ let express = require('express');
 let routes = express.Router();
 
 routes.get('/servercheck',
-  require('./middleware/is-authenticated'),
   require('./routes/server-check')
 );
 
@@ -12,28 +11,34 @@ routes.get('/getFiles/*',
 );
 
 routes.get('/getFile/:id',
-  require('./middleware/is-owner'),
   require('./middleware/file-with-id-exists'),
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-owner'),
   require('./routes/get-file')
 );
 
 routes.get('/getFile/:id/content',
-  require('./middleware/is-owner'),
   require('./middleware/file-with-id-exists'),
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-owner'),
   require('./routes/get-file-content')
 );
 
 routes.get('/deleteFile/:id',
-  require('./middleware/is-owner'),
   require('./middleware/file-with-id-exists'),
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-owner'),
   require('./routes/delete-file')
 );
 
 routes.get('/deleteDir/:id',
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-owner'),
   require('./routes/delete-directory')
 );
 
 routes.put('/uploadFile/:id/content',
+  require('./middleware/is-authenticated'),
   require('./routes/upload-file-content')
 );
 

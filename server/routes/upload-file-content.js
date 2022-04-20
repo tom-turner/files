@@ -2,6 +2,7 @@ const { Files } = require('../../models')
 const fs = require('fs')
 
 module.exports = async (req, res) => {
+  console.log('upload file content')
   const file = await Files.findBy({ id: req.params.id })
 
   if(!file)

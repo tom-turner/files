@@ -2,10 +2,20 @@ let UpChunk = require('@mux/upchunk')
 
 const apiBase = "http://localhost:5001"
 
+let getAuthHeaders = () =>{
+  let token = window.localStorage.getItem('token') // replace this with session cookies
+  return {
+      'Authorization': token
+    }
+}
+
+let handleResponse = (body) => {
+  console.log(body)
+  return body
+}
+
 let serverCheck = async (callback) => {
-  fetch(`${apiBase}/servercheck`, {
-    credentials: "include"
-  })
+  fetch(`${apiBase}/servercheck`)
     .then((res) => res.json())
     .then((data) => { callback({ data: data }) })
     .catch((error) => { callback({ error: error }) })
@@ -18,12 +28,14 @@ let uploadFileContent = async (file, serverData, callback) => {
     file: file,
     chunkSize: 30720, // Uploads the file in ~30 MB chunks
     method:'PUT',
+    headers: getAuthHeaders()
   });
 
   // subscribe to events
   upload.on('error', err => {
-    callback({error: err.detail})
-    console.error(err.detail);
+    let error = handleResponse(err)
+    callback({error: error.detail})
+    console.error(error.detail);
   });
 
   upload.on('progress', progress => {
@@ -40,8 +52,10 @@ let uploadFileContent = async (file, serverData, callback) => {
 let uploadFile = async (file, callback) =>{
   let res = await fetch(`${apiBase}/uploadFile`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: "include",
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify({
         fileName: file.name,
         path: window.location.pathname,
@@ -50,7 +64,8 @@ let uploadFile = async (file, callback) =>{
         lastModified: file.lastModifiedDate,
       })
     })
-    let data = await res.json()
+    let body = await res.json()
+    let data = handleResponse(body)
 
     uploadFileContent(file, data, (e) => {
       callback(e)
@@ -65,71 +80,70 @@ let uploadFiles = async (files, callback) => {
     })
 }
 
-let createDir = (fileName) => {
-    fetch(`${apiBase}/createDir`, {
+let createDir = async (fileName) => {
+    let result = await fetch(`${apiBase}/createDir`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify({
         fileName: fileName,
         path: window.location.pathname,
       })
     })
-    .then((res) => res.json())
-    .then((data) => { return window.location.reload() })
-    .catch((error) => { return alert(`error: ${error}`) })
+    let body = await result.json()
+    handleResponse(body)
+    return window.location.reload()  
 }
 
 let deleteFiles = async (files) => {
    Array.prototype.forEach.call(files, async (file) => {
     let result = await fetch(`${apiBase}/deleteFile/${file.id}`, {
-      credentials: "include"
+      headers: getAuthHeaders()
     })
     let body = await result.json()
-    if(body)
-      console.log(body)
-      return window.location.reload()  
+    handleResponse(body)
+    return window.location.reload()  
   });
 }
 
 let deleteDir = async (id) => {
   let result = await fetch(`${apiBase}/deleteDir/${id}`,{
-    credentials: "include"
+    headers: getAuthHeaders()
   })
   let body = await result.json()
-  if(body)
-    console.log(body)
-    return window.location.reload()
+  handleResponse(body)
+  return window.location.reload() 
 }
 
 let getFiles = async (path) => {
   const result = await fetch(`${apiBase}/getFiles/${path}`,{
-    credentials: "include"
+    headers: getAuthHeaders()
   });
   let body = await result.json()
-  return body
+  return handleResponse(body)
 }
 
 let getFileData = async (fileId) => {
-  const result = await fetch(`${apiBase}/getFile/${fileId}`,{
-    credentials: "include"
+  const result = await fetch(`${apiBase}/getFile/${fileId}`, {
+    headers: getAuthHeaders()
   });
   let body = await result.json()
-  return body.fileData
+  return handleResponse(body)
 }
 
 let getFileContent = async (fileId) => {
   const result = await fetch(`${apiBase}/getFile/${fileId}/content`,{
-    credentials: "include"
+    headers: getAuthHeaders()
   });
-  return result
+  return handleResponse(result)
 }
 
 let register = async (input) => {
   const result = await fetch(`${apiBase}/register`,{
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    credentials: "include",
     body: JSON.stringify({
       username: input.username,
       password: input.password,
@@ -137,21 +151,20 @@ let register = async (input) => {
     })
   });
   const body = await result.json()
-  return body
+  return handleResponse(body)
 }
 
 let session = async (input) => {
   const result = await fetch(`${apiBase}/session`,{
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    credentials: "include",
     body: JSON.stringify({
       username: input.username,
       password: input.password
     })
   });
   const body = await result.json()
-  return body
+  return handleResponse(body)
 }
 
 module.exports.apiBase = apiBase

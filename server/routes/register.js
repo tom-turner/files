@@ -1,11 +1,11 @@
 const { Users } = require('../../models')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-let hashedToken = '$2b$10$9cUxXzeEGew4CWRvCS4ta.4Je8C4LCDEs96Zmp1cw3YT07Jhn.bhi'
+const tokenSecret = process.env.TOKEN_SECRET
 
 module.exports = async function (req, res) {
   let user = await Users.findBy({ username: req.body.username })
-  let match = await bcrypt.compare(req.body.token, hashedToken);
+  let match = await bcrypt.compare(req.body.token, tokenSecret);
 
   if (user)
     return res.status(500).json({error: 'Username exists'})

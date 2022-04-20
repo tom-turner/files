@@ -32,8 +32,8 @@ let Register = () => {
 	return (
 		<div className="relative flex w-full h-screen bg-gray-100 overflow-hidden justify-center items-center">
 			<div className="z-50 p-6 bg-white rounded-lg shadow-md border flex flex-col items-center space-y-6">
-				<h1 class="text-5xl font-bold"> Register </h1>
-				<div class="text-xl flex flex-col space-y-3 ">
+				<h1 className="text-5xl font-bold"> Register </h1>
+				<div className="text-xl flex flex-col space-y-3 ">
 	        		<input type="text" onChange={(e) => setUsername(e.target.value)} placeholder="Username" className="p-2 rounded-md border bg-gray-100" />
 	        		<input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="p-2 rounded-md border bg-gray-100" />
 	        		<input type="password" onChange={(e) => setMatch(e.target.value == password ? true : false)} placeholder="Password" className="p-2 rounded-md border bg-gray-100" />
