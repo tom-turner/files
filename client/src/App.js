@@ -19,6 +19,8 @@ function App() {
     return (
       <BrowserRouter>
           <Routes>
+            <Route path="/login" root element={ <Login /> } />
+            <Route path="/register" element={ <Register /> } />
             <Route path="/file:/*" element={ <FilePreview /> } />
             <Route path="/*" root element={ <Explorer /> } />
           </Routes>
