@@ -124,7 +124,6 @@ let getFiles = async (path) => {
 let getFileData = async (fileId) => {
   return http.get(`/getFile/${fileId}`)
     .then(res => res.json())
-    .then(data => data.fileData)
 }
 
 let getFileContent = async (fileId) => {
