@@ -4,6 +4,7 @@ import { getFileData, getFileContent } from '../lib/api'
 import ServerCheck from "../components/ServerCheck"
 import IconByType from './IconByType'
 import {ReactComponent as LinkIcon}  from '../assets/link.svg';
+import withAuthentication from "../lib/withAuthentication"
 
 let Audio = ({fileData, url, className}) => {
 	return (
@@ -104,4 +105,4 @@ let FilePreview = () => {
 	)
 }
 
-export default FilePreview
+export default withAuthentication(FilePreview)

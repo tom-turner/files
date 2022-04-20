@@ -7,7 +7,9 @@ const routes = require("./routes")
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const morgan = require('morgan')
 
+app.use(morgan())
 app.use(cors({
   origin: 'http://localhost:5002',
   methods: "GET,HEAD,POST,PATCH,DELETE,OPTIONS,PUT",

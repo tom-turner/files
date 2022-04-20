@@ -15,7 +15,9 @@ class Http {
     return fetch(`${this.base}${url}`, {
       method,
       body,
-      headers: this.headers
+      headers: Object.fromEntries(Object.entries(this.headers).map(([name, value]) => {
+        return [name, typeof value === 'function' ? value() : value]
+      }))
     })
   }
 
@@ -27,7 +29,7 @@ class Http {
 
 const http = new Http('http://localhost:5001', {
   'Content-Type': 'application/json',
-  'Authorization': window.localStorage.getItem('token')
+  'Authorization': () => window.localStorage.getItem('token')
 })
 
 let serverCheck = async (callback) => {

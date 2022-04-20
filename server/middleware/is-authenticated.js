@@ -7,7 +7,12 @@ let isAuthenticated = async (req, res, next) => {
   if(!token)
     return res.status(401).json({ auth: false, error: 'User not authenticated', redirect: '/login'});
 
-  const user = jwt.verify(token, tokenSecret);
+  let user = null
+  try {
+    user = jwt.verify(token, tokenSecret);
+  } catch (e) {
+    return res.status(500).json({ error: 'Failed to parse jwt', redirect: '/login' })
+  }
 
   if(!user)
     return res.status(401).json({ auth: false, error: 'User not authenticated', redirect: '/login'});

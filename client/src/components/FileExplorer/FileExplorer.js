@@ -8,13 +8,16 @@ import Header from "./Header"
 import Actions from "./Actions"
 import FileComponent from "./FileComponent"
 import ServerCheck from "../ServerCheck"
+import { useParams } from "react-router-dom";
+import withAuthentication from "../../lib/withAuthentication"
 
-
-let FileExplorer = ({ path }) => {
+let FileExplorer = ({ }) => {
+  const params = useParams()
+  const path = params['*']
   const [ viewType, setViewType ]= useState(null)
   const [ files, setFiles ]= useState([])
   const [ dirs, setDirs ]= useState([])
-  const [ selectedFiles, setSelectedFiles ]= useState([])
+  const [ selectedFiles, setSelectedFiles ] = useState([])
   const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
   const [ progress, setProgress ] = useState(0)
 
@@ -79,4 +82,4 @@ let FileExplorer = ({ path }) => {
   )
 }
 
-export default FileExplorer;
+export default withAuthentication(FileExplorer)
