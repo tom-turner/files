@@ -24,14 +24,14 @@ routes.get('/getFile/:id/content',
   require('./routes/get-file-content')
 );
 
-routes.get('/deleteFile/:id',
+routes.delete('/deleteFile/:id',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
   require('./middleware/is-owner'),
   require('./routes/delete-file')
 );
 
-routes.get('/deleteDir/:id',
+routes.delete('/deleteDir/:id',
   require('./middleware/is-authenticated'),
   require('./middleware/is-owner'),
   require('./routes/delete-directory')
@@ -59,6 +59,5 @@ routes.post('/session',
 routes.post('/register',
   require('./routes/register')
 );
-
 
 module.exports = routes

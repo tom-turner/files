@@ -9,7 +9,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 
 app.use(cors({
-  origin: 'http://localhost:5000',   
+  origin: 'http://localhost:5002',
   methods: "GET,HEAD,POST,PATCH,DELETE,OPTIONS,PUT",
   credentials: true,
   allowedHeaders: "Content-Type, Content-Range, Content-Length, Authorization, X-Requested-With, Accept",
@@ -17,7 +17,6 @@ app.use(cors({
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.urlencoded());
-
 app.use(routes)
 
 // Starting the App

@@ -2,38 +2,55 @@ let UpChunk = require('@mux/upchunk')
 
 const apiBase = "http://localhost:5001"
 
-let getAuthHeaders = () =>{
-  let token = window.localStorage.getItem('token') // replace this with session cookies
-  return {
-      'Authorization': token
-    }
+class Http {
+  constructor(base, headers) {
+    this.base = base
+    this.headers = headers
+  }
+
+  async request(method, url, params, body) {
+    if (params)
+      url = url + '?' + new URLSearchParams(params).toString()
+
+    return fetch(`${this.base}${url}`, {
+      method,
+      body,
+      headers: this.headers
+    })
+  }
+
+  async get(url, params) { return this.request('GET', url, params) }
+  async post(url, params, body) { return this.request('POST', url, params, body) }
+  async delete(url, params) { return this.request('DELETE', url, params) }
+  async put(url, params, body) { return this.request('PUT', url, params, body) }
 }
 
-let handleResponse = (body) => {
-  console.log(body)
-  return body
-}
+const http = new Http('http://localhost:5001', {
+  'Content-Type': 'application/json',
+  'Authorization': window.localStorage.getItem('token')
+})
 
 let serverCheck = async (callback) => {
-  fetch(`${apiBase}/servercheck`)
+  http.get('/servercheck')
     .then((res) => res.json())
     .then((data) => { callback({ data: data }) })
     .catch((error) => { callback({ error: error }) })
-  return
 }
 
 let uploadFileContent = async (file, serverData, callback) => {
   const upload = UpChunk.createUpload({
     endpoint:`${apiBase}/uploadFile/${serverData.id}/content`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': window.localStorage.getItem('token')
+    },
     file: file,
     chunkSize: 30720, // Uploads the file in ~30 MB chunks
-    method:'PUT',
-    headers: getAuthHeaders()
+    method:'PUT'
   });
 
   // subscribe to events
-  upload.on('error', err => {
-    let error = handleResponse(err)
+  upload.on('error', error => {
     callback({error: error.detail})
     console.error(error.detail);
   });
@@ -50,121 +67,91 @@ let uploadFileContent = async (file, serverData, callback) => {
 };
 
 let uploadFile = async (file, callback) =>{
-  let res = await fetch(`${apiBase}/uploadFile`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeaders()
-      },
-      body: JSON.stringify({
-        fileName: file.name,
-        path: window.location.pathname,
-        fileType: file.type,
-        size: file.size,
-        lastModified: file.lastModifiedDate,
-      })
-    })
-    let body = await res.json()
-    let data = handleResponse(body)
+  let data = await http.post('/uploadFile', null, JSON.stringify({
+    fileName: file.name,
+    path: window.location.pathname,
+    fileType: file.type,
+    size: file.size,
+    lastModified: file.lastModifiedDate,
+  })).then(res => res.json())
 
-    uploadFileContent(file, data, (e) => {
-      callback(e)
-    })
+  uploadFileContent(file, data, (e) => {
+    callback(e)
+  })
 }
 
 let uploadFiles = async (files, callback) => {
-    Array.prototype.forEach.call(files, (file) => {
-      uploadFile(file, (e) =>{
-        callback(e)
-      })
+  Array.prototype.forEach.call(files, (file) => {
+    uploadFile(file, (e) =>{
+      callback(e)
     })
+  })
 }
 
-let createDir = async (fileName) => {
-    let result = await fetch(`${apiBase}/createDir`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeaders()
-      },
-      body: JSON.stringify({
-        fileName: fileName,
-        path: window.location.pathname,
-      })
-    })
-    let body = await result.json()
-    handleResponse(body)
-    return window.location.reload()  
+let createDir = (fileName) => {
+  http.post('/createDir', null, JSON.stringify({
+    fileName: fileName,
+    path: window.location.pathname,
+  }))
+    .then((res) => res.json())
+    .then((data) => { return window.location.reload() })
+    .catch((error) => { return alert(`error: ${error}`) })
+}
+
+let deleteFile = async (id) => {
+  const response = http.delete(`/deleteFile/${id}`)
+    .then(res => res.json())
+
+  if (response)
+    console.log(response)
+    return window.location.reload()
+}
+
+let deleteDir = async (id) => {
+  const response = http.delete(`/deletedir/${id}`)
+    .then(res => res.json())
+
+  if (response)
+    console.log(response)
+    return window.location.reload()
+}
+
+let getFiles = async (path) => {
+  return http.get(`/getFiles/${path}`)
+    .then(res => res.json())
+}
+
+let getFileData = async (fileId) => {
+  return http.get(`/getFile/${fileId}`)
+    .then(res => res.json())
+}
+
+let getFileContent = async (fileId) => {
+  return http.get(`/getFile/${fileId}/content`)
+    .then(res => res.body)
 }
 
 let deleteFiles = async (files) => {
    Array.prototype.forEach.call(files, async (file) => {
-    let result = await fetch(`${apiBase}/deleteFile/${file.id}`, {
-      headers: getAuthHeaders()
-    })
-    let body = await result.json()
-    handleResponse(body)
-    return window.location.reload()  
+     http.post(`${apiBase}/deleteFile/${file.id}`)
+       .then(res => res.json())
+       .then(() => window.location.reload())
   });
-}
-
-let deleteDir = async (id) => {
-  let result = await fetch(`${apiBase}/deleteDir/${id}`,{
-    headers: getAuthHeaders()
-  })
-  let body = await result.json()
-  handleResponse(body)
-  return window.location.reload() 
-}
-
-let getFiles = async (path) => {
-  const result = await fetch(`${apiBase}/getFiles/${path}`,{
-    headers: getAuthHeaders()
-  });
-  let body = await result.json()
-  return handleResponse(body)
-}
-
-let getFileData = async (fileId) => {
-  const result = await fetch(`${apiBase}/getFile/${fileId}`, {
-    headers: getAuthHeaders()
-  });
-  let body = await result.json()
-  return handleResponse(body)
-}
-
-let getFileContent = async (fileId) => {
-  const result = await fetch(`${apiBase}/getFile/${fileId}/content`,{
-    headers: getAuthHeaders()
-  });
-  return handleResponse(result)
 }
 
 let register = async (input) => {
-  const result = await fetch(`${apiBase}/register`,{
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      username: input.username,
-      password: input.password,
-      token: input.token
-    })
-  });
-  const body = await result.json()
-  return handleResponse(body)
+  return http.post('/register', null, JSON.stringify({
+    username: input.username,
+    password: input.password,
+    token: input.token
+  })).then(res => res.json())
 }
 
 let session = async (input) => {
-  const result = await fetch(`${apiBase}/session`,{
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      username: input.username,
-      password: input.password
-    })
-  });
-  const body = await result.json()
-  return handleResponse(body)
+  return http.post('/session', null, JSON.stringify({
+    username: input.username,
+    password: input.password
+  })).then(res => res.json())
 }
 
 module.exports.apiBase = apiBase
