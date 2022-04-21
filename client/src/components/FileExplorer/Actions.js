@@ -1,30 +1,13 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom"
 import { deleteFiles, deleteDir, getFiles, getFileContent } from '../../lib/api'
+import { downloadFiles } from '../../lib/download'
 import {ReactComponent as Delete}  from '../../assets/delete.svg';
 import {ReactComponent as LinkIcon}  from '../../assets/link.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
 import {ReactComponent as List}  from '../../assets/list.svg';
 import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
 
-function download(blob, filename) {
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display = 'none';
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  window.URL.revokeObjectURL(url);
-}
-
-let downloadFiles = (files) => {
-	Array.prototype.forEach.call( files, async (file, index) => {
-		let fileContent = await getFileContent(file.id)
-		fileContent.blob().then(blob => download(blob, file.user_file_name))
-	})
-}
 
 let FileUploadButton = (props) => {
 	let fileUpload = useRef()
@@ -34,7 +17,6 @@ let FileUploadButton = (props) => {
 			<p className="my-auto text-white"> Upload Files </p>
 			<input type="file" ref={fileUpload} className={'hidden ' + props.className} onChange={props.onChange} />
 		</div>
-
 	)
 }
 
