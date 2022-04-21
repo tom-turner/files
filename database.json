@@ -1,14 +1,14 @@
 {
   "development": {
-    "url": { "ENV": "DATABASE_URL" }
+    "driver": "sqlite3",
+    "filename": "development.db"
+  },
+  "test": {
+    "driver": "sqlite3",
+    "filename": ":memory:"
   },
   "production": {
-    "url": { "ENV": "DATABASE_URL" },
-    "addIfNoteExists": {
-      "sslmode": "require"
-    },
-    "overwrite": {
-      "native": true
-    }
+    "driver": "sqlite3",
+    "filename": "production.db"
   }
 }

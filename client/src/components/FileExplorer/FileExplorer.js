@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom"
 import { deleteFile, deleteDir, getFiles } from '../../lib/api'
 import UploadProgress from "./UploadProgress"
@@ -9,7 +9,7 @@ import Actions from "./Actions"
 import FileComponent from "./FileComponent"
 import ServerCheck from "../ServerCheck"
 import { useParams } from "react-router-dom";
-import withAuthentication from "../../lib/withAuthentication"
+import { AuthenticationContext } from "../../lib/withAuthentication"
 
 let FileExplorer = ({ }) => {
   const params = useParams()
@@ -20,6 +20,7 @@ let FileExplorer = ({ }) => {
   const [ selectedFiles, setSelectedFiles ] = useState([])
   const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
   const [ progress, setProgress ] = useState(0)
+  const { logout } = useContext(AuthenticationContext)
 
   useEffect( () => {
     ;(async () => {
@@ -65,6 +66,7 @@ let FileExplorer = ({ }) => {
 
   return (
     <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-scroll mx-auto flex flex-col">
+      <button onClick={logout}>logout</button>
   
       <Header />
       <div className="flex-grow px-6 py-3 flex flex-col space-y-6">
@@ -82,4 +84,4 @@ let FileExplorer = ({ }) => {
   )
 }
 
-export default withAuthentication(FileExplorer)
+export default FileExplorer

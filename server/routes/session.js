@@ -15,6 +15,7 @@ module.exports = async function (req, res) {
     if(!result) { 
       return res.status(401).json({ error: "Password didn't match" })
     } else { 
+
       let token = jwt.sign(user, tokenSecret)
 
       res.json({ token: token });

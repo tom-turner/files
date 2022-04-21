@@ -1,10 +1,12 @@
 import { useLogin } from "./useLogin"
 import { useNavigate } from "react-router-dom"
-import { useEffect } from "react"
+import { useEffect, createContext } from "react"
 
-export default function withAuthentication(Component) {
+export const AuthenticationContext = createContext({})
+
+export function withAuthentication(Component) {
   return (props) => {
-    const { loggedIn } = useLogin()
+    const { loggedIn, logout } = useLogin()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -13,6 +15,8 @@ export default function withAuthentication(Component) {
       }
     }, [loggedIn])
 
-    return <Component {...props} />
+    return <AuthenticationContext.Provider value={{ loggedIn, logout }}>
+      <Component {...props} />
+    </AuthenticationContext.Provider>
   }
 }
