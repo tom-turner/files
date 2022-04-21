@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getFileData, getFileContent } from '../lib/api'
+import { downloadFromUrl } from '../lib/download'
 import ServerCheck from "../components/ServerCheck"
 import IconByType from './IconByType'
 import {ReactComponent as LinkIcon}  from '../assets/link.svg';
@@ -48,18 +49,6 @@ let ContentPreview = ({fileData, url, className}) => {
 
 }
 
-function download(blob, filename) {
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display = 'none';
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  window.URL.revokeObjectURL(url);
-}
-
 let FilePreview = () => {
 	const params = useParams()
 	const fileId = params['*']
@@ -97,7 +86,7 @@ let FilePreview = () => {
 			<div className="flex z-50 flex-col justify-center mx-auto space-y-3">
 				<p className="text-center text-white">{fileData.user_file_name}</p>
 				<div className="flex justify-center mx-auto space-x-6">
-					<LinkIcon className="fill-white w-8 h-8 cursor-pointer" onClick={ () => { download(fileContentUrl, fileData.user_file_name) } } />
+					<LinkIcon className="fill-white w-8 h-8 cursor-pointer" onClick={ () => { downloadFromUrl(fileContentUrl, fileData.user_file_name) } } />
 				</div>	
 			</div>
 

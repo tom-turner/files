@@ -109,6 +109,14 @@ let deleteFile = async (id) => {
     return window.location.reload()
 }
 
+let deleteFiles = async (files) => {
+   Array.prototype.forEach.call(files, async (file) => {
+     http.delete(`/deleteFile/${file.id}`)
+       .then(res => res.json())
+       .then(() => window.location.reload())
+  });
+}
+
 let deleteDir = async (id) => {
   const response = http.delete(`/deletedir/${id}`)
     .then(res => res.json())
@@ -131,14 +139,6 @@ let getFileData = async (fileId) => {
 let getFileContent = async (fileId) => {
   return http.get(`/getFile/${fileId}/content`)
     .then(res => res.body)
-}
-
-let deleteFiles = async (files) => {
-   Array.prototype.forEach.call(files, async (file) => {
-     http.post(`${apiBase}/deleteFile/${file.id}`)
-       .then(res => res.json())
-       .then(() => window.location.reload())
-  });
 }
 
 let register = async (input) => {
