@@ -11,7 +11,7 @@ import ServerCheck from "../ServerCheck"
 import { useParams } from "react-router-dom";
 import { AuthenticationContext } from "../../lib/withAuthentication"
 
-let FileExplorer = ({ }) => {
+let FileExplorer = () => {
   const params = useParams()
   const path = params['*']
   const [ viewType, setViewType ]= useState(null)
@@ -36,7 +36,6 @@ let FileExplorer = ({ }) => {
     uploadFiles(files, (e) => {
       if(e.error){
         alert(e.error.message)
-        window.location.reload()
       }
       if(e.success){
         window.location.reload()
@@ -66,8 +65,6 @@ let FileExplorer = ({ }) => {
 
   return (
     <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-scroll mx-auto flex flex-col">
-      <button onClick={logout}>logout</button>
-  
       <Header />
       <div className="flex-grow px-6 py-3 flex flex-col space-y-6">
         <Actions selectedFiles={selectedFiles} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} />

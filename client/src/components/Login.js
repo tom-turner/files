@@ -28,10 +28,10 @@ let Login = () => {
       <div className="z-50 p-6 bg-white rounded-lg shadow-md border flex flex-col items-center space-y-6">
         <h1 className="text-5xl font-bold text-gray-800"> Login </h1>
         <div className="text-xl flex flex-col space-y-3 ">
-          { error && <p className="text-red-500">U dum <pre>{error}</pre></p> }
+          { error && <p className="text-red-500 text-sm text-center"><pre>{error}</pre></p> }
           <input type="email" onChange={(e) => setUsername(e.target.value)} placeholder="Username" className="p-2 rounded-md border bg-gray-100" />
           <input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="p-2 rounded-md border bg-gray-100" />
-          <button onClick={handleSubmit} class="font-bold hover:bg-indigo-500 border w-full rounded-md border bg-green-500 text-white px-4 py-2 ">Let's Go!</button>
+          <button onClick={handleSubmit} className="font-bold hover:bg-indigo-500 border w-full rounded-md border bg-green-500 text-white px-4 py-2 ">Let's Go!</button>
         </div>
         <Link to="/register" className="text-gray-600"> Register </Link>
       </div>
