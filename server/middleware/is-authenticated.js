@@ -7,18 +7,13 @@ let isAuthenticated = async (req, res, next) => {
   if(!token)
     return res.status(401).json({ auth: false, error: 'User not authenticated', redirect: '/login'});
 
-  let user = null
-  try {
-    user = jwt.verify(token, tokenSecret);
-  } catch (e) {
-    return res.status(500).json({ error: 'Failed to parse jwt', redirect: '/login' })
-  }
+  jwt.verify(token, tokenSecret, (err, user) => {
+    if (err)
+      return res.status(401).json({ auth: false, error: err, redirect: '/login'});
 
-  if(!user)
-    return res.status(401).json({ auth: false, error: 'User not authenticated', redirect: '/login'});
-
-  res.locals.user = user
-  next();
+    res.locals.user = user
+    next();
+  });
 }
 
 module.exports = isAuthenticated

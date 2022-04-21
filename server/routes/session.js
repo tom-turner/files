@@ -17,7 +17,7 @@ module.exports = async function (req, res) {
       return res.status(401).json({ error: 'Check username or password' })
     } else { 
 
-      let token = jwt.sign(user, tokenSecret)
+      let token = jwt.sign({ id: user.id }, tokenSecret)
 
       res.json({ token: token });
     }
