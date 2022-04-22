@@ -3,3 +3,4 @@ node_modules/*
 *.swp
 file_storage/*
 .DS_Store
+*.db
