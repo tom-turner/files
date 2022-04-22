@@ -46,7 +46,7 @@ let uploadFileContent = async (file, serverData, callback) => {
       'Authorization': window.localStorage.getItem('token')
     },
     file: file,
-    chunkSize: 30720, // Uploads the file in ~30 MB chunks
+    chunkSize: 15360, // Uploads the file in ~15 MB chunks
     method:'PUT'
   });
 
