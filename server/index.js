@@ -11,7 +11,7 @@ const morgan = require('morgan')
 
 app.use(morgan())
 app.use(cors({
-  origin: 'http://localhost:5002',
+  origin: '*',
   methods: "GET,HEAD,POST,PATCH,DELETE,OPTIONS,PUT",
   credentials: true,
   allowedHeaders: "Content-Type, Content-Range, Content-Length, Authorization, X-Requested-With, Accept",

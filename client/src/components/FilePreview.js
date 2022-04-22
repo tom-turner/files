@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getFileData, getFileContent } from '../lib/api'
 import { downloadFromUrl } from '../lib/download'
+import { Loading } from "./Loading"
 import ServerCheck from "../components/ServerCheck"
 import IconByType from './IconByType'
 import {ReactComponent as LinkIcon}  from '../assets/link.svg';
@@ -20,7 +21,9 @@ let Video = ({fileData, url, className}) => {
 
 let Image = ({fileData, url, className}) => {
 	return (
-		<img src={url.url} className={className}/>
+		<object data={url} type={fileData.file_type} className={className}>
+  		<img src={url}/>
+		</object>	
 	)
 }
 
@@ -70,7 +73,10 @@ let FilePreview = () => {
 	},[fileId])
 
   if (fileData === null || fileData === undefined)
-    return <p>Maybe loading? idk...</p>
+    return <Loading />
+
+  if (fileContentUrl === null || fileContentUrl === undefined)
+    return <Loading />
 
 	return (
 		<div className="bg-black bg-opacity-80 relative w-full relative min-h-screen overflow-scroll mx-auto flex flex-col justify-center space-y-3">

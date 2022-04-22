@@ -1,6 +1,5 @@
+let { getApiBase } = require('./apiBase')
 let UpChunk = require('@mux/upchunk')
-
-const apiBase = "http://localhost:5001"
 
 class Http {
   constructor(base, headers) {
@@ -27,7 +26,7 @@ class Http {
   async put(url, params, body) { return this.request('PUT', url, params, body) }
 }
 
-const http = new Http('http://localhost:5001', {
+const http = new Http( getApiBase(), {
   'Content-Type': 'application/json',
   'Authorization': () => window.localStorage.getItem('token')
 })
@@ -41,7 +40,7 @@ let serverCheck = async (callback) => {
 
 let uploadFileContent = async (file, serverData, callback) => {
   const upload = UpChunk.createUpload({
-    endpoint:`${apiBase}/uploadFile/${serverData.id}/content`,
+    endpoint:`${getApiBase()}/uploadFile/${serverData.id}/content`,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': window.localStorage.getItem('token')
@@ -156,7 +155,6 @@ let session = async (input) => {
   })).then(res => res.json())
 }
 
-module.exports.apiBase = apiBase
 module.exports.serverCheck = serverCheck
 module.exports.uploadFile = uploadFile
 module.exports.uploadFiles = uploadFiles
