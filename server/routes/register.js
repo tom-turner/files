@@ -18,7 +18,7 @@ module.exports = async function (req, res) {
     Users.create({
       username: req.body.username,
       hashed_password: hash,
-      created_at: new Date()
+      created_at: new Date().toString()
     })
   });
 

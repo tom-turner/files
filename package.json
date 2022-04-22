@@ -7,7 +7,6 @@
     "start": "node server/index.js",
     "client": "cd client npm run start",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-db": "npx db-migrate db:create filesdb && npx db-migrate up",
     "db-up": "db-migrate up",
     "db-down": "db-migrate down"
   },
@@ -15,9 +14,9 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "better-sqlite3": "^7.5.1",
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
-    "cookie-session": "^2.0.0",
     "db-migrate": "^0.11.13",
     "db-migrate-sqlite3": "^0.4.0",
     "dotenv": "^16.0.0",
@@ -25,7 +24,7 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "path": "^0.12.7",
-    "pg": "^8.7.3"
+    "sqlite3": "^5.0.4"
   },
   "devDependencies": {
     "cors": "^2.8.5"

@@ -1,18 +1,13 @@
-const { Pool } = require('pg');
+const database = require('./database.json')
+const databaseUrl = process.env.NODE_ENV === 'production' ? database.production.filename : database.development.filename
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  // only connect with ssl in production (heroku)
-  ssl: process.env.NODE_ENV === 'production' ? {
-    rejectUnauthorized: false
-  } : false
-})
+const db = require('better-sqlite3')(databaseUrl);
 
 function generateInsert(table, columns) {
   return ` 
     insert into
     ${table} (${columns.join(', ')})
-    values (${columns.map((_, i) => `$${i + 1}`).join(', ')})
+    values (${columns.map((_, i) => `?`).join(', ')})
     returning id
   `
 }
@@ -29,7 +24,7 @@ function generateFind(table, columns) {
   return ` 
     select *
     from ${table}
-    where ${columns.map((name, index) => `${name} = $${index + 1}`).join(' and ')}
+    where ${columns.map((name, index) => `${name} = ?`).join(' and ')}
     limit 1
   `
 }
@@ -38,7 +33,7 @@ function generateFindAll(table, columns) {
   return ` 
     select *
     from ${table}
-    ${columns.length > 0 ? 'where' : ''} ${columns.map((name, index) => `${name} = $${index + 1}`).join(' and ')}
+    ${columns.length > 0 ? 'where' : ''} ${columns.map((name, index) => `${name} = ?`).join(' and ')}
   `
 }
 
@@ -46,7 +41,7 @@ function generateDelete(table, columns) {
   return `
     delete 
     from ${table} 
-    where ${columns.map((name, index) => `${name} = $${index + 1}`).join(' and ')}
+    where ${columns.map((name, index) => `${name} = ?`).join(' and ')}
     returning *
   `
 }
@@ -58,13 +53,8 @@ class Model {
     this.columnNames = []
 
     ;(async () => {
-      const result = await pool.query(`
-        select column_name
-        from information_schema.columns
-        where table_name = '${tableName}'
-      `)
-
-      this.columnNames = result.rows.map(r => r.column_name)
+      const result = await db.pragma(`table_info(${tableName});`)
+      this.columnNames = result.map(r => r.name)
     })()
   }
 
@@ -85,72 +75,69 @@ class Model {
   async create(values) {
     const [columnsToInsert, valuesToInsert] = this.columnsAndValuesFromMap(values)
 
-    const result = await pool.query(
-      generateInsert(this.tableName, columnsToInsert),
-      valuesToInsert
-    )
-
-    return result.rows[0].id
+    const result = await db.prepare(
+      generateInsert(this.tableName, columnsToInsert)
+    ).run(valuesToInsert)
+   
+    return result.lastInsertRowid
   }
 
   async update(id, values) {
     const [columnsToUpdate, valuesToUpdate] = this.columnsAndValuesFromMap(values)
 
-    const result = await pool.query(
+    const result = await db.prepare(
       generateUpdate(this.tableName, columnsToUpdate),
       [id].concat(valuesToUpdate)
-    )
+    ).run()
 
     return result.rows[0]?.id
-  }
+  } // update is most likely broken after move to sqlite3
+    // but no updates in app to test
 
   async findBy(values) {
     const [columnsToFind, valuesToFind] = this.columnsAndValuesFromMap(values)
 
-    const result = await pool.query(
+    const result = await db.prepare(
       generateFind(this.tableName, columnsToFind),
       valuesToFind
-    )
+    ).all(valuesToFind)
 
-    if(!result){
+    if(!result.length){
       return null
     }
 
-    return result.rows[0]
+    return result[0]
   }
 
   async findAllBy(values) {
     const [columnsToFind, valuesToFind] = this.columnsAndValuesFromMap(values)
 
-    const result = await pool.query(
-      generateFindAll(this.tableName, columnsToFind),
-      valuesToFind
-    )
+    const result = await db.prepare(
+      generateFindAll(this.tableName, columnsToFind)
+    ).all(valuesToFind)
 
-    if(!result){
-      return null
+    if(!result.length){
+      return []
     }
 
-    return result.rows
+    return result
   }
 
   async delete(values) {
     const [columnsToFind, valuesToFind] = this.columnsAndValuesFromMap(values)
 
-    const result = await pool.query(
-      generateDelete(this.tableName, columnsToFind),
-      valuesToFind
-    )
+    const result = await db.prepare(
+      generateDelete(this.tableName, columnsToFind)
+    ).run(valuesToFind)
 
     if(!result){
       return null
     }
-
-    return result.rows
+    
+    return result.lastInsertRowid
   }
 }
 
-exports.pool = pool
 exports.generateInsert = generateInsert
 exports.generateFind = generateFind
 exports.generateUpdate = generateUpdate

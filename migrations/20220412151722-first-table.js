@@ -16,7 +16,7 @@ exports.setup = function(options, seedLink) {
 
 exports.up = async function(db) {
   await db.createTable('files', {
-    id: { type: 'bigint', primaryKey: true, autoIncrement: true },
+    id: { type: 'int', primaryKey: true, autoIncrement: true },
     user_id:'string',
     user_file_name:'string',
     user_file_path: 'string',
@@ -24,12 +24,12 @@ exports.up = async function(db) {
     file_ext:'string',
     file_size:'bigint',
     bytes_uploaded:'bigint',
-    meta_data:'json',
+    meta_data:'string',
     checksum:'string',
     last_modified:'string'
   })
   await db.createTable('directories', {
-    id: { type: 'bigint', primaryKey: true, autoIncrement: true },
+    id: { type: 'int', primaryKey: true, autoIncrement: true },
     user_id:'string',
     user_file_name:'string',
     user_file_path: 'string',
@@ -37,7 +37,7 @@ exports.up = async function(db) {
   })
 
   await db.createTable('users', {
-    id: { type: 'bigint', primaryKey: true, autoIncrement: true },
+    id: { type: 'int', primaryKey: true, autoIncrement: true },
     username:'string',
     hashed_password:'string',
     created_at:'string'
