@@ -6,6 +6,7 @@ import { Loading } from "./Loading"
 import ServerCheck from "../components/ServerCheck"
 import IconByType from './IconByType'
 import {ReactComponent as LinkIcon}  from '../assets/link.svg';
+let { getApiBase } = require('../lib/apiBase')
 
 let Audio = ({fileData, url, className}) => {
 	return (
@@ -55,20 +56,12 @@ let FilePreview = () => {
 	const params = useParams()
 	const fileId = params['*']
 	const [ fileData, setFileData ] = useState(null)
-	const [ fileContentUrl, setFileContentUrl ] = useState(null)
+	const fileContentUrl = `${getApiBase()}/getFile/${fileId}/content`
 
 	useEffect(() => {
 		;(async () => {
 	    let fileData = await getFileData(fileId)
 	    setFileData(fileData)
-		})()
-	},[fileId])
-
-	useEffect(() => {
-		;(async () => {
-	    let response = new Response(await getFileContent(fileId))
-      let url = URL.createObjectURL(await response.blob())
-	   	setFileContentUrl(url)
 		})()
 	},[fileId])
 

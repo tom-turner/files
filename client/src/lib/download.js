@@ -14,8 +14,23 @@ export function downloadFromUrl(url, filename) {
 // takes file data object from db and downloads file content
 export function downloadFiles(files) {
 	Array.prototype.forEach.call( files, async (file, index) => {
-		let response = new Response(await getFileContent(file.id))
-		let url = URL.createObjectURL(await response.blob())
-		downloadFromUrl(url, file.user_file_name)
+    const newHandle = await window.showSaveFilePicker({ suggestedName:file.user_file_name});
+    const writableStream = await newHandle.createWritable()
+		let response = (await getFileContent(file.id)).getReader()
+    const stream = new ReadableStream({
+      start(controller) {
+        function pump() {
+          return response.read().then(({ done, value }) => {
+            if (done)
+              return controller.close()
+
+            controller.enqueue(value)
+            return pump()
+          })
+        }
+        return pump();
+      }
+    }) 
+    await stream.pipeTo(writableStream)
 	})
 }

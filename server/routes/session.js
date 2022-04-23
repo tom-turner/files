@@ -19,6 +19,7 @@ module.exports = async function (req, res) {
 
       let token = jwt.sign({ id: user.id }, tokenSecret)
 
+      res.cookie('token', token, { httpOnly:true })
       res.json({ token: token });
     }
   });  

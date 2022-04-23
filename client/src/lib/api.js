@@ -14,6 +14,7 @@ class Http {
     return fetch(`${this.base}${url}`, {
       method,
       body,
+      credentials: 'include',
       headers: Object.fromEntries(Object.entries(this.headers).map(([name, value]) => {
         return [name, typeof value === 'function' ? value() : value]
       }))
