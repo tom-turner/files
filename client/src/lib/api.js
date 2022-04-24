@@ -44,18 +44,58 @@ let serverCheck = async (callback) => {
 class FileUploader {
   constructor({ url, chunkSize, callback, retryLimit, retryDelay }) {
     this.url = url
-    this.chunkSize = chunkSize
+    this.chunkSize = chunkSize || 1024
+    this.chunkHistory = {}
+    this.smallestPing = Infinity
+    this.pid = {
+      weights: {
+        p: 5,
+        i: 1
+      },
+      i: 0,
+      previousError: 0
+    }
     this.callback = callback
     this.retryLimit = retryLimit
     this.retryDelay = retryDelay
   }
 
+  optimizeChunkSize(id, { size, time }) {
+    this.chunkHistory[id] = { size, time }
+    const uxResponseTarget = 500
+
+    if (time < this.smallestPing)
+      this.smallestPing = time
+
+    const target = this.smallestPing + uxResponseTarget
+    const error = target - time
+    const pUpdate = (this.pid.weights.p * error) / time
+
+    this.pid.i += Math.max(10, Math.min(1000, error * this.pid.weights.i))
+
+    this.chunkSize =  Math.min(Math.round(this.chunkSize * pUpdate) + this.pid.i, 1e8)
+    console.log(target, error, pUpdate, this.pid, this.chunkSize)
+  }
+
+  chunkStart(id) {
+    let start = 0
+    for (let [id, chunk] of Object.entries(this.chunkHistory)) {
+      start = start + chunk.size
+    }
+    return start
+  }
+
+  chunkEnd(id) {
+    return this.chunkStart(id) + this.chunkSize
+  }
+
   upload(file) {
     const pump = async (file, chunkId, retry) => {
-      const start = chunkId * this.chunkSize
-      const chunk = file.slice(start, start + this.chunkSize, file.type === '' ? 'application/octet-stream' : file.type)
+      const start = this.chunkStart(chunkId)
+      const chunk = file.slice(start, this.chunkEnd(chunkId), file.type === '' ? 'application/octet-stream' : file.type)
       const end = start + chunk.size - 1
 
+      let requestStartTime = performance.now()
       let response 
       try {
         response = await http.put(this.url, null, chunk, {
@@ -65,6 +105,14 @@ class FileUploader {
       } catch (e) {
         return console.error(`Uploading ${file.name} failed, uploading chunk ${chunkId} failed with error responded with error ${e}. Retrying in ${this.retryDelay}`)
       }
+      let requestEndTime = performance.now()
+
+      this.optimizeChunkSize(chunkId, {
+        size: chunk.size,
+        time: requestEndTime - requestStartTime
+      })
+
+      console.log(`Request of size ${chunk.size} took ${requestEndTime - requestStartTime} milliseconds`)
 
       if (!response.ok) {
         console.error(`Uploading ${file.name} failed, uploading chunk ${chunkId} failed with error. Server responded with status ${response.status}. Retrying in ${this.retryDelay}.`)
@@ -87,7 +135,7 @@ class FileUploader {
         progress: (end / file.size) * 100
       })
 
-      if (end > file.size)
+      if (end >= file.size - 1)
         return this.callback({
           error: null,
           success: true,
@@ -104,7 +152,7 @@ class FileUploader {
 let uploadFileContent = async (file, serverData, callback) => {
   const uploader = new FileUploader({
     url: `/uploadFile/${serverData.id}/content`,
-    chunkSize: 2.5e+6,
+    // chunkSize: 2.5e+6,
     callback,
     retryLimit: 5,
     retryDelay: 200
