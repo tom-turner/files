@@ -33,12 +33,14 @@ let FileExplorer = () => {
 
   let handleFileUpload = (event, callback) =>{
     let files = event.target.files
-    uploadFiles(files, (e) => {
+    uploadFiles(files, async (e) => {
       if(e.error){
         alert(e.error.message)
       }
       if(e.success){
-        window.location.reload()
+        let result = await getFiles(path)
+        setFiles(result.files)
+        setDirs(result.dirs)
       }
       setProgress(e.progress)
     })

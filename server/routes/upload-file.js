@@ -4,8 +4,6 @@ let files = require('../lib/file-system')
 module.exports = async (req, res) => {
   let upload = req.body
 
-  console.log(upload)
-
   let fileId = await Files.create({
     user_id: res.locals.user.id,
     user_file_name: upload.fileName,

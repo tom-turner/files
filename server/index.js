@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 
 
-app.use(morgan())
+//app.use(morgan())
 app.use(cors({
   origin: (origin, next) => next(null, origin),
   credentials: true
@@ -18,6 +18,7 @@ app.use(cors({
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.urlencoded());
+app.use(bodyParser.raw({type: '*/*', limit: '30MB'}))
 app.use(routes)
 
 // Starting the App

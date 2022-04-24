@@ -7,15 +7,17 @@ class Http {
     this.headers = headers
   }
 
-  async request(method, url, params, body) {
+  async request(method, url, params, body, headers) {
     if (params)
       url = url + '?' + new URLSearchParams(params).toString()
+
+    headers = headers || {}
 
     return fetch(`${this.base}${url}`, {
       method,
       body,
       credentials: 'include',
-      headers: Object.fromEntries(Object.entries(this.headers).map(([name, value]) => {
+      headers: Object.fromEntries(Object.entries({ ...this.headers, ...headers }).map(([name, value]) => {
         return [name, typeof value === 'function' ? value() : value]
       }))
     })
@@ -24,7 +26,7 @@ class Http {
   async get(url, params) { return this.request('GET', url, params) }
   async post(url, params, body) { return this.request('POST', url, params, body) }
   async delete(url, params) { return this.request('DELETE', url, params) }
-  async put(url, params, body) { return this.request('PUT', url, params, body) }
+  async put(url, params, body, headers) { return this.request('PUT', url, params, body, headers) }
 }
 
 const http = new Http( getApiBase(), {
@@ -39,34 +41,76 @@ let serverCheck = async (callback) => {
     .catch((error) => { callback({ error: error }) })
 }
 
+class FileUploader {
+  constructor({ url, chunkSize, callback, retryLimit, retryDelay }) {
+    this.url = url
+    this.chunkSize = chunkSize
+    this.callback = callback
+    this.retryLimit = retryLimit
+    this.retryDelay = retryDelay
+  }
+
+  upload(file) {
+    const pump = async (file, chunkId, retry) => {
+      const start = chunkId * this.chunkSize
+      const chunk = file.slice(start, start + this.chunkSize, file.type === '' ? 'application/octet-stream' : file.type)
+      const end = start + chunk.size - 1
+
+      let response 
+      try {
+        response = await http.put(this.url, null, chunk, {
+          'Content-Type': chunk.type,
+          'Content-Range': `bytes ${start}-${end}/${file.size}`
+        })
+      } catch (e) {
+        return console.error(`Uploading ${file.name} failed, uploading chunk ${chunkId} failed with error responded with error ${e}. Retrying in ${this.retryDelay}`)
+      }
+
+      if (!response.ok) {
+        console.error(`Uploading ${file.name} failed, uploading chunk ${chunkId} failed with error. Server responded with status ${response.status}. Retrying in ${this.retryDelay}.`)
+
+        return setTimeout(() => {
+          if (retry >= this.retryLimit)
+            return this.callback({
+              error: `Uploading ${file.name} failed, server responded with error ${response}`,
+              success: false,
+              progress: (end / file.size) * 100
+            })
+
+          pump(file, chunkId, retry + 1)
+        }, this.retryDelay)
+      }
+
+      this.callback({
+        error: null,
+        success: null,
+        progress: (end / file.size) * 100
+      })
+
+      if (end > file.size)
+        return this.callback({
+          error: null,
+          success: true,
+          progress: (end / file.size) * 100
+        })
+
+      pump(file, chunkId + 1, 0)
+    }
+
+    pump(file, 0, 0)
+  }
+}
+
 let uploadFileContent = async (file, serverData, callback) => {
-  const upload = UpChunk.createUpload({
-    endpoint:`${getApiBase()}/uploadFile/${serverData.id}/content`,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': window.localStorage.getItem('token')
-    },
-    file: file,
-    chunkSize: 15360, // Uploads the file in ~15 MB chunks
-    method:'PUT'
-  });
-
-  // subscribe to events
-  upload.on('error', error => {
-    callback({error: error.detail})
-    console.error(error.detail);
-  });
-
-  upload.on('progress', progress => {
-    callback({progress: progress.detail})
-    console.log(`So far we've uploaded ${progress.detail}% of this file.`);
-  });
-
-  upload.on('success', () => {
-    callback({success: true})
-    console.log("Wrap it up, we're done here. 👋");
-  });
-};
+  const uploader = new FileUploader({
+    url: `/uploadFile/${serverData.id}/content`,
+    chunkSize: 262144,
+    callback,
+    retryLimit: 5,
+    retryDelay: 200
+  })
+  uploader.upload(file)
+}
 
 let uploadFile = async (file, callback) =>{
   let data = await http.post('/uploadFile', null, JSON.stringify({

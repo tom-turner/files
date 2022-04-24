@@ -15,8 +15,8 @@ function generateInsert(table, columns) {
 function generateUpdate(table, columns) {
   return `
     update ${table}
-    set ${columns.map((name, index) => `${name} = $${index + 2}`).join(', ')}
-    where id = $1
+    set ${columns.map((name, index) => `${name} = ?`).join(', ')}
+    where id = ?
   `
 }
 
@@ -86,11 +86,10 @@ class Model {
     const [columnsToUpdate, valuesToUpdate] = this.columnsAndValuesFromMap(values)
 
     const result = await db.prepare(
-      generateUpdate(this.tableName, columnsToUpdate),
-      [id].concat(valuesToUpdate)
-    ).run()
+      generateUpdate(this.tableName, columnsToUpdate)
+    ).run(valuesToUpdate.concat(id))
 
-    return result.rows[0]?.id
+    return result.lastInsertRowid
   } // update is most likely broken after move to sqlite3
     // but no updates in app to test
 

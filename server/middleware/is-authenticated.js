@@ -5,6 +5,8 @@ let isAuthenticated = async (req, res, next) => {
   let token = req.header('Authorization')
   if (!token)
     token = req.cookies.token
+  else
+    res.cookie('token', token, { httpOnly:true }) 
 
   if(!token)
     return res.status(401).json({ auth: false, error: 'User not authenticated', redirect: '/login'});
