@@ -21,6 +21,7 @@ let FileExplorer = () => {
   const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
   const [ progress, setProgress ] = useState(0)
   const { logout } = useContext(AuthenticationContext)
+  const [ uploading, setUploading ] = useState(false)
 
   useEffect( () => {
     ;(async () => {
@@ -33,6 +34,7 @@ let FileExplorer = () => {
 
   let handleFileUpload = (event, callback) =>{
     let files = event.target.files
+    setUploading(true)
     uploadFiles(files, async (e) => {
       if(e.error){
         alert(e.error.message)
@@ -41,6 +43,7 @@ let FileExplorer = () => {
         let result = await getFiles(path)
         setFiles(result.files)
         setDirs(result.dirs)
+        setUploading(false)
       }
       setProgress(e.progress)
     })
@@ -73,7 +76,7 @@ let FileExplorer = () => {
         <div className={"w-full grid " + ( viewMode == "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
           {listDirs}
           {listFiles}
-          <UploadProgress progress={progress} viewMode={viewMode} />
+          { uploading && <UploadProgress progress={progress} viewMode={viewMode} /> }
         </div>
       </div>
 

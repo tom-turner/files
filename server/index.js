@@ -18,7 +18,7 @@ app.use(cors({
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.urlencoded());
-app.use(bodyParser.raw({type: '*/*', limit: '30MB'}))
+app.use(bodyParser.raw({type: '*/*', limit: 1e8 }))
 app.use(routes)
 
 // Starting the App
