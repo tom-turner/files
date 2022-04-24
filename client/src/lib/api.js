@@ -104,7 +104,7 @@ class FileUploader {
 let uploadFileContent = async (file, serverData, callback) => {
   const uploader = new FileUploader({
     url: `/uploadFile/${serverData.id}/content`,
-    chunkSize: 262144,
+    chunkSize: 2.5e+7,
     callback,
     retryLimit: 5,
     retryDelay: 200
