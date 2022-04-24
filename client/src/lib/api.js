@@ -49,8 +49,8 @@ class FileUploader {
     this.smallestPing = Infinity
     this.pid = {
       weights: {
-        p: 5,
-        i: 1
+        p: 1.5,
+        i: 0.5
       },
       i: 0,
       previousError: 0
