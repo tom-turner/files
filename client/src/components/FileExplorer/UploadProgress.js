@@ -15,6 +15,8 @@ let UploadProgress = ({ progress, viewMode }) => {
 	if ((100 - progress) < 0.001 || !progress)
 		return
 
+	progress = Math.round(progress * 100) / 100
+	
 	return(
 			<div className={"relative flex overflow-hidden break-words cursor-pointer " + (viewMode === 'grid' ? 'flex-col ' : 'flex-row ') } >
 				<DefaultFileIcon className={"z-50 p-2 mx-auto w-12 md:w-24 rounded-lg bg-gray-100 " + (viewMode === 'grid' ? 'w-16 md:w-24 m-2' : 'w-20' )} />
