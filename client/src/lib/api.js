@@ -101,12 +101,7 @@ class FileUploader {
       let requestStartTime = performance.now()
 
       let xhr = new XMLHttpRequest();
-      xhr.open('PUT', getApiBase() + this.url ) 
-      xhr.withCredentials = true;
-      xhr.setRequestHeader('Content-Type', chunk.type)
-      xhr.setRequestHeader('Content-Range', `bytes ${start}-${end}/${file.size}`)
-      xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'))
-      
+
       xhr.onload = () => {
         if(xhr.status != 200){
           return console.error(`Uploading ${file.name} failed, uploading chunk ${chunkId} failed with error responded with error ${xhr.error}. Retrying in ${this.retryDelay}`)
@@ -125,7 +120,7 @@ class FileUploader {
           return this.callback({
             error: null,
             success: true,
-            progress: (end / file.size) * 100
+            progress: 100
           })
 
         pump(file, chunkId + 1, 0)
@@ -156,6 +151,12 @@ class FileUploader {
           pump(file, chunkId, retry + 1)
         }, this.retryDelay)
       }
+
+      xhr.open('PUT', getApiBase() + this.url ) 
+      xhr.withCredentials = true;
+      xhr.setRequestHeader('Content-Type', chunk.type)
+      xhr.setRequestHeader('Content-Range', `bytes ${start}-${end}/${file.size}`)
+      xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'))
 
       xhr.send(chunk)
     }
