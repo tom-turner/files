@@ -11,7 +11,10 @@ let ProgressBar = ({progress, className }) => {
 	)
 }
 
-let UploadProgress = ({ progress, viewMode }) => {
+let UploadProgress = ({ progress, viewMode, error }) => {
+	if(error)
+		return 
+
 	if ((100 - progress) < 0.001 || !progress)
 		return
 

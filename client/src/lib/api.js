@@ -50,8 +50,8 @@ class FileUploader {
     this.smallestPing = Infinity
     this.pid = {
       weights: {
-        p: 5,
-        i: 1
+        p: 1,
+        i: 10 
       },
       i: 0,
       previousError: 0
@@ -98,13 +98,25 @@ class FileUploader {
       const chunk = file.slice(start, this.chunkEnd(chunkId), file.type === '' ? 'application/octet-stream' : file.type)
       const end = start + chunk.size - 1
       let lastProgressEventLoaded = 0
+      let chunkLoaded = 0
       let requestStartTime = performance.now()
 
       let xhr = new XMLHttpRequest();
 
       xhr.onload = () => {
         if(xhr.status != 200){
-          return console.error(`Uploading ${file.name} failed, uploading chunk ${chunkId} failed with error responded with error ${xhr.error}. Retrying in ${this.retryDelay}`)
+          console.log('onload error')
+          this.progress = this.progress - chunkLoaded
+          return setTimeout(() => {
+          if (retry >= this.retryLimit)
+            return this.callback({
+              error: `Uploading ${file.name} failed, server responded with error ${xhr.status}`,
+              success: false,
+              progress: (end / file.size) * 100
+            })
+
+          pump(file, chunkId, retry + 1)
+          }, this.retryDelay)
         }
         //otherwise success
         let requestEndTime = performance.now()
@@ -129,6 +141,7 @@ class FileUploader {
       xhr.upload.onprogress = (event) => {
         this.progress = this.progress + ( event.loaded - lastProgressEventLoaded )
         lastProgressEventLoaded = event.loaded
+        chunkLoaded = event.loaded
 
         this.callback({
           error: null,
@@ -138,8 +151,9 @@ class FileUploader {
       }
 
       xhr.onerror = (event) => {
-        console.log("status: ",xhr.status)
+        console.log("onerror error",xhr.status)
         console.error(`Uploading ${file.name} failed, uploading chunk ${chunkId} failed with error responded with error ${event}. Retrying in ${this.retryDelay}`)
+        this.progress = this.progress - chunkLoaded
         return setTimeout(() => {
           if (retry >= this.retryLimit)
             return this.callback({
