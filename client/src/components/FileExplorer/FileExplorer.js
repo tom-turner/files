@@ -14,6 +14,7 @@ import { AuthenticationContext } from "../../lib/withAuthentication"
 let FileExplorer = () => {
   const params = useParams()
   const path = params['*']
+  const query = window.location.search
   const [ viewType, setViewType ]= useState(null)
   const [ files, setFiles ]= useState([])
   const [ dirs, setDirs ]= useState([])
@@ -25,7 +26,7 @@ let FileExplorer = () => {
 
   useEffect( () => {
     ;(async () => {
-      let result = await getFiles(path)
+      let result = await getFiles(path, query)
       setFiles(result.files)
       setDirs(result.dirs)
       return

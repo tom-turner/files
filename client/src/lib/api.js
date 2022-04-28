@@ -248,8 +248,8 @@ let deleteDir = async (id) => {
     return window.location.reload()
 }
 
-let getFiles = async (path) => {
-  return http.get(`/getFiles/${path}`)
+let getFiles = async (path, query) => {
+  return http.get(`/getFiles/${path}${query}`)
     .then(res => res.json())
 }
 
@@ -261,6 +261,17 @@ let getFileData = async (fileId) => {
 let getFileContent = async (fileId) => {
   return http.get(`/getFile/${fileId}/content`)
     .then(res => res.body)
+}
+
+let tagFiles = async (files, tagName, tagColour) => {
+  Array.prototype.forEach.call(files, async (file) => {
+    return http.post(`/tagFile/${file.id}`, null, JSON.stringify({
+      fileId: file.id,
+      tagName: tagName,
+      tagColour: tagColour 
+    }))
+      .then(res => res.json())
+  })
 }
 
 let register = async (input) => {
@@ -287,6 +298,7 @@ module.exports.deleteDir = deleteDir
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
+module.exports.tagFiles = tagFiles
 module.exports.register = register
 module.exports.session = session
 

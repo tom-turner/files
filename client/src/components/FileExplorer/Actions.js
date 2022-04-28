@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom"
-import { deleteFiles, deleteDir, getFiles, getFileContent } from '../../lib/api'
+import { deleteFiles, deleteDir, getFiles, getFileContent, tagFiles } from '../../lib/api'
 import { downloadFiles } from '../../lib/download'
 import {ReactComponent as Delete}  from '../../assets/delete.svg';
 import {ReactComponent as LinkIcon}  from '../../assets/link.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
 import {ReactComponent as List}  from '../../assets/list.svg';
 import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
-
+import {ReactComponent as AddTag}  from '../../assets/add-tag.svg';
 
 let FileUploadButton = (props) => {
 	let fileUpload = useRef()
@@ -26,7 +26,11 @@ let ActionButtons = ({ selectedFiles }) => {
 
 	return (
 		<div className="flex space-x-3">
-			
+
+			<button onClick={ () => { tagFiles(selectedFiles) } } > 
+				<AddTag className="fill-gray-600 w-8 h-8  my-auto" />
+			</button>
+
 			<button onClick={ () => { downloadFiles(selectedFiles) } } > 
 				<LinkIcon className="fill-gray-600 w-8 h-8  my-auto" />
 			</button>

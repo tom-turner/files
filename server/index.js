@@ -9,7 +9,6 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 
-
 //app.use(morgan())
 app.use(cors({
   origin: (origin, next) => next(null, origin),

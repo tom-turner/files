@@ -143,4 +143,6 @@ exports.generateUpdate = generateUpdate
 exports.Model = Model
 exports.Files = new Model('files')
 exports.Directories = new Model('directories')
+exports.Tags = new Model('tags')
+exports.JoinFilesTags = new Model('join_files_tags')
 exports.Users = new Model('users')

@@ -31,10 +31,10 @@ routes.delete('/deleteFile/:id',
   require('./routes/delete-file')
 );
 
-routes.delete('/deleteDir/:id',
+routes.delete('/deleteTag/:id',
   require('./middleware/is-authenticated'),
   require('./middleware/is-owner'),
-  require('./routes/delete-directory')
+  require('./routes/delete-tag')
 );
 
 routes.put('/uploadFile/:id/content',
@@ -47,9 +47,10 @@ routes.post('/uploadFile',
   require('./routes/upload-file')
 );
 
-routes.post('/createDir',
+routes.post('/tagFile/:id',
   require('./middleware/is-authenticated'),
-  require('./routes/create-directory')
+  require('./middleware/is-owner'),
+  require('./routes/tag-file')
 );
 
 routes.post('/session',
