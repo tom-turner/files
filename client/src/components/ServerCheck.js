@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { serverCheck } from '../lib/api'
 
-let ServerOkMsg = (data) => {
+let ServerOkMsg = ({data}) => {
   let [ className, setClassName ] = useState('')
 
   return (
@@ -11,12 +11,12 @@ let ServerOkMsg = (data) => {
   )
 }
 
-let ServerErrorMsg = (error) => {
+let ServerErrorMsg = ({error}) => {
   let [ className, setClassName ] = useState('')
 
   return (
     <div className={"z-50 w-full duration-300 p-3" + className}>
-      <p className="bg-red-400 rounded-lg p-2 text-center mx-auto text-white text-lg"> Error Connecting To Server </p>
+      <p className="bg-red-400 rounded-lg p-2 text-center mx-auto text-white text-lg">{ `Error Connecting To Server - ${error}` }</p>
     </div>
   )
 }
@@ -27,15 +27,19 @@ let ServerCheck = () => {
 
   useEffect(() => {
     serverCheck((response) => {
-      setData(response.data)
-      setError(response.error)
+      if (response.error){
+        setError(response.error)
+        alert(response.error)
+      } else {
+        setData(response.data)
+      }
     })
   }, []);
 
-  if(!error){
-    return <ServerOkMsg data={data} />
+  if(error){
+    return <ServerErrorMsg error={error} />
   } else {
-    return <ServerErrorMsg data={error} />
+    return <ServerOkMsg data={data} />
   }
 }
 

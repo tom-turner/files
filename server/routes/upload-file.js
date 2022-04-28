@@ -4,7 +4,7 @@ let files = require('../lib/file-system')
 module.exports = async (req, res) => {
   let upload = req.body
 
-  let fileId = await Files.create({
+  let file = await Files.create({
     user_id: res.locals.user.id,
     user_file_name: upload.fileName,
     user_file_path: upload.path,
@@ -15,8 +15,6 @@ module.exports = async (req, res) => {
     last_modified: upload.lastModified,
     checksum: await files.getChecksum()
   })
-
-  let file = await Files.findBy({ id: fileId })
 
   res.json(file)
 }

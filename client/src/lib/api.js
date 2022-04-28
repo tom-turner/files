@@ -37,8 +37,8 @@ const http = new Http( getApiBase(), {
 let serverCheck = async (callback) => {
   http.get('/servercheck')
     .then((res) => res.json())
-    .then((data) => { callback({ data: data }) })
-    .catch((error) => { callback({ error: error }) })
+    .then((data) => { callback(data) })
+    .catch((error) => { callback({error: error}) })
 }
 
 class FileUploader {
@@ -231,11 +231,10 @@ let deleteFile = async (id) => {
     return window.location.reload()
 }
 
-let deleteFiles = async (files) => {
+let deleteFiles = async (files, callback) => {
    Array.prototype.forEach.call(files, async (file) => {
      http.delete(`/deleteFile/${file.id}`)
-       .then(res => res.json())
-       .then(() => window.location.reload())
+       .then(res => callback(res.json()) )
   });
 }
 
@@ -248,8 +247,8 @@ let deleteDir = async (id) => {
     return window.location.reload()
 }
 
-let getFiles = async (path, query) => {
-  return http.get(`/getFiles/${path}${query}`)
+let getFiles = async (path) => {
+  return http.get(`/getFiles/${path}`)
     .then(res => res.json())
 }
 
@@ -263,15 +262,15 @@ let getFileContent = async (fileId) => {
     .then(res => res.body)
 }
 
-let tagFiles = async (files, tagName, tagColour) => {
+let createTag = async (files, tagName, tagColour, callback) => {
   Array.prototype.forEach.call(files, async (file) => {
-    return http.post(`/tagFile/${file.id}`, null, JSON.stringify({
+    return http.post(`/createTag/${file.id}`, null, JSON.stringify({
       fileId: file.id,
       tagName: tagName,
       tagColour: tagColour 
-    }))
-      .then(res => res.json())
+    })).then( res => callback(res.json()) )
   })
+
 }
 
 let register = async (input) => {
@@ -298,7 +297,7 @@ module.exports.deleteDir = deleteDir
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
-module.exports.tagFiles = tagFiles
+module.exports.createTag = createTag
 module.exports.register = register
 module.exports.session = session
 

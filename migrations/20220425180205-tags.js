@@ -17,7 +17,7 @@ exports.setup = function(options, seedLink) {
 exports.up = async function(db) {
   await db.createTable('tags', {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
-    user_id:'string',
+    user_id:'int',
     tag_name:'string',
     tag_colour:'string',
     created_at:'string'
@@ -25,9 +25,9 @@ exports.up = async function(db) {
 
   await db.createTable('join_files_tags', {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
-    user_id:'string',
-    tag_id:'string',
-    file_id:'string',
+    user_id:'int',
+    tag_id:'int',
+    file_id:'int',
     created_at:'string'
   })
 

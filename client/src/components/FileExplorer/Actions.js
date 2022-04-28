@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom"
-import { deleteFiles, deleteDir, getFiles, getFileContent, tagFiles } from '../../lib/api'
+import { deleteFiles, deleteDir, getFiles, getFileContent, createTag } from '../../lib/api'
 import { downloadFiles } from '../../lib/download'
 import {ReactComponent as Delete}  from '../../assets/delete.svg';
 import {ReactComponent as LinkIcon}  from '../../assets/link.svg';
@@ -20,15 +20,15 @@ let FileUploadButton = (props) => {
 	)
 }
 
-let ActionButtons = ({ selectedFiles }) => {
+let ActionButtons = ({ selectedFiles, refresh }) => {
 	if(selectedFiles.length === 0)
 		return
 
 	return (
 		<div className="flex space-x-3">
 
-			<button onClick={ () => { tagFiles(selectedFiles) } } > 
-				<AddTag className="fill-gray-600 w-8 h-8  my-auto" />
+			<button onClick={ () => createTag(selectedFiles, null, null, async result => refresh()) }> 
+				<AddTag className="fill-gray-600 w-8 h-8  my-auto" refresh={refresh} />
 			</button>
 
 			<button onClick={ () => { downloadFiles(selectedFiles) } } > 
@@ -36,7 +36,7 @@ let ActionButtons = ({ selectedFiles }) => {
 			</button>
 			
 			<button>
-				<Delete onClick={ () => { deleteFiles(selectedFiles) }} className="fill-gray-600 w-8 h-8  my-auto" />
+				<Delete onClick={ () => deleteFiles(selectedFiles, async result => refresh())} className="fill-gray-600 w-8 h-8  my-auto" />
 			</button>
 
 		</div>
@@ -56,12 +56,12 @@ let ToggleViewMode = ({setViewMode, viewMode}) => {
 	)
 }
 
-let Actions = ({ selectedFiles, setViewMode, viewMode, handleFileUpload }) => {
+let Actions = ({ selectedFiles, setViewMode, viewMode, handleFileUpload, refresh }) => {
 	return (
 		<div className="max-w-screen flex w-full justify-between space-x-3">
 			<FileUploadButton onChange={handleFileUpload} />
 			<div className={'flex flex-grow justify-end space-x-3'}>
-				<ActionButtons selectedFiles={selectedFiles}/>
+				<ActionButtons selectedFiles={selectedFiles} refresh={refresh} />
 				<ToggleViewMode setViewMode={setViewMode} viewMode={viewMode} />
 			</div>
 		</div>

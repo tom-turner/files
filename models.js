@@ -79,7 +79,7 @@ class Model {
       generateInsert(this.tableName, columnsToInsert)
     ).run(valuesToInsert)
    
-    return result.lastInsertRowid
+    return await this.findBy({ id : result.lastInsertRowid })
   }
 
   async update(id, values) {

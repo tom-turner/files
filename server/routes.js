@@ -2,6 +2,7 @@ let express = require('express');
 let routes = express.Router();
 
 routes.get('/servercheck',
+  require('./middleware/is-authenticated'),
   require('./routes/server-check')
 );
 
@@ -47,10 +48,10 @@ routes.post('/uploadFile',
   require('./routes/upload-file')
 );
 
-routes.post('/tagFile/:id',
+routes.post('/createTag/:id',
   require('./middleware/is-authenticated'),
   require('./middleware/is-owner'),
-  require('./routes/tag-file')
+  require('./routes/create-tag')
 );
 
 routes.post('/session',
