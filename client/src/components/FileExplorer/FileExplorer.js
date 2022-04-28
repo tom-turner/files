@@ -72,7 +72,7 @@ let FileExplorer = () => {
 
   const listTags = tags.map((tag) => {
     return (
-      <div className="flex px-4 py-1 rounded-full rounded-tl-md text-sm text-white space-x-3 cursor-pointer" style={{backgroundColor: tag.tag_colour}}>
+      <div draggable="true" className="flex px-4 py-1 rounded-full rounded-tl-md text-sm text-white space-x-3 cursor-pointer" style={{backgroundColor: tag.tag_colour}}>
         <p> {tag.tag_name} </p>
       </div>
     )
