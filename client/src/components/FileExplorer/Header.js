@@ -7,7 +7,7 @@ let SearchBar = ({className, search}) => {
 	return (
 		<div className={ "relative w-full flex rounded-lg border overflow-hidden bg-gray-100 flex flex-grow " + className} >
 			<SearchIcon className="absolute top-2 left-2.5 w-7 fill-gray-400" />
-			<input type='search' className="py-2 pr-4 pl-12 flex bg-gray-100 flex-grow" placeholder="search file name or type" onChange={search} />
+			<input type='search' className="py-2 pr-4 pl-12 flex bg-gray-100 flex-grow" placeholder="Search by file or tag name" onChange={search} />
 		</div>
 	)
 }
@@ -24,9 +24,15 @@ let Profile = () =>{
 }
 
 let Header = ({search}) => {
+
+	let handleSearch = (e) => {
+		let query = e.target.value
+		search(query)
+	}
+
 	return (
 		<div className="text-xl border shadow-inner flex px-6 py-3 space-x-3">
-			<SearchBar className="" search={search} />
+			<SearchBar className="" search={handleSearch} />
 		</div>
 	)
 } 

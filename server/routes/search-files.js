@@ -25,7 +25,9 @@ module.exports = async (req,res) => {
     let joins = await JoinFilesTags.findAllBy({ tag_id : tag.id })
     joins.map( async (join) => {
       let file = await Files.findBy({ id: join.file_id})
-      console.log(1, file)
+      if(!file)
+        return
+      
       filesInSearch.find( obj => obj.id === file.id ) === undefined ? filesInSearch.push(file) : console.log(`file id ${file.id} already exists in tagList`)
     })
   }))
@@ -34,6 +36,9 @@ module.exports = async (req,res) => {
     let joins = await JoinFilesTags.findAllBy({ file_id : file.id })
     let fileTags = await Promise.all(joins.map( async (join) =>{
       let tag = await Tags.findBy({ id : join.tag_id })
+      if(!tag)
+        return
+
       tagsInSearch.find( obj => obj.id === tag.id ) === undefined ? tagsInSearch.push(tag) : console.log(`tag id ${tag.id} already exists in tagList`)
       return tag
     }))

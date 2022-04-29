@@ -5,7 +5,7 @@ import { downloadFromUrl } from '../lib/download'
 import { Loading } from "./Loading"
 import ServerCheck from "../components/ServerCheck"
 import IconByType from './IconByType'
-import {ReactComponent as LinkIcon}  from '../assets/link.svg';
+import {ReactComponent as DownloadIcon}  from '../assets/download.svg';
 let { getApiBase } = require('../lib/apiBase')
 
 let Audio = ({fileData, url, className}) => {
@@ -84,7 +84,7 @@ let FilePreview = () => {
 			<div className="flex z-50 flex-col justify-center mx-auto space-y-3">
 				<p className="text-center text-white">{fileData.user_file_name}</p>
 				<div className="flex justify-center mx-auto space-x-6">
-					<LinkIcon className="fill-white w-8 h-8 cursor-pointer" onClick={ () => { downloadFromUrl(fileContentUrl, fileData.user_file_name) } } />
+					<DownloadIcon className="fill-white w-8 h-8 cursor-pointer" onClick={ () => { downloadFromUrl(fileContentUrl, fileData.user_file_name) } } />
 				</div>	
 			</div>
 

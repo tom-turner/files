@@ -1,13 +1,19 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom"
-import { deleteFiles, deleteDir, getFiles, getFileContent, createTag } from '../../lib/api'
+import { deleteFiles, deleteDir, getFiles, getFileContent, createTag, deleteTag, createTagShare } from '../../lib/api'
+import { getApiBase } from '../../lib/apiBase'
 import { downloadAllFromUrl } from '../../lib/download'
 import {ReactComponent as Delete}  from '../../assets/delete.svg';
-import {ReactComponent as LinkIcon}  from '../../assets/link.svg';
+import {ReactComponent as Share}  from '../../assets/share.svg';
+import {ReactComponent as DownloadIcon}  from '../../assets/download.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
 import {ReactComponent as List}  from '../../assets/list.svg';
 import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
 import {ReactComponent as AddTag}  from '../../assets/add-tag.svg';
+
+let handleShare = ({ shareId }) => {
+	alert(`share url: ${getApiBase()}/shares/${shareId}`)
+}
 
 let FileUploadButton = (props) => {
 	let fileUpload = useRef()
@@ -20,10 +26,23 @@ let FileUploadButton = (props) => {
 	)
 }
 
-let ActionButtons = ({ selectedFiles, refresh }) => {
-	if(selectedFiles.length === 0)
-		return
+let TagActions = ({selectedTag, refresh}) => {
+	return (
+		<div className="flex space-x-3">
 
+			<button>
+				<Share onClick={ async () => handleShare( await createTagShare(selectedTag) ) } className="fill-gray-600 w-8 h-8  my-auto" />
+			</button>
+			
+			<button>
+				<Delete onClick={ () => deleteTag(selectedTag, async result => refresh())} className="fill-gray-600 w-8 h-8  my-auto" />
+			</button>
+
+		</div>
+	)
+}
+
+let FileActions = ({selectedFiles, refresh}) => {
 	return (
 		<div className="flex space-x-3">
 
@@ -32,7 +51,7 @@ let ActionButtons = ({ selectedFiles, refresh }) => {
 			</button>
 
 			<button onClick={ () => { downloadAllFromUrl(selectedFiles) } } > 
-				<LinkIcon className="fill-gray-600 w-8 h-8  my-auto" />
+				<DownloadIcon className="fill-gray-600 w-8 h-8  my-auto" />
 			</button>
 			
 			<button>
@@ -41,6 +60,17 @@ let ActionButtons = ({ selectedFiles, refresh }) => {
 
 		</div>
 	)
+}
+
+let ActionButtons = ({ selectedFiles, selectedTag, refresh }) => {
+	if(selectedFiles.length !== 0)
+		return <FileActions selectedFiles={selectedFiles} refresh={refresh} />
+
+	if(Object.keys(selectedTag).length !== 0)
+		return <TagActions selectedTag={selectedTag} refresh={refresh} />
+
+	return
+
 }
 
 let ToggleViewMode = ({setViewMode, viewMode}) => {
@@ -56,12 +86,12 @@ let ToggleViewMode = ({setViewMode, viewMode}) => {
 	)
 }
 
-let Actions = ({ selectedFiles, setViewMode, viewMode, handleFileUpload, refresh }) => {
+let Actions = ({ selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh }) => {
 	return (
 		<div className="max-w-screen flex w-full justify-between space-x-3">
 			<FileUploadButton onChange={handleFileUpload} />
 			<div className={'flex flex-grow justify-end space-x-3'}>
-				<ActionButtons selectedFiles={selectedFiles} refresh={refresh} />
+				<ActionButtons selectedFiles={selectedFiles} selectedTag={selectedTag} refresh={refresh} />
 				<ToggleViewMode setViewMode={setViewMode} viewMode={viewMode} />
 			</div>
 		</div>

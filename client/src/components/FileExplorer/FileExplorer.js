@@ -7,6 +7,7 @@ import useStickyState from "../../lib/useStickyState"
 import Header from "./Header"
 import Actions from "./Actions"
 import FileComponent from "./FileComponent"
+import TagComponent from "./TagComponent"
 import ServerCheck from "../ServerCheck"
 import { useParams } from "react-router-dom";
 import { AuthenticationContext } from "../../lib/withAuthentication"
@@ -21,6 +22,7 @@ let FileExplorer = () => {
   const [ dirs, setDirs ]= useState([])
   const [ tags, setTags ]= useState([])
   const [ selectedFiles, setSelectedFiles ] = useState([])
+  const [ selectedTag, setSelectedTag ] = useState({})
   const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
   const [ progress, setProgress ] = useState(0)
   const [ uploadError, setUploadError ] = useState(null)
@@ -33,8 +35,8 @@ let FileExplorer = () => {
     setTags(result.tags)
 
   }
-  const search = async (searchParams) => {
-    let result = await searchFiles(searchParams.target.value, path)
+  const search = async (e) => {
+    let result = await searchFiles(e, path)
     setFiles(result.files)
     setDirs(result.dirs)
     setTags(result.tags)
@@ -72,15 +74,13 @@ let FileExplorer = () => {
 
   const listFiles = files.map((file) => {
     return (
-      <FileComponent file={file} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} className={''} viewMode={viewMode}  />
+      <FileComponent file={file} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} className={''} viewMode={viewMode} setSelectedTag={setSelectedTag}   />
     )
   });
 
   const listTags = tags.map((tag) => {
     return (
-      <div draggable="true" className="flex px-4 py-1 rounded-full rounded-tl-md text-sm text-white space-x-3 cursor-pointer" style={{backgroundColor: tag.tag_colour}}>
-        <p> {tag.tag_name} </p>
-      </div>
+      <TagComponent tag={tag} selectedTag={selectedTag} setSelectedTag={setSelectedTag} setSelectedFiles={setSelectedFiles} search={search}  />
     )
   });
 
@@ -95,7 +95,7 @@ let FileExplorer = () => {
     <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-scroll mx-auto flex flex-col">
       <Header search={search} />
       <div className="flex-grow px-6 py-3 flex flex-col space-y-6">
-        <Actions selectedFiles={selectedFiles} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={refresh} />
+        <Actions selectedFiles={selectedFiles} selectedTag={selectedTag} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={refresh} />
         <div className="flex space-x-3">
           {listTags}
         </div>

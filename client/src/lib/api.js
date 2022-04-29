@@ -238,17 +238,19 @@ let deleteFiles = async (files, callback) => {
   });
 }
 
+let deleteTag = async (tag, callback) => {
+  console.log(tag.id)
+  http.delete(`/deleteTag/${tag.id}`)
+    .then(res => callback(res.json()) )
+}
+
 let deleteDir = async (id) => {
   const response = http.delete(`/deletedir/${id}`)
     .then(res => res.json())
-
-  if (response)
-    console.log(response)
-    return window.location.reload()
 }
 
-let searchFiles = async (params, path) => {
-  return http.get(`/searchFiles/${path}?search=${params}`)
+let searchFiles = async (query) => {
+  return http.get(`/searchFiles/?search=${query}`)
     .then(res => res.json())
 }
 
@@ -275,7 +277,11 @@ let createTag = async (files, tagName, tagColour, callback) => {
       tagColour: tagColour 
     })).then( res => callback(res.json()) )
   })
+}
 
+let createTagShare = async (tag) => {
+  return http.post(`/createTagShare/${tag.id}`)
+    .then( res =>  res.json() ) 
 }
 
 let register = async (input) => {
@@ -298,12 +304,14 @@ module.exports.uploadFile = uploadFile
 module.exports.uploadFiles = uploadFiles
 module.exports.createDir = createDir
 module.exports.deleteFiles = deleteFiles
+module.exports.deleteTag = deleteTag
 module.exports.deleteDir = deleteDir
 module.exports.searchFiles = searchFiles
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
 module.exports.createTag = createTag
+module.exports.createTagShare = createTagShare
 module.exports.register = register
 module.exports.session = session
 

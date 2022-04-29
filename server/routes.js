@@ -14,14 +14,14 @@ routes.get('/getFiles/*',
 routes.get('/getFile/:id',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
+  require('./middleware/is-file-owner'),
   require('./routes/get-file')
 );
 
 routes.get('/getFile/:id/content',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
+  require('./middleware/is-file-owner'),
   require('./routes/get-file-content')
 );
 
@@ -33,13 +33,13 @@ routes.get('/searchFiles/*',
 routes.delete('/deleteFile/:id',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
+  require('./middleware/is-file-owner'),
   require('./routes/delete-file')
 );
 
 routes.delete('/deleteTag/:id',
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
+  require('./middleware/is-tag-owner'),
   require('./routes/delete-tag')
 );
 
@@ -55,8 +55,14 @@ routes.post('/uploadFile',
 
 routes.post('/createTag/:id',
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
+  require('./middleware/is-file-owner'),
   require('./routes/create-tag')
+);
+
+routes.post('/createTagShare/:id',
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-tag-owner'),
+  require('./routes/create-tag-share')
 );
 
 routes.post('/session',
