@@ -11,13 +11,14 @@ module.exports = async (req,res) => {
   if(!tag)
     return res.status(401).send() 
 
+  let shareHost = `${req.protocol}//${req.hostname}:${process.env.PORT}/sharetag`
   let joinExists = await JoinSharesTags.findBy({ tag_id: tag.id, user_id: res.locals.user.id })
 
   if(joinExists){
     let shareExists = await Shares.findBy({ id : joinExists.share_id, user_id: res.locals.user.id })
     console.log('share exists')
     if(shareExists)
-      return res.json({ shareId : shareExists.id })
+      return res.json({ url:`${shareHost}/${shareExists.id}` })
   }
 
   let share = await Shares.create({
@@ -33,8 +34,6 @@ module.exports = async (req,res) => {
     created_at: new Date().toString()
   })
 
-  console.log({ shareId : share.id })
-
-  return res.json({ shareId : share.id })
+  return res.json({ url: `${shareHost}/${share.id }` })
 
 }

@@ -11,8 +11,8 @@ import {ReactComponent as List}  from '../../assets/list.svg';
 import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
 import {ReactComponent as AddTag}  from '../../assets/add-tag.svg';
 
-let handleShare = ({ shareId }) => {
-	alert(`share url: ${getApiBase()}/shares/${shareId}`)
+let handleShare = ({ url }) => {
+	alert(`share url: ${ url }`)
 }
 
 let FileUploadButton = (props) => {
