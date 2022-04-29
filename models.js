@@ -79,7 +79,7 @@ class Model {
       generateInsert(this.tableName, columnsToInsert)
     ).run(valuesToInsert)
    
-    return result.lastInsertRowid
+    return await this.findBy({ id : result.lastInsertRowid })
   }
 
   async update(id, values) {
@@ -143,4 +143,8 @@ exports.generateUpdate = generateUpdate
 exports.Model = Model
 exports.Files = new Model('files')
 exports.Directories = new Model('directories')
+exports.Tags = new Model('tags')
+exports.JoinFilesTags = new Model('join_files_tags')
+exports.Shares = new Model('shares')
+exports.JoinSharesTags = new Model('join_shares_tags')
 exports.Users = new Model('users')

@@ -37,8 +37,8 @@ const http = new Http( getApiBase(), {
 let serverCheck = async (callback) => {
   http.get('/servercheck')
     .then((res) => res.json())
-    .then((data) => { callback({ data: data }) })
-    .catch((error) => { callback({ error: error }) })
+    .then((data) => { callback(data) })
+    .catch((error) => { callback({error: error}) })
 }
 
 class FileUploader {
@@ -231,21 +231,27 @@ let deleteFile = async (id) => {
     return window.location.reload()
 }
 
-let deleteFiles = async (files) => {
+let deleteFiles = async (files, callback) => {
    Array.prototype.forEach.call(files, async (file) => {
      http.delete(`/deleteFile/${file.id}`)
-       .then(res => res.json())
-       .then(() => window.location.reload())
+       .then(res => callback(res.json()) )
   });
+}
+
+let deleteTag = async (tag, callback) => {
+  console.log(tag.id)
+  http.delete(`/deleteTag/${tag.id}`)
+    .then(res => callback(res.json()) )
 }
 
 let deleteDir = async (id) => {
   const response = http.delete(`/deletedir/${id}`)
     .then(res => res.json())
+}
 
-  if (response)
-    console.log(response)
-    return window.location.reload()
+let searchFiles = async (query) => {
+  return http.get(`/searchFiles/?search=${query}`)
+    .then(res => res.json())
 }
 
 let getFiles = async (path) => {
@@ -261,6 +267,21 @@ let getFileData = async (fileId) => {
 let getFileContent = async (fileId) => {
   return http.get(`/getFile/${fileId}/content`)
     .then(res => res.body)
+}
+
+let createTag = async (files, tagName, tagColour, callback) => {
+  Array.prototype.forEach.call(files, async (file) => {
+    return http.post(`/createTag/${file.id}`, null, JSON.stringify({
+      fileId: file.id,
+      tagName: tagName,
+      tagColour: tagColour 
+    })).then( res => callback(res.json()) )
+  })
+}
+
+let createTagShare = async (tag) => {
+  return http.post(`/createTagShare/${tag.id}`)
+    .then( res =>  res.json() ) 
 }
 
 let register = async (input) => {
@@ -283,10 +304,14 @@ module.exports.uploadFile = uploadFile
 module.exports.uploadFiles = uploadFiles
 module.exports.createDir = createDir
 module.exports.deleteFiles = deleteFiles
+module.exports.deleteTag = deleteTag
 module.exports.deleteDir = deleteDir
+module.exports.searchFiles = searchFiles
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
+module.exports.createTag = createTag
+module.exports.createTagShare = createTagShare
 module.exports.register = register
 module.exports.session = session
 

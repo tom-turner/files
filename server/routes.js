@@ -2,6 +2,7 @@ let express = require('express');
 let routes = express.Router();
 
 routes.get('/servercheck',
+  require('./middleware/is-authenticated'),
   require('./routes/server-check')
 );
 
@@ -13,28 +14,33 @@ routes.get('/getFiles/*',
 routes.get('/getFile/:id',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
+  require('./middleware/is-file-owner'),
   require('./routes/get-file')
 );
 
 routes.get('/getFile/:id/content',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
+  require('./middleware/is-file-owner'),
   require('./routes/get-file-content')
+);
+
+routes.get('/searchFiles/*',
+  require('./middleware/is-authenticated'),
+  require('./routes/search-files')
 );
 
 routes.delete('/deleteFile/:id',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
+  require('./middleware/is-file-owner'),
   require('./routes/delete-file')
 );
 
-routes.delete('/deleteDir/:id',
+routes.delete('/deleteTag/:id',
   require('./middleware/is-authenticated'),
-  require('./middleware/is-owner'),
-  require('./routes/delete-directory')
+  require('./middleware/is-tag-owner'),
+  require('./routes/delete-tag')
 );
 
 routes.put('/uploadFile/:id/content',
@@ -47,9 +53,16 @@ routes.post('/uploadFile',
   require('./routes/upload-file')
 );
 
-routes.post('/createDir',
+routes.post('/createTag/:id',
   require('./middleware/is-authenticated'),
-  require('./routes/create-directory')
+  require('./middleware/is-file-owner'),
+  require('./routes/create-tag')
+);
+
+routes.post('/createTagShare/:id',
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-tag-owner'),
+  require('./routes/create-tag-share')
 );
 
 routes.post('/session',
