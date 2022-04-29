@@ -3,11 +3,11 @@ import {ReactComponent as Avatar}  from '../../assets/avatar.svg';
 import {ReactComponent as SearchIcon}  from '../../assets/searchicon.svg';
 import { AuthenticationContext } from "../../lib/withAuthentication"
 
-let SearchBar = ({className}) => {
+let SearchBar = ({className, search}) => {
 	return (
 		<div className={ "relative w-full flex rounded-lg border overflow-hidden bg-gray-100 flex flex-grow " + className} >
 			<SearchIcon className="absolute top-2 left-2.5 w-7 fill-gray-400" />
-			<input type='search' className="py-2 pr-4 pl-12 flex bg-gray-100 flex-grow" placeholder="search file name or type" />
+			<input type='search' className="py-2 pr-4 pl-12 flex bg-gray-100 flex-grow" placeholder="search file name or type" onChange={search} />
 		</div>
 	)
 }
@@ -23,10 +23,10 @@ let Profile = () =>{
 	)
 }
 
-let Header = () => {
+let Header = ({search}) => {
 	return (
 		<div className="text-xl border shadow-inner flex px-6 py-3 space-x-3">
-			<SearchBar className="" />
+			<SearchBar className="" search={search} />
 		</div>
 	)
 } 

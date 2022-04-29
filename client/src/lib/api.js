@@ -247,6 +247,11 @@ let deleteDir = async (id) => {
     return window.location.reload()
 }
 
+let searchFiles = async (params, path) => {
+  return http.get(`/searchFiles/${path}?search=${params}`)
+    .then(res => res.json())
+}
+
 let getFiles = async (path) => {
   return http.get(`/getFiles/${path}`)
     .then(res => res.json())
@@ -294,6 +299,7 @@ module.exports.uploadFiles = uploadFiles
 module.exports.createDir = createDir
 module.exports.deleteFiles = deleteFiles
 module.exports.deleteDir = deleteDir
+module.exports.searchFiles = searchFiles
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent

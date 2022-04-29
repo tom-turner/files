@@ -25,6 +25,11 @@ routes.get('/getFile/:id/content',
   require('./routes/get-file-content')
 );
 
+routes.get('/searchFiles/*',
+  require('./middleware/is-authenticated'),
+  require('./routes/search-files')
+);
+
 routes.delete('/deleteFile/:id',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),

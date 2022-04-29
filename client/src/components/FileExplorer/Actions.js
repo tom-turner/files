@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom"
 import { deleteFiles, deleteDir, getFiles, getFileContent, createTag } from '../../lib/api'
-import { downloadFiles } from '../../lib/download'
+import { downloadAllFromUrl } from '../../lib/download'
 import {ReactComponent as Delete}  from '../../assets/delete.svg';
 import {ReactComponent as LinkIcon}  from '../../assets/link.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
@@ -31,7 +31,7 @@ let ActionButtons = ({ selectedFiles, refresh }) => {
 				<AddTag className="fill-gray-600 w-8 h-8  my-auto" refresh={refresh} />
 			</button>
 
-			<button onClick={ () => { downloadFiles(selectedFiles) } } > 
+			<button onClick={ () => { downloadAllFromUrl(selectedFiles) } } > 
 				<LinkIcon className="fill-gray-600 w-8 h-8  my-auto" />
 			</button>
 			

@@ -1,4 +1,5 @@
 import { getFiles, getFileContent } from './api'
+import{ getApiBase } from './apiBase'
 
 export function downloadFromUrl(url, filename) {
   const a = document.createElement('a');
@@ -9,6 +10,13 @@ export function downloadFromUrl(url, filename) {
   a.click();
   document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
+}
+
+export function downloadAllFromUrl(files) {
+  Array.prototype.forEach.call( files, async (file, index) => {
+    const fileContentUrl = `${getApiBase()}/getFile/${file.id}/content`
+    downloadFromUrl(fileContentUrl, file.user_file_name)
+  })
 }
 
 // takes file data object from db and downloads file content

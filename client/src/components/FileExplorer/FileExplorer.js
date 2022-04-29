@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom"
 import { deleteFile, deleteDir, getFiles } from '../../lib/api'
 import UploadProgress from "./UploadProgress"
-import { uploadFile, uploadFiles } from "../../lib/api"
+import { uploadFile, uploadFiles, searchFiles } from "../../lib/api"
 import useStickyState from "../../lib/useStickyState"
 import Header from "./Header"
 import Actions from "./Actions"
@@ -32,6 +32,12 @@ let FileExplorer = () => {
     setDirs(result.dirs)
     setTags(result.tags)
 
+  }
+  const search = async (searchParams) => {
+    let result = await searchFiles(searchParams.target.value, path)
+    setFiles(result.files)
+    setDirs(result.dirs)
+    setTags(result.tags)
   }
 
   useEffect( () => { refresh() } , [path]);
@@ -87,7 +93,7 @@ let FileExplorer = () => {
 
   return (
     <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-scroll mx-auto flex flex-col">
-      <Header />
+      <Header search={search} />
       <div className="flex-grow px-6 py-3 flex flex-col space-y-6">
         <Actions selectedFiles={selectedFiles} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={refresh} />
         <div className="flex space-x-3">
