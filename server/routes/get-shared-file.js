@@ -5,6 +5,9 @@ module.exports = async (req,res) => {
   
   let tag = await Tags.findBy({ share_slug : req.params.slug })
 
+  if(!tag)
+    return res.status(401).send()
+
   if(!tag.shared || !tag.share_slug)
     return res.status(401).send()
 
