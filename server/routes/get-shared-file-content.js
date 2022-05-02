@@ -5,10 +5,7 @@ module.exports = async (req,res) => {
   
   let tag = await Tags.findBy({ share_slug : req.params.slug })
 
-  if(!tag)
-    return res.status(401).send()
-
-  if(!tag.shared || !tag.share_slug)
+  if(!tag || !tag.shared || !tag.share_slug)
     return res.status(401).send()
 
   let exists = await JoinFilesTags.findBy({ file_id : req.params.id, tag_id : tag.id })
