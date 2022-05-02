@@ -25,6 +25,18 @@ routes.get('/getFile/:id/content',
   require('./routes/get-file-content')
 );
 
+routes.get('/getShare/:slug',
+  require('./routes/get-shared-files')
+);
+
+routes.get('/getShare/:slug/:id',
+  require('./routes/get-shared-file')
+);
+
+routes.get('/getShare/:slug/:id/content',
+  require('./routes/get-shared-file-content')
+);
+
 routes.get('/searchFiles/*',
   require('./middleware/is-authenticated'),
   require('./routes/search-files')
@@ -59,10 +71,10 @@ routes.post('/createTag/:id',
   require('./routes/create-tag')
 );
 
-routes.post('/createTagShare/:id',
+routes.post('/createShare/:id',
   require('./middleware/is-authenticated'),
   require('./middleware/is-tag-owner'),
-  require('./routes/create-tag-share')
+  require('./routes/create-share')
 );
 
 routes.post('/session',

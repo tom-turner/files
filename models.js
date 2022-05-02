@@ -90,8 +90,7 @@ class Model {
     ).run(valuesToUpdate.concat(id))
 
     return result.lastInsertRowid
-  } // update is most likely broken after move to sqlite3
-    // but no updates in app to test
+  } 
 
   async findBy(values) {
     const [columnsToFind, valuesToFind] = this.columnsAndValuesFromMap(values)
@@ -145,6 +144,4 @@ exports.Files = new Model('files')
 exports.Directories = new Model('directories')
 exports.Tags = new Model('tags')
 exports.JoinFilesTags = new Model('join_files_tags')
-exports.Shares = new Model('shares')
-exports.JoinSharesTags = new Model('join_shares_tags')
 exports.Users = new Model('users')

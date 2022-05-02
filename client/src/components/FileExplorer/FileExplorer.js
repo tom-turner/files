@@ -30,13 +30,16 @@ let FileExplorer = () => {
   const refresh = async () => {
     let result = await getFiles(path)
     console.log(result)
+    setSelectedFiles([])
+    setSelectedTag({})
     setFiles(result.files)
     setDirs(result.dirs)
     setTags(result.tags)
-
   }
   const search = async (e) => {
     let result = await searchFiles(e, path)
+    setSelectedFiles([])
+    setSelectedTag({})
     setFiles(result.files)
     setDirs(result.dirs)
     setTags(result.tags)

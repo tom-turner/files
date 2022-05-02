@@ -15,27 +15,22 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = async function(db) {
-  await db.createTable('shares', {
-    id: { type: 'int', primaryKey: true, autoIncrement: true },
-    user_id:'int',
-    url:'string',
-    created_at:'string'
-  })
+  
+  await db.addColumn('tags', 'shared', {
+    type: 'int',
+    default: 0
+  });
 
-  await db.createTable('join_shares_tags', {
-    id: { type: 'int', primaryKey: true, autoIncrement: true },
-    user_id:'int',
-    tag_id:'int',
-    share_id:'int',
-    created_at:'string'
-  })
+  await db.addColumn('tags', 'share_slug', {
+    type: 'string'
+  });
 
 };
 
 exports.down = async function(db) {
-  await db.dropTable('shares');
+  await db.removeColumn('tags', 'shared')
 
-  await db.dropTable('join_shares_tags');
+  await db.removeColumn('tags', 'share_slug')
 
 };
 

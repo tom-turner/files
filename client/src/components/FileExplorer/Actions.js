@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom"
-import { deleteFiles, deleteDir, getFiles, getFileContent, createTag, deleteTag, createTagShare } from '../../lib/api'
+import { deleteFiles, deleteDir, getFiles, getFileContent, createTag, deleteTag, createShare } from '../../lib/api'
 import { getApiBase } from '../../lib/apiBase'
 import { downloadAllFromUrl } from '../../lib/download'
 import {ReactComponent as Delete}  from '../../assets/delete.svg';
@@ -11,8 +11,25 @@ import {ReactComponent as List}  from '../../assets/list.svg';
 import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
 import {ReactComponent as AddTag}  from '../../assets/add-tag.svg';
 
-let handleShare = ({ url }) => {
-	alert(`share url: ${ url }`)
+let handleTagShare = ({ slug }) => {
+	alert(`share url: ${window.location.protocol}//${window.location.host}/share/${slug}`)
+
+}
+
+let handleFileShare = async ( selectedFiles, refresh ) => {
+	createTag(selectedFiles, null, null, async result => {
+		let body = await result
+		
+		if(!body.tag.tagId)
+			return
+
+		let share = await createShare({ id: body.tag.tagId })
+
+		alert(`share url: ${window.location.protocol}//${window.location.host}/share/${share.slug}/${body.fileId}`)
+
+		refresh()
+	})
+
 }
 
 let FileUploadButton = (props) => {
@@ -31,7 +48,7 @@ let TagActions = ({selectedTag, refresh}) => {
 		<div className="flex space-x-3">
 
 			<button>
-				<Share onClick={ async () => handleShare( await createTagShare(selectedTag) ) } className="fill-gray-600 w-8 h-8  my-auto" />
+				<Share onClick={ async () => handleTagShare( await createShare(selectedTag) ) } className="fill-gray-600 w-8 h-8  my-auto" />
 			</button>
 			
 			<button>
@@ -45,6 +62,10 @@ let TagActions = ({selectedTag, refresh}) => {
 let FileActions = ({selectedFiles, refresh}) => {
 	return (
 		<div className="flex space-x-3">
+
+			<button>
+				<Share onClick={ async () => handleFileShare(selectedFiles, refresh) } className="fill-gray-600 w-8 h-8  my-auto" />
+			</button>
 
 			<button onClick={ () => createTag(selectedFiles, null, null, async result => refresh()) }> 
 				<AddTag className="fill-gray-600 w-8 h-8  my-auto" refresh={refresh} />

@@ -269,18 +269,33 @@ let getFileContent = async (fileId) => {
     .then(res => res.body)
 }
 
+let getSharedFiles = async (slug) => {
+  return http.get(`/getShare/${slug}`)
+    .then(res => res.json())
+}
+
+let getSharedFile = async (slug, id) => {
+  return http.get(`/getShare/${slug}/${id}`)
+    .then(res => res.json())
+}
+
+let getSharedFileContent = async (slug, id) => {
+  return http.get(`/getShare/${slug}/${id}/content`)
+    .then(res => res.body)
+}
+
 let createTag = async (files, tagName, tagColour, callback) => {
   Array.prototype.forEach.call(files, async (file) => {
     return http.post(`/createTag/${file.id}`, null, JSON.stringify({
       fileId: file.id,
       tagName: tagName,
       tagColour: tagColour 
-    })).then( res => callback(res.json()) )
+    })).then( async res => callback({ fileId: file.id, tag: await res.json() }) )
   })
 }
 
-let createTagShare = async (tag) => {
-  return http.post(`/createTagShare/${tag.id}`)
+let createShare = async (tag) => {
+  return http.post(`/createShare/${tag.id}`)
     .then( res =>  res.json() ) 
 }
 
@@ -310,8 +325,11 @@ module.exports.searchFiles = searchFiles
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
+module.exports.getSharedFiles = getSharedFiles
+module.exports.getSharedFile = getSharedFile
+module.exports.getSharedFileContent = getSharedFileContent
 module.exports.createTag = createTag
-module.exports.createTagShare = createTagShare
+module.exports.createShare = createShare
 module.exports.register = register
 module.exports.session = session
 

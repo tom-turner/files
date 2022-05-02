@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { register } from '../lib/api'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useLogin } from "../lib/useLogin"
 
 let Register = () => {
+	let { loggedIn, error, login } = useLogin()
+	const navigate = useNavigate()
 	const [ username, setUsername ] = useState(null)
 	const [ password, setPassword ] = useState(null)
 	const [ match, setMatch ] = useState(null)
@@ -28,6 +31,12 @@ let Register = () => {
 			return window.location.href = '/login'
 		}
 	}
+
+	useEffect(() => {
+    	if (loggedIn) {
+      		navigate('/')
+    	}
+  	}, [loggedIn])
 
 	return (
 		<div className="relative flex w-full h-screen bg-gray-100 overflow-hidden justify-center items-center">
