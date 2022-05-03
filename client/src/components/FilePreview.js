@@ -1,8 +1,8 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getFileData, getFileContent } from '../lib/api'
+import { getFileData, getFileContent, getSharedFile, getSharedFileContent } from '../lib/api'
 import { downloadFromUrl } from '../lib/download'
-import { Loading } from "./Loading"
+import { Loading, Error } from "./Alerts"
 import ServerCheck from "../components/ServerCheck"
 import IconByType from './IconByType'
 import {ReactComponent as DownloadIcon}  from '../assets/download.svg';
@@ -52,20 +52,10 @@ let ContentPreview = ({fileData, url, className}) => {
 
 }
 
-let FilePreview = () => {
-	const params = useParams()
-	const fileId = params['*']
-	const [ fileData, setFileData ] = useState(null)
-	const fileContentUrl = `${getApiBase()}/getFile/${fileId}/content`
+export function PageLayout({fileData, fileContentUrl}) {
+	const navigate = useNavigate();
 
-	useEffect(() => {
-		;(async () => {
-	    let fileData = await getFileData(fileId)
-	    setFileData(fileData)
-		})()
-	},[fileId])
-
-  if (fileData === null || fileData === undefined)
+	if (fileData === null || fileData === undefined)
     return <Loading />
 
   if (fileContentUrl === null || fileContentUrl === undefined)
@@ -74,7 +64,7 @@ let FilePreview = () => {
 	return (
 		<div className="bg-black bg-opacity-80 relative w-full relative min-h-screen overflow-scroll mx-auto flex flex-col justify-center space-y-3">
 			
-			<p onClick={ ()=>{ window.location.href = fileData.user_file_path } } className="absolute w-full h-screen cursor-pointer inset-0 text-right text-white px-6 py-2 font-bold text-2xl">x</p>
+			<p onClick={ ()=>{ navigate(-1) } } className="absolute w-full h-screen cursor-pointer inset-0 text-right text-white px-6 py-2 font-bold text-2xl">x</p>
 			
 			<div className="absolute top-0 left-1/3 z-0 h-screen rounded-full animate-[spin_8s_linear_infinite] w-96 bg-green-400 blur-3xl"> </div>
       <div className="absolute top-0 right-1/3 z-0 h-screen rounded-full animate-[spin_20s_linear_infinite] w-96 bg-indigo-400 blur-3xl"> </div>
@@ -92,4 +82,49 @@ let FilePreview = () => {
 	)
 }
 
-export default FilePreview
+export function FilePreview() {
+	const params = useParams()
+	const fileId = params['*']
+	const [ fileData, setFileData ] = useState(null)
+	const fileContentUrl = `${getApiBase()}/getFile/${fileId}/content`
+
+	useEffect(() => {
+		;(async () => {
+	    let fileData = await getFileData(fileId)
+	    setFileData(fileData)
+		})()
+	},[fileId])
+
+	return <PageLayout fileData={fileData} fileContentUrl={fileContentUrl} />
+
+}
+
+export function SharedFilePreview() {
+	const params = useParams()
+	const slug = params['slug']
+	const id = params['fileId']
+	const [ fileData, setFileData ] = useState(null)
+	const [ error, setError ] = useState(null)
+	const fileContentUrl = `${getApiBase()}/getShare/${slug}/${id}/content`
+	const getFile = async () => {
+		let result = await getSharedFile(slug, id)
+		if(result.error)
+			setError(result.error)
+
+		setFileData(result.file)
+	}
+
+	useEffect(() => { getFile() } ,[slug])
+
+	if(error)
+		return (
+			<Error error={error} />
+		)
+
+	return (
+		<PageLayout fileData={fileData} fileContentUrl={fileContentUrl}  />
+	)
+}
+
+
+
