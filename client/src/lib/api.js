@@ -244,6 +244,14 @@ let deleteTag = async (tag, callback) => {
     .then(res => callback(res.json()) )
 }
 
+let removeTag = async (fileId, tagId) => {
+  http.post(`/removeTag/${fileId}`, null, JSON.stringify({
+      fileId: fileId,
+      tagId: tagId,
+    }))
+    .then(res => res.json() )
+}
+
 let deleteDir = async (id) => {
   const response = http.delete(`/deletedir/${id}`)
     .then(res => res.json())
@@ -299,6 +307,19 @@ let createShare = async (tag) => {
     .then( res =>  res.json() ) 
 }
 
+let renameFile = async (fileId, fileName) => {
+  return http.post(`/renameFile/${fileId}`, null, JSON.stringify({
+    fileName: fileName
+  })).then(res => res.json())
+}
+
+let renameTag = async (tagId, tagName, tagColour ) => {
+  return http.post(`/renameTag/${tagId}`, null, JSON.stringify({
+    tagName: tagName,
+    tagColour: tagColour
+  })).then(res => res.json())
+}
+
 let register = async (input) => {
   return http.post('/register', null, JSON.stringify({
     username: input.username,
@@ -321,6 +342,7 @@ module.exports.createDir = createDir
 module.exports.deleteFiles = deleteFiles
 module.exports.deleteTag = deleteTag
 module.exports.deleteDir = deleteDir
+module.exports.removeTag = removeTag
 module.exports.searchFiles = searchFiles
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
@@ -330,6 +352,8 @@ module.exports.getSharedFile = getSharedFile
 module.exports.getSharedFileContent = getSharedFileContent
 module.exports.createTag = createTag
 module.exports.createShare = createShare
+module.exports.renameFile = renameFile
+module.exports.renameTag = renameTag
 module.exports.register = register
 module.exports.session = session
 

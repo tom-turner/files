@@ -60,6 +60,24 @@ routes.put('/uploadFile/:id/content',
   require('./routes/upload-file-content')
 );
 
+routes.post('/removeTag/:id',
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-file-owner'),
+  require('./routes/remove-tag')
+);
+
+routes.post('/renameFile/:id',
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-file-owner'),
+  require('./routes/rename-file')
+);
+
+routes.post('/renameTag/:id',
+  require('./middleware/is-authenticated'),
+  require('./middleware/is-file-owner'),
+  require('./routes/rename-tag')
+);
+
 routes.post('/uploadFile',
   require('./middleware/is-authenticated'),
   require('./routes/upload-file')
