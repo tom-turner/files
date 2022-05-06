@@ -10,6 +10,8 @@ import {ReactComponent as Grid}  from '../../assets/grid.svg';
 import {ReactComponent as List}  from '../../assets/list.svg';
 import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
 import {ReactComponent as AddTag}  from '../../assets/add-tag.svg';
+import {ReactComponent as Menu}  from '../../assets/menu.svg';
+import { Dropdown, DropdownItem, DropdownSplit } from '../Dropdown.js'
 
 let handleTagShare = ({ slug }) => {
 	alert(`share url: ${window.location.protocol}//${window.location.host}/share/${slug}`)
@@ -34,56 +36,44 @@ let handleFileShare = async ( selectedFiles, refresh ) => {
 
 let FileUploadButton = (props) => {
 	let fileUpload = useRef()
+	let folderUpload = useRef()
+
 	return (
-		<div onClick={() => { fileUpload.current.click() }} className="flex space-x-3 bg-green-500 hover:bg-indigo-500 px-4 py-2 rounded-lg cursor-pointer">
-			<UploadIcon className={'w-6 h-6 my-auto fill-white'} />
-			<p className="my-auto text-white"> Upload Files </p>
-			<input type="file" ref={fileUpload} className={'hidden ' + props.className} onChange={props.onChange} />
+		<div>
+			<DropdownSplit onClick={() => { fileUpload.current.click() }} title='Upload Files' img={UploadIcon} >
+					<DropdownItem title='Upload Files' onClick={() => { fileUpload.current.click() }} />
+					<DropdownItem title='Upload Folder'onClick={() => { folderUpload.current.click() }} />
+					<DropdownItem title='Create Tag' />
+			</DropdownSplit>
+			<input multiple type="file" ref={fileUpload} className={'hidden ' + props.className} onChange={props.onChange} />
+			<input webkitdirectory="" mozdirectory="" type="file" ref={folderUpload} className={'hidden ' + props.className} onChange={props.onChange} />
 		</div>
 	)
 }
 
 let TagActions = ({selectedTag, refresh}) => {
 	return (
-		<div className="flex space-x-3">
 
-			<button>
-				<Share onClick={ async () => handleTagShare( await createShare(selectedTag) ) } className="fill-gray-600 w-8 h-8  my-auto" />
-			</button>
-			
-			<button>
-				<Delete onClick={ () => deleteTag(selectedTag, async result => refresh())} className="fill-gray-600 w-8 h-8  my-auto" />
-			</button>
-
-		</div>
+		<Dropdown title="Actions" img={Menu}>
+			<DropdownItem title='Share' onClick={ async () => handleTagShare( await createShare(selectedTag) ) } />
+			<DropdownItem title='Rename' />
+			<DropdownItem title='Delete' onClick={ async () => deleteTag(selectedTag, async result => refresh()) } />
+		</ Dropdown>	
 	)
 }
 
 let FileActions = ({selectedFiles, refresh}) => {
 	return (
-		<div className="flex space-x-3">
-
-			<button>
-				<Share onClick={ async () => handleFileShare(selectedFiles, refresh) } className="fill-gray-600 w-8 h-8  my-auto" />
-			</button>
-
-			<button onClick={ () => createTag(selectedFiles, null, null, async result => refresh()) }> 
-				<AddTag className="fill-gray-600 w-8 h-8  my-auto" refresh={refresh} />
-			</button>
-
-			<button onClick={ () => { downloadAllFromUrl(selectedFiles) } } > 
-				<DownloadIcon className="fill-gray-600 w-8 h-8  my-auto" />
-			</button>
-			
-			<button>
-				<Delete onClick={ () => deleteFiles(selectedFiles, async result => refresh())} className="fill-gray-600 w-8 h-8  my-auto" />
-			</button>
-
-		</div>
+		<Dropdown title="Actions" img={Menu}>
+			<DropdownItem title='Share' onClick={ async () => handleFileShare(selectedFiles, refresh) } />
+			<DropdownItem title='Add Tag' onClick={  async () => createTag(selectedFiles, null, null, async result => refresh()) } />
+			<DropdownItem title='Download' onClick={ async () => downloadAllFromUrl(selectedFiles) } />
+			<DropdownItem title='Delete' onClick={ async () => deleteFiles(selectedFiles, async result => refresh()) } />
+		</ Dropdown>			
 	)
 }
 
-let ActionButtons = ({ selectedFiles, selectedTag, refresh }) => {
+let ActionsMenu = ({ selectedFiles, selectedTag, refresh }) => {
 	if(selectedFiles.length !== 0)
 		return <FileActions selectedFiles={selectedFiles} refresh={refresh} />
 
@@ -97,22 +87,21 @@ let ActionButtons = ({ selectedFiles, selectedTag, refresh }) => {
 let ToggleViewMode = ({setViewMode, viewMode}) => {
 	let [toggle, setToggle]= useState(viewMode == 'list' ? true : false)
 
-	let grid = <Grid className="fill-gray-600 w-8 h-8" />
-	let list = <List className="fill-gray-600 w-8 h-8" />
-
 	return ( 
-			<button onClick={() => { setToggle(!toggle); setViewMode(toggle ? 'grid' : 'list') }}>
-				{ viewMode === 'list' ? list : grid} 
-			</button>
+		<DropdownSplit onClick={() => { setToggle(!toggle); setViewMode(toggle ? 'grid' : 'list') }} title='' img={ viewMode === 'list' ? List : Grid} >
+					<DropdownItem title='Grid' onClick={ () => { setViewMode('grid') }} />
+					<DropdownItem title='List' onClick={ () => { setViewMode('list') }}/>
+		</DropdownSplit>
 	)
 }
 
-let Actions = ({ selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh }) => {
+let Actions = ({className, selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh }) => {
 	return (
-		<div className="max-w-screen flex w-full justify-between space-x-3">
+		<div className={`max-w-screen flex w-full justify-between space-x-3 ` + className}>
 			<FileUploadButton onChange={handleFileUpload} />
+
 			<div className={'flex flex-grow justify-end space-x-3'}>
-				<ActionButtons selectedFiles={selectedFiles} selectedTag={selectedTag} refresh={refresh} />
+				<ActionsMenu selectedFiles={selectedFiles} selectedTag={selectedTag} refresh={refresh} />
 				<ToggleViewMode setViewMode={setViewMode} viewMode={viewMode} />
 			</div>
 		</div>

@@ -257,13 +257,8 @@ let deleteDir = async (id) => {
     .then(res => res.json())
 }
 
-let searchFiles = async (query) => {
+let getFiles = async (query) => {
   return http.get(`/searchFiles/?search=${query}`)
-    .then(res => res.json())
-}
-
-let getFiles = async (path) => {
-  return http.get(`/getFiles/${path}`)
     .then(res => res.json())
 }
 
@@ -282,7 +277,7 @@ let getSharedFiles = async (slug) => {
     .then(res => res.json())
 }
 
-let getSharedFile = async (slug, id) => {
+let getSharedFileData = async (slug, id) => {
   return http.get(`/getShare/${slug}/${id}`)
     .then(res => res.json())
 }
@@ -343,12 +338,11 @@ module.exports.deleteFiles = deleteFiles
 module.exports.deleteTag = deleteTag
 module.exports.deleteDir = deleteDir
 module.exports.removeTag = removeTag
-module.exports.searchFiles = searchFiles
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
 module.exports.getSharedFiles = getSharedFiles
-module.exports.getSharedFile = getSharedFile
+module.exports.getSharedFileData = getSharedFileData
 module.exports.getSharedFileContent = getSharedFileContent
 module.exports.createTag = createTag
 module.exports.createShare = createShare

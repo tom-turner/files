@@ -2,12 +2,14 @@ import { useContext } from "react";
 import {ReactComponent as Avatar}  from '../../assets/avatar.svg';
 import {ReactComponent as SearchIcon}  from '../../assets/searchicon.svg';
 import { AuthenticationContext } from "../../lib/withAuthentication"
+import { Dropdown, DropdownItem } from '../Dropdown.js'
 
-let SearchBar = ({className, search}) => {
+let SearchBar = ({className, search, tagsList}) => {
 	return (
-		<div className={ "relative w-full flex rounded-lg border overflow-hidden bg-gray-100 flex flex-grow " + className} >
-			<SearchIcon className="absolute top-2 left-2.5 w-7 fill-gray-400" />
-			<input type='search' className="py-2 pr-4 pl-12 flex bg-gray-100 flex-grow" placeholder="Search by file or tag name" onChange={search} />
+		<div className={ "relative w-full flex rounded-lg border border-zinc-300 shadow-sm bg-white overflow-hidden flex flex-grow " + className} >
+			<SearchIcon className="absolute top-2 left-3 w-6 fill-gray-400" />
+			<input type='search' className=" py-1 pr-3 pl-11 flex flex-grow bg-white" placeholder="Search" onChange={search} />
+			{tagsList}
 		</div>
 	)
 }
@@ -15,15 +17,16 @@ let SearchBar = ({className, search}) => {
 let Profile = () =>{
 	const { logout } = useContext(AuthenticationContext)
 	return (
-		<button onClick={logout} className="relative flex rounded-lg h-full group overflow-hidden bg-gray-200 shadow-md rounded-full justify-center items-center">
-			<div className="absolute z-10 top-5 flex w-16 h-20 bg-gray-500 group-hover:bg-indigo-500 animate-[spin_8s_linear_infinite] blur"></div>
-			<div className="absolute z-0 left-15 flex w-16 h-20 bg-gray-400 group-hover:bg-indigo-400 animate-[spin_20s_linear_infinite] blur"></div>
-			<Avatar className="z-40 fill-gray-800 group-hover:fill-white w-12 h-12" />
-		</button>
+
+		<Dropdown title="" img={Avatar} style={{ background: 'bg-white border border-zinc-300 shadow-sm', hover:'hover:bg-zinc-200', fill: 'fill-gray-400' }}>
+			<DropdownItem title='My Account' />
+			<DropdownItem title='Logout' onClick={logout} />
+		</Dropdown>
+
 	)
 }
 
-let Header = ({search}) => {
+let Header = ({search, tagsList}) => {
 
 	let handleSearch = (e) => {
 		let query = e.target.value
@@ -31,8 +34,9 @@ let Header = ({search}) => {
 	}
 
 	return (
-		<div className="text-xl border shadow-inner flex px-6 py-3 space-x-3">
-			<SearchBar className="" search={handleSearch} />
+		<div className="text-xl border shadow-inner flex px-6 py-3 space-x-3 bg-zinc-50">
+			<Profile />
+			<SearchBar className="" search={handleSearch} tagsList={tagsList} />
 		</div>
 	)
 } 

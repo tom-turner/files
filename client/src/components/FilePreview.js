@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getFileData, getFileContent, getSharedFile, getSharedFileContent } from '../lib/api'
+import { getFileData, getFileContent, getSharedFileData, getSharedFileContent } from '../lib/api'
 import { downloadFromUrl } from '../lib/download'
 import { Loading, Error } from "./Alerts"
 import ServerCheck from "../components/ServerCheck"
@@ -107,7 +107,7 @@ export function SharedFilePreview() {
 	const [ error, setError ] = useState(null)
 	const fileContentUrl = `${getApiBase()}/getShare/${slug}/${id}/content`
 	const getFile = async () => {
-		let result = await getSharedFile(slug, id)
+		let result = await getSharedFileData(slug, id)
 		if(result.error)
 			setError(result.error)
 

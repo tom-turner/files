@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import IconByType from '../IconByType'
+import {ReactComponent as Delete}  from '../../assets/delete-cross.svg';
+import { removeTag } from '../../lib/api'
 
-let Tag = ({tag, active}) => {
+let Tag = ({tag, active, file}) => {
 	if(!tag)
 		return
 
 	return (
-		<div className={"px-4 text-white rounded-full rounded-tl-md py-1 whitespace-nowrap flex justify-center border-4 " +( active ? 'border-green-200 shadow-lg ' : 'border-gray-100 ' ) } style={{backgroundColor: tag.tag_colour}} >
+		<div className={"px-4 cursor-auto group text-white rounded-full rounded-tl-md py-1 whitespace-nowrap flex justify-center border-4 " +( active ? 'border-green-200 shadow-lg ' : 'border-gray-100 ' ) } style={{backgroundColor: tag.tag_colour}} >
 			<p>{tag.tag_name}</p>
+			<Delete className="w-3 h-3 my-auto mx-auto group-hover:inline hidden ml-3 fill-white cursor-pointer" onClick={ () => { removeTag(file.id, tag.id) } } />
 		</div>
 	)
 }
@@ -42,7 +45,7 @@ let FileComponent = ({file, selectedFiles, setSelectedFiles, className, viewMode
 
 	const tags = file.fileTags.map((tag) =>{
 		return (
-			<Tag tag={tag} active={active} />
+			<Tag tag={tag} active={active} file={file} />
 		)
 	})
 
