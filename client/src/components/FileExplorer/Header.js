@@ -18,7 +18,7 @@ let Profile = () =>{
 	const { logout } = useContext(AuthenticationContext)
 	return (
 
-		<Dropdown title="" img={Avatar} style={{ outer: 'bg-white border border-zinc-300 shadow-sm', inner:'hover:bg-zinc-200', img: 'fill-gray-400' }}>
+		<Dropdown title="" img={Avatar} style={{ outer: 'bg-white border border-zinc-300 shadow-sm ', inner:'hover:bg-zinc-200', img: 'fill-gray-400' }}>
 			<DropdownItem title='My Account' />
 			<DropdownItem title='Logout' onClick={logout} />
 		</Dropdown>
@@ -34,7 +34,7 @@ let Header = ({search, tagsList}) => {
 	}
 
 	return (
-		<div className="text-xl border shadow-inner flex px-6 py-3 space-x-3 bg-zinc-50">
+		<div className="text-xl shadow-inner flex px-3 sm:px-6 pt-3 space-x-3 bg-zinc-50">
 			<Profile />
 			<SearchBar className="" search={handleSearch} tagsList={tagsList} />
 		</div>

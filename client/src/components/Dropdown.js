@@ -16,8 +16,8 @@ export function Dropdown(props) {
 
 	return (
 		<div className={`rounded-lg text-white flex overflow-hidden z-50 ${style.outer} ${props.className}`} >
-			<div onClick={ () => { setToggle(!toggle)} } className={`flex cursor-pointer h-full my-auto  py-2 px-1 hover:bg-green-600 ${style.inner}`}>
-				<props.img className={`w-6 h-6 fill-white my-auto mx-1 ${style.img}`} />
+			<div onClick={ () => { setToggle(!toggle)} } className={`flex cursor-pointer h-full my-auto p-2 hover:bg-green-600 min-w-full ${style.inner}`}>
+				<props.img className={`w-6 h-6 fill-white ${style.img}`} />
 				{ props.title ? <p className="my-auto pl-1 font-semibold pr-3 hidden sm:inline">{props.title}</p> : ''}
 			</div>
 			<HiddenList children={props.children} toggle={toggle} setToggle={setToggle} />
@@ -32,7 +32,7 @@ export function DropdownSplit(props) {
 
 	return (
 		<div className={`rounded-lg text-white flex overflow-hidden ${style.outer} ${props.className}`} >
-			<div onClick={props.onClick} className={`flex cursor-pointer my-auto py-2 px-3  hover:bg-green-600 ${style.inner}`}>
+			<div onClick={props.onClick} className={`flex cursor-pointer my-auto py-2 px-3 hover:bg-green-600 ${style.inner}`}>
 				<props.img className={`w-6 h-6 fill-white ${style.img}`} />
 				{ props.title ? <p className="my-auto font-semibold pl-3 hidden sm:inline">{props.title}</p> : ''}
 			</div>

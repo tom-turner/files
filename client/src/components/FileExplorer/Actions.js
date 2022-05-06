@@ -4,6 +4,7 @@ import { deleteFiles, deleteDir, getFiles, getFileContent, createTag, deleteTag,
 import { getApiBase } from '../../lib/apiBase'
 import { downloadAllFromUrl } from '../../lib/download'
 import {ReactComponent as Delete}  from '../../assets/delete.svg';
+import {ReactComponent as Exit}  from '../../assets/exit.svg';
 import {ReactComponent as Share}  from '../../assets/share.svg';
 import {ReactComponent as DownloadIcon}  from '../../assets/download.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
@@ -12,6 +13,7 @@ import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
 import {ReactComponent as AddTag}  from '../../assets/add-tag.svg';
 import {ReactComponent as Menu}  from '../../assets/menu.svg';
 import { Dropdown, DropdownItem, DropdownSplit } from '../Dropdown.js'
+import { BlockPicker } from 'react-color';
 
 let handleTagShare = ({ slug }) => {
 	alert(`share url: ${window.location.protocol}//${window.location.host}/share/${slug}`)
@@ -38,15 +40,25 @@ let FileShareForm = ({selectedFiles, refresh, setPopupContent}) =>{
 	let [tagName, setTagName ] = useState('')
 	let [tagColour, setTagColour ] = useState('#6365f1')
 
+	let title = selectedFiles.length > 1 ? 'Share these files' : 'Share this file'
+
 	return(
-		<div className="flex flex-col p-6 space-y-6">
-			<h2 className="text-2xl">New File Share</h2>
-			<div className="flex space-x-1">
-				<input className="border rounded-lg px-3 py-1" placeholder="Name" type="text" onChange={ (e) => { setTagName(e.target.value) } } />
-				<input className="border rounded-lg bg-zink-100 my-auto" type="color" value={tagColour} onChange={ (e) => { setTagColour(e.target.value) } } />
+		<div className="flex flex-col">
+			<div className="flex justify-between w-full border bg-zinc-50 py-3 px-6">
+				<h2 className="text-2xl">{title}</h2>
+				<Exit onClick={ () => setPopupContent(null) } className="my-auto w-3 h-3 fill-gray-800 cursor-pointer" />
 			</div>
 
-			<button className={"bg-indigo-500 text-white rounded-lg py-1"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent) } >Create</button>
+			<div className="flex flex-col space-y-6 p-6 max-w-md">
+				<p>{` ${selectedFiles.length} file${selectedFiles.length > 1 ? 's' : ''} selected - Share your files using Tags. Sharing files will create a shared Tag for you. Anyone with a link can view this file. `}</p>
+				<input className="border border-2 rounded-r-full rounded-b-full px-3 py-1" style={{borderColor: tagColour}} placeholder="Name your Tag" type="text" onChange={ (e) => { setTagName(e.target.value) } } />
+				<div className="w-full flex justify-center">
+					<BlockPicker width="75%" type="color" color={tagColour} onChange={ (e) => { setTagColour(e.hex) } } />
+				</div>
+				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent) } >Create</button>
+			</div>
+
+			
 		</div>
 
 	)
@@ -56,17 +68,24 @@ export function NewTagForm({ selectedFiles, refresh, setPopupContent }){
 	let [tagName, setTagName ] = useState('')
 	let [tagColour, setTagColour ] = useState('#6365f1')
 
+	let title = selectedFiles.length > 1 ? 'Tag these files' : 'Tag this file'
+
 	return(
-		<div className="flex flex-col p-6 space-y-6">
-		<h2 className="text-2xl">Tag File</h2>
-			<div className="flex space-x-1">
-				<input className="border rounded-lg px-3 py-1" placeholder="Name" type="text" onChange={ (e) => { setTagName(e.target.value) } } />
-				<input className="border rounded-lg bg-zink-100 my-auto" type="color" value={tagColour} onChange={ (e) => { setTagColour(e.target.value) } } />
+		<div className="flex flex-col">
+			<div className="flex justify-between w-full border bg-zinc-50 py-3 px-6">
+				<h2 className="text-2xl">{title}</h2>
+				<Exit onClick={ () => setPopupContent(null) } className="my-auto w-3 h-3 fill-gray-800 cursor-pointer" />
 			</div>
 
-			<button className={"bg-indigo-500 text-white rounded-lg py-1"} onClick={ () => createTag(selectedFiles, tagName, tagColour, async (result) => { refresh() }) } >Create</button>
+			<div className="flex flex-col space-y-6 p-6 max-w-md">
+				<p>{` ${selectedFiles.length} file${selectedFiles.length > 1 ? 's' : ''} selected - Tag files so you can organize them. The file will not be shared until you share the Tag.`}</p>
+				<input className="border border-2 rounded-r-full rounded-b-full px-3 py-1" style={{borderColor: tagColour}} placeholder="Name your Tag." type="text" onChange={ (e) => { setTagName(e.target.value) } } />
+				<div className="w-full flex justify-center">
+					<BlockPicker width="75%" type="color" color={tagColour} onChange={ (e) => { setTagColour(e.hex) } } />
+				</div>
+				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent) } >Create</button>
+			</div>
 		</div>
-
 	)
 }
 
@@ -125,15 +144,15 @@ let ToggleViewMode = ({setViewMode, viewMode}) => {
 
 	return ( 
 		<DropdownSplit onClick={() => { setToggle(!toggle); setViewMode(toggle ? 'grid' : 'list') }} title='' img={ viewMode === 'list' ? List : Grid} >
-					<DropdownItem title='Grid' onClick={ () => { setViewMode('grid') }} />
-					<DropdownItem title='List' onClick={ () => { setViewMode('list') }}/>
+			<DropdownItem title='Grid' onClick={ () => { setViewMode('grid') }} />
+			<DropdownItem title='List' onClick={ () => { setViewMode('list') }}/>
 		</DropdownSplit>
 	)
 }
 
 let Actions = ({className, selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh, setPopupContent }) => {
 	return (
-		<div className={`max-w-screen flex w-full justify-between space-x-3 ` + className}>
+		<div className={`max-w-screen flex w-full justify-between space-x-3 p-3 sm:px-6 bg-zinc-50 ` + className}>
 			<FileUploadButton onChange={handleFileUpload} />
 
 			<div className={'flex flex-grow justify-end space-x-3'}>

@@ -45,7 +45,7 @@ export function Files({files, dirs, setSelectedFiles, selectedFiles, selectedTag
   });
 
   return (
-    <div className="flex-grow px-6 py-3 flex flex-col space-y-6 z-20">
+    <div className="overflow-y-scroll border flex-grow px-3 sm:px-6 py-3 flex flex-col space-y-6 z-20">
         <div className={"w-full grid " + ( viewMode == "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
           {listDirs}
           {listFiles}
@@ -59,13 +59,12 @@ export function FileExplorer() {
   const params = useParams()
   const path = params['*']
   const query = window.location.search
-  const [ viewType, setViewType ]= useState(null)
+  const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
   const [ files, setFiles ]= useState([])
   const [ dirs, setDirs ]= useState([])
   const [ tags, setTags ]= useState([])
   const [ selectedFiles, setSelectedFiles ] = useState([])
   const [ selectedTag, setSelectedTag ] = useState({})
-  const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
   const [ progress, setProgress ] = useState(0)
   const [ uploadError, setUploadError ] = useState(null)
   const { logout } = useContext(AuthenticationContext)
@@ -113,10 +112,10 @@ export function FileExplorer() {
   let tagsList = <Tags tags={tags} selectedTag={selectedTag} setSelectedTag={setSelectedTag} setSelectedFiles={setSelectedFiles} search={updateFileList} />
 
   return (
-    <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-clip mx-auto flex flex-col">
+    <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen max-h-screen overflow-clip mx-auto flex flex-col">
       <Header search={updateFileList} tagsList={tagsList} />
-      <Actions className="px-6 py-3" selectedFiles={selectedFiles} selectedTag={selectedTag} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={updateFileList} setPopupContent={setPopupContent} />
-      <Files files={files} dirs={dirs} setSelectedFiles={setSelectedFiles} selectedFiles={selectedFiles} viewMode={viewMode} setSelectedTag={setSelectedTag} search={updateFileList} progress={progress} uploadError={uploadError} />
+      <Actions selectedFiles={selectedFiles} selectedTag={selectedTag} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={updateFileList} setPopupContent={setPopupContent} />
+      <Files files={files} dirs={dirs} setSelectedFiles={setSelectedFiles} selectedFiles={selectedFiles} viewMode={viewMode} setSelectedTag={setSelectedTag} search={updateFileList} progress={progress} uploadError={uploadError}  />
       <ServerCheck />
       <Popup content={popupContent} setPopupContent={setPopupContent} />
     </div>
