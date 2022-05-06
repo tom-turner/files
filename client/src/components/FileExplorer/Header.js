@@ -18,7 +18,7 @@ let Profile = () =>{
 	const { logout } = useContext(AuthenticationContext)
 	return (
 
-		<Dropdown title="" img={Avatar} style={{ background: 'bg-white border border-zinc-300 shadow-sm', hover:'hover:bg-zinc-200', fill: 'fill-gray-400' }}>
+		<Dropdown title="" img={Avatar} style={{ outer: 'bg-white border border-zinc-300 shadow-sm', inner:'hover:bg-zinc-200', img: 'fill-gray-400' }}>
 			<DropdownItem title='My Account' />
 			<DropdownItem title='Logout' onClick={logout} />
 		</Dropdown>

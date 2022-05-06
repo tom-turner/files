@@ -13,6 +13,7 @@ import { AuthenticationContext } from "../../lib/withAuthentication"
 import {ReactComponent as Delete}  from '../../assets/delete.svg';
 import IconByType from '../IconByType'
 import { Error } from "../Alerts"
+import { Popup } from "../Popup"
 
 export function Tags({tags, selectedTag, setSelectedTag, setSelectedFiles, search}){
   const listTags = tags.map((tag) => {
@@ -54,8 +55,6 @@ export function Files({files, dirs, setSelectedFiles, selectedFiles, selectedTag
   )
 }
 
-
-
 export function FileExplorer() {
   const params = useParams()
   const path = params['*']
@@ -70,6 +69,7 @@ export function FileExplorer() {
   const [ progress, setProgress ] = useState(0)
   const [ uploadError, setUploadError ] = useState(null)
   const { logout } = useContext(AuthenticationContext)
+  const [ popupContent, setPopupContent ] = useState(null)
   const updateFileList = async (e) => {
     let result = await getFiles( e || '' , path)
     setSelectedFiles([])
@@ -77,6 +77,7 @@ export function FileExplorer() {
     setFiles(result.files)
     setDirs(result.dirs)
     setTags(result.tags)
+    setPopupContent(null)
   }
 
   useEffect( () => { updateFileList() } , [path]);
@@ -114,9 +115,10 @@ export function FileExplorer() {
   return (
     <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen overflow-clip mx-auto flex flex-col">
       <Header search={updateFileList} tagsList={tagsList} />
-      <Actions className="px-6 py-3" selectedFiles={selectedFiles} selectedTag={selectedTag} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={updateFileList} />
+      <Actions className="px-6 py-3" selectedFiles={selectedFiles} selectedTag={selectedTag} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={updateFileList} setPopupContent={setPopupContent} />
       <Files files={files} dirs={dirs} setSelectedFiles={setSelectedFiles} selectedFiles={selectedFiles} viewMode={viewMode} setSelectedTag={setSelectedTag} search={updateFileList} progress={progress} uploadError={uploadError} />
       <ServerCheck />
+      <Popup content={popupContent} setPopupContent={setPopupContent} />
     </div>
   )
 }

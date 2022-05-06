@@ -18,8 +18,8 @@ let handleTagShare = ({ slug }) => {
 
 }
 
-let handleFileShare = async ( selectedFiles, refresh ) => {
-	createTag(selectedFiles, null, null, async result => {
+let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPopupContent ) => {
+	createTag(selectedFiles, tagName, tagColour, async result => {
 		let body = await result
 		
 		if(!body.tag.tagId)
@@ -34,6 +34,43 @@ let handleFileShare = async ( selectedFiles, refresh ) => {
 
 }
 
+let FileShareForm = ({selectedFiles, refresh, setPopupContent}) =>{
+	let [tagName, setTagName ] = useState('')
+	let [tagColour, setTagColour ] = useState('#6365f1')
+
+	return(
+		<div className="flex flex-col p-6 space-y-6">
+			<h2 className="text-2xl">New File Share</h2>
+			<div className="flex space-x-1">
+				<input className="border rounded-lg px-3 py-1" placeholder="Name" type="text" onChange={ (e) => { setTagName(e.target.value) } } />
+				<input className="border rounded-lg bg-zink-100 my-auto" type="color" value={tagColour} onChange={ (e) => { setTagColour(e.target.value) } } />
+			</div>
+
+			<button className={"bg-indigo-500 text-white rounded-lg py-1"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent) } >Create</button>
+		</div>
+
+	)
+}
+
+export function NewTagForm({ selectedFiles, refresh, setPopupContent }){
+	let [tagName, setTagName ] = useState('')
+	let [tagColour, setTagColour ] = useState('#6365f1')
+
+	return(
+		<div className="flex flex-col p-6 space-y-6">
+		<h2 className="text-2xl">Tag File</h2>
+			<div className="flex space-x-1">
+				<input className="border rounded-lg px-3 py-1" placeholder="Name" type="text" onChange={ (e) => { setTagName(e.target.value) } } />
+				<input className="border rounded-lg bg-zink-100 my-auto" type="color" value={tagColour} onChange={ (e) => { setTagColour(e.target.value) } } />
+			</div>
+
+			<button className={"bg-indigo-500 text-white rounded-lg py-1"} onClick={ () => createTag(selectedFiles, tagName, tagColour, async (result) => { refresh() }) } >Create</button>
+		</div>
+
+	)
+}
+
+
 let FileUploadButton = (props) => {
 	let fileUpload = useRef()
 	let folderUpload = useRef()
@@ -43,7 +80,6 @@ let FileUploadButton = (props) => {
 			<DropdownSplit onClick={() => { fileUpload.current.click() }} title='Upload Files' img={UploadIcon} >
 					<DropdownItem title='Upload Files' onClick={() => { fileUpload.current.click() }} />
 					<DropdownItem title='Upload Folder'onClick={() => { folderUpload.current.click() }} />
-					<DropdownItem title='Create Tag' />
 			</DropdownSplit>
 			<input multiple type="file" ref={fileUpload} className={'hidden ' + props.className} onChange={props.onChange} />
 			<input webkitdirectory="" mozdirectory="" type="file" ref={folderUpload} className={'hidden ' + props.className} onChange={props.onChange} />
@@ -51,7 +87,7 @@ let FileUploadButton = (props) => {
 	)
 }
 
-let TagActions = ({selectedTag, refresh}) => {
+let TagActions = ({selectedTag, refresh, setPopupContent}) => {
 	return (
 
 		<Dropdown title="Actions" img={Menu}>
@@ -62,23 +98,23 @@ let TagActions = ({selectedTag, refresh}) => {
 	)
 }
 
-let FileActions = ({selectedFiles, refresh}) => {
+let FileActions = ({selectedFiles, refresh, setPopupContent}) => {
 	return (
 		<Dropdown title="Actions" img={Menu}>
-			<DropdownItem title='Share' onClick={ async () => handleFileShare(selectedFiles, refresh) } />
-			<DropdownItem title='Add Tag' onClick={  async () => createTag(selectedFiles, null, null, async result => refresh()) } />
+			<DropdownItem title='Share' onClick={ async () => setPopupContent( < FileShareForm selectedFiles={selectedFiles} refresh={refresh} setPopupContent={setPopupContent} /> )  } />
+			<DropdownItem title='Add Tag' onClick={  async () => setPopupContent( < NewTagForm selectedFiles={selectedFiles} refresh={refresh} setPopupContent={setPopupContent} /> ) } />
 			<DropdownItem title='Download' onClick={ async () => downloadAllFromUrl(selectedFiles) } />
 			<DropdownItem title='Delete' onClick={ async () => deleteFiles(selectedFiles, async result => refresh()) } />
 		</ Dropdown>			
 	)
 }
 
-let ActionsMenu = ({ selectedFiles, selectedTag, refresh }) => {
+let ActionsMenu = ({ selectedFiles, selectedTag, refresh, setPopupContent }) => {
 	if(selectedFiles.length !== 0)
-		return <FileActions selectedFiles={selectedFiles} refresh={refresh} />
+		return <FileActions selectedFiles={selectedFiles} refresh={refresh} setPopupContent={setPopupContent} />
 
 	if(Object.keys(selectedTag).length !== 0)
-		return <TagActions selectedTag={selectedTag} refresh={refresh} />
+		return <TagActions selectedTag={selectedTag} refresh={refresh} setPopupContent={setPopupContent} />
 
 	return
 
@@ -95,13 +131,13 @@ let ToggleViewMode = ({setViewMode, viewMode}) => {
 	)
 }
 
-let Actions = ({className, selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh }) => {
+let Actions = ({className, selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh, setPopupContent }) => {
 	return (
 		<div className={`max-w-screen flex w-full justify-between space-x-3 ` + className}>
 			<FileUploadButton onChange={handleFileUpload} />
 
 			<div className={'flex flex-grow justify-end space-x-3'}>
-				<ActionsMenu selectedFiles={selectedFiles} selectedTag={selectedTag} refresh={refresh} />
+				<ActionsMenu selectedFiles={selectedFiles} selectedTag={selectedTag} refresh={refresh} setPopupContent={setPopupContent} />
 				<ToggleViewMode setViewMode={setViewMode} viewMode={viewMode} />
 			</div>
 		</div>

@@ -36,7 +36,7 @@ let TagComponent = ({tag, selectedTag, setSelectedTag, className, setSelectedFil
 	}
 
 	return (
-		<div draggable="true" onClick={clickFunc} className={"flex px-4 py-1 rounded-full rounded-tl-md text-sm text-white space-x-3 cursor-pointer border-4 " + ( active ? "border-green-500 " : "border-white" )} style={{backgroundColor: tag.tag_colour}}>
+		<div draggable="true" onClick={clickFunc} className={"truncate flex px-4 py-1 rounded-full rounded-tl-md text-sm text-white space-x-3 cursor-pointer border-4 " + ( active ? "border-green-500 " : "border-white" )} style={{backgroundColor: tag.tag_colour}}>
       <p> {tag.tag_name} </p>
     </div>
 	)
