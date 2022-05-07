@@ -1,5 +1,7 @@
 require('dotenv').config();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT
+if(!PORT)
+  return console.error('\x1b[33m%s\x1b[0m', 'You must create a .env file!!! consult README.md or contact the developer if you run into issues.')
 const express = require('express')
 const app = express()
 const http = require('http').Server(app);

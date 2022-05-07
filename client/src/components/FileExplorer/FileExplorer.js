@@ -54,6 +54,7 @@ export function FileExplorer() {
   const params = useParams()
   const path = params['*']
   const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
+  const [ error, setError ]= useState(null)
   const [ files, setFiles ]= useState([])
   const [ dirs, setDirs ]= useState([])
   const [ tags, setTags ]= useState([])
@@ -64,6 +65,9 @@ export function FileExplorer() {
   const [ popupContent, setPopupContent ] = useState(null)
   const updateFileList = async (e) => {
     let result = await getFiles( e || '' , path)
+    if(result.error) 
+      return setError(result.error)
+
     setSelectedFiles([])
     setSelectedTag({})
     setFiles(result.files)

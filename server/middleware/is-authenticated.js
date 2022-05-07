@@ -14,7 +14,7 @@ let isAuthenticated = async (req, res, next) => {
 
   jwt.verify(token, tokenSecret, async (err, user) => {
     if (err)
-      return res.status(401).json({ auth: false, error: 'Stupid JWT error', redirect: '/login'});
+      return res.status(401).json({ auth: false, error: 'Invalid auth token', redirect: '/login'});
 
     let userExists = await Users.findBy({ id: user.id })
 
