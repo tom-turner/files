@@ -9,8 +9,8 @@ import {ReactComponent as Pdf}  from '../assets/pdf.svg';
 import {ReactComponent as Video}  from '../assets/video.svg';
 import {ReactComponent as Dir}  from '../assets/directory.svg';
 
-let IconByBroadType = ({className, fileType}) => {
-	let broadType = fileType.split('/')[0]
+let IconByBroadType = ({className, filetype}) => {
+	let broadType = filetype.split('/')[0]
 
 	switch (broadType){
 		case 'text':
@@ -29,12 +29,12 @@ let IconByBroadType = ({className, fileType}) => {
 			return <Dir className={className} />
 			break;
 		default: 
-			return <DefaultFileIcon className={className} fileType={fileType} />
+			return <DefaultFileIcon className={className} filetype={filetype} />
 	}
 }
 
-let IconByType = ({className, fileType}) => {
-	switch (fileType){
+let IconByType = ({className, filetype}) => {
+	switch (filetype){
 		case 'text/csv':
 			return <Csv className={className} />
 			break;
@@ -45,7 +45,7 @@ let IconByType = ({className, fileType}) => {
 			return <Pdf className={className} />
 			break;
 		default: 
-			return <IconByBroadType className={className} fileType={fileType} />
+			return <IconByBroadType className={className} filetype={filetype} />
 	}	
 }
 

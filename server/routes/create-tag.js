@@ -22,7 +22,7 @@ module.exports = async (req,res) => {
 
   let joinExists = await JoinFilesTags.findBy({ file_id: fileId, tag_id: tag.id, user_id: res.locals.user.id })
   if(joinExists)
-    return res.status(401).json({ message: 'join exists already', tagId: joinExists.tag_id }) 
+    return res.status(200).json({ message: 'join exists already', tagId: joinExists.tag_id }) 
   
   let newJoin = await JoinFilesTags.create({
     user_id: res.locals.user.id,

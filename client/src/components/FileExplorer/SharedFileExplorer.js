@@ -45,7 +45,7 @@ export function SharedFileExplorer() {
     console.log(file)
     return (
     <div className={"relative flex overflow-hidden break-words cursor-pointer " + ( viewMode == 'grid' ? 'flex-col' : 'flex-row' ) } onClick={ () => { navigate(`/share/${slug}/${file.id}`) } }>
-      <IconByType fileType={file.file_type} className={"z-50 p-2 mx-auto w-12 md:w-24 rounded-lg " + (viewMode == 'grid' ? 'w-16 md:w-24 m-2' : 'w-20 md:w-36' )} />
+      <IconByType filetype={file.file_type} className={"z-50 p-2 mx-auto w-12 md:w-24 rounded-lg " + (viewMode == 'grid' ? 'w-16 md:w-24 m-2' : 'w-20 md:w-36' )} />
       
       <p className={"my-auto z-50 w-full underline px-4 " + (viewMode == 'grid' ? 'text-center' : 'text-left' )}>{file.user_file_name }</p>
       

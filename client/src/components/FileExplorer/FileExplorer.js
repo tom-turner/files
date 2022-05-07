@@ -18,7 +18,7 @@ import { Popup } from "../Popup"
 export function Tags({tags, selectedTag, setSelectedTag, setSelectedFiles, search}){
   const listTags = tags.map((tag) => {
     return (
-        <TagComponent tag={tag} selectedTag={selectedTag} setSelectedTag={setSelectedTag} setSelectedFiles={setSelectedFiles} search={search} />
+        <TagComponent key={tag.id} tag={tag} selectedTag={selectedTag} setSelectedTag={setSelectedTag} setSelectedFiles={setSelectedFiles} search={search} />
     )
   });
 
@@ -33,7 +33,7 @@ export function Files({files, dirs, setSelectedFiles, selectedFiles, selectedTag
 
   const listFiles = files.map((file) => {
     return (
-      <FileComponent file={file} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} className={''} viewMode={viewMode} setSelectedTag={setSelectedTag}   />
+      <FileComponent key={file.id} file={file} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} className={''} viewMode={viewMode} setSelectedTag={setSelectedTag}   />
     )
   });
 

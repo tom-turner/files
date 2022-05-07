@@ -29,14 +29,14 @@ let Image = ({fileData, url, className}) => {
 }
 
 let Default = ({fileData, url, className}) => {
-	return ( <IconByType fileType={fileData.file_type || '' } className={className} />
+	return ( <IconByType filetype={fileData.file_type || '' } className={className} />
 	)
 }
 
 let ContentPreview = ({fileData, url, className}) => {
-	let fileType = fileData.file_type ? fileData.file_type.split('/')[0] : {}
+	let filetype = fileData.file_type ? fileData.file_type.split('/')[0] : {}
 
-	switch(fileType){
+	switch(filetype){
 		case 'audio':
 			return <Audio fileData={fileData} url={url} className={className} />
 			break;
