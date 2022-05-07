@@ -1,9 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getFileData, getFileContent, getSharedFileData, getSharedFileContent } from '../lib/api'
+import { getFileData, getSharedFileData } from '../lib/api'
 import { downloadFromUrl } from '../lib/download'
 import { Loading, Error } from "./Alerts"
-import ServerCheck from "../components/ServerCheck"
 import IconByType from './IconByType'
 import {ReactComponent as DownloadIcon}  from '../assets/download.svg';
 let { getApiBase } = require('../lib/apiBase')
@@ -23,7 +22,7 @@ let Video = ({fileData, url, className}) => {
 let Image = ({fileData, url, className}) => {
 	return (
 		<object data={url} type={fileData.file_type} className={className}>
-  		<img src={url}/>
+  		<img src={url} alt={fileData.user_file_name} />
 		</object>	
 	)
 }
@@ -39,13 +38,13 @@ let ContentPreview = ({fileData, url, className}) => {
 	switch(filetype){
 		case 'audio':
 			return <Audio fileData={fileData} url={url} className={className} />
-			break;
+			
 		case 'video':
 			return <Video fileData={fileData} url={url} className={className} />
-			break;
+
 		case 'image':
 			return <Image fileData={fileData} url={url} className={className}/>
-			break;
+
 		default:
 			return <Default fileData={fileData} url={url} className={className}/>
 	}

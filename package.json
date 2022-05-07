@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server/index.js",
     "client": "cd client && npm run start",
+    "build": "npm install --build-from-source --python=/usr/bin/python3 && cd client && npm i",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db-up": "db-migrate up",
     "db-down": "db-migrate down"

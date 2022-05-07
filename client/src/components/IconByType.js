@@ -15,19 +15,19 @@ let IconByBroadType = ({className, filetype}) => {
 	switch (broadType){
 		case 'text':
 			return <Text className={className} />
-			break;
+
 		case 'audio':
 			return <Audio className={className} />
-			break;
+
 		case 'image':
 			return <Image className={className} />
-			break;
+
 		case 'video':
 			return <Video className={className} />
-			break;
+
 		case 'directory':
 			return <Dir className={className} />
-			break;
+
 		default: 
 			return <DefaultFileIcon className={className} filetype={filetype} />
 	}
@@ -37,13 +37,13 @@ let IconByType = ({className, filetype}) => {
 	switch (filetype){
 		case 'text/csv':
 			return <Csv className={className} />
-			break;
+
 		case 'application/zip':
 			return <Zip className={className} />
-			break;
+
 		case 'application/pdf':
 			return <Pdf className={className} />
-			break;
+
 		default: 
 			return <IconByBroadType className={className} filetype={filetype} />
 	}	

@@ -1,22 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { serverCheck } from '../lib/api'
 
-let ServerOkMsg = ({data}) => {
-  let [ className, setClassName ] = useState('')
-
+let ServerMsg = (props) => {
   return (
-    <div className={"z-50 w-full duration-300 p-3 " + className}>
-      <p className="bg-green-500 rounded-lg p-2 text-center mx-auto text-white text-lg"> Server OK </p>
-    </div>
-  )
-}
-
-let ServerErrorMsg = ({error}) => {
-  let [ className, setClassName ] = useState('')
-
-  return (
-    <div className={"z-50 w-full duration-300 p-3" + className}>
-      <p className="bg-red-400 rounded-lg p-2 text-center mx-auto text-white text-lg">{ `Error Connecting To Server - ${error}` }</p>
+    <div className={"z-50 w-full duration-300 p-3 " }>
+      <p className={`rounded-lg p-2 text-center mx-auto text-white text-lg ${props.className}`}> {props.message} </p>
     </div>
   )
 }
@@ -29,17 +17,16 @@ let ServerCheck = () => {
     serverCheck((response) => {
       if (response.error){
         setError(response.error)
-        alert(response.error)
       } else {
-        setData(response.data)
+        setData(response.message)
       }
     })
   }, []);
 
   if(error){
-    return <ServerErrorMsg error={error} />
+    return <ServerMsg className="bg-red-400" message={`Error Connecting To Server - ${error}`} />
   } else {
-    return <ServerOkMsg data={data} />
+    return <ServerMsg className="bg-green-400" message={`${data}`} />
   }
 }
 

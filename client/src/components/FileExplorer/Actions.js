@@ -1,23 +1,16 @@
 import { useState, useRef } from 'react'
-import { Link } from "react-router-dom"
-import { deleteFiles, deleteDir, getFiles, getFileContent, createTag, deleteTag, createShare } from '../../lib/api'
-import { getApiBase } from '../../lib/apiBase'
+import { deleteFiles, createTag, deleteTag, createShare } from '../../lib/api'
 import { downloadAllFromUrl } from '../../lib/download'
-import {ReactComponent as Delete}  from '../../assets/delete.svg';
 import {ReactComponent as Exit}  from '../../assets/exit.svg';
-import {ReactComponent as Share}  from '../../assets/share.svg';
-import {ReactComponent as DownloadIcon}  from '../../assets/download.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
 import {ReactComponent as List}  from '../../assets/list.svg';
 import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
-import {ReactComponent as AddTag}  from '../../assets/add-tag.svg';
 import {ReactComponent as Menu}  from '../../assets/menu.svg';
 import { Dropdown, DropdownItem, DropdownSplit } from '../Dropdown.js'
 import { BlockPicker } from 'react-color';
 
 let handleTagShare = ({ slug }) => {
 	alert(`share url: ${window.location.protocol}//${window.location.host}/share/${slug}`)
-
 }
 
 let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPopupContent ) => {
@@ -57,7 +50,6 @@ let FileShareForm = ({selectedFiles, refresh, setPopupContent}) =>{
 				</div>
 				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent) } >Create</button>
 			</div>
-
 			
 		</div>
 
@@ -140,7 +132,7 @@ let ActionsMenu = ({ selectedFiles, selectedTag, refresh, setPopupContent }) => 
 }
 
 let ToggleViewMode = ({setViewMode, viewMode}) => {
-	let [toggle, setToggle]= useState(viewMode == 'list' ? true : false)
+	let [toggle, setToggle]= useState(viewMode === 'list' ? true : false)
 
 	return ( 
 		<DropdownSplit onClick={() => { setToggle(!toggle); setViewMode(toggle ? 'grid' : 'list') }} title='' img={ viewMode === 'list' ? List : Grid} >

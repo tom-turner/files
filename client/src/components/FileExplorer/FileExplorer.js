@@ -1,7 +1,6 @@
-import { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react";
 import UploadProgress from "./UploadProgress"
-import { uploadFile, uploadFiles, getFiles, getSharedFiles, deleteFile, deleteDir } from "../../lib/api"
+import { uploadFiles, getFiles } from "../../lib/api"
 import useStickyState from "../../lib/useStickyState"
 import Header from "./Header"
 import Actions from "./Actions"
@@ -9,10 +8,6 @@ import FileComponent from "./FileComponent"
 import TagComponent from "./TagComponent"
 import ServerCheck from "../ServerCheck"
 import { useParams } from "react-router-dom";
-import { AuthenticationContext } from "../../lib/withAuthentication"
-import {ReactComponent as Delete}  from '../../assets/delete.svg';
-import IconByType from '../IconByType'
-import { Error } from "../Alerts"
 import { Popup } from "../Popup"
 
 export function Tags({tags, selectedTag, setSelectedTag, setSelectedFiles, search}){
@@ -46,7 +41,7 @@ export function Files({files, dirs, setSelectedFiles, selectedFiles, selectedTag
 
   return (
     <div className="overflow-y-scroll border flex-grow px-3 sm:px-6 py-3 flex flex-col space-y-6 z-20">
-        <div className={"w-full grid " + ( viewMode == "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
+        <div className={"w-full grid " + ( viewMode === "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
           {listDirs}
           {listFiles}
           <UploadProgress progress={progress} error={uploadError} viewMode={viewMode} />
@@ -58,7 +53,6 @@ export function Files({files, dirs, setSelectedFiles, selectedFiles, selectedTag
 export function FileExplorer() {
   const params = useParams()
   const path = params['*']
-  const query = window.location.search
   const [ viewMode, setViewMode]= useStickyState('grid', 'viewMode')
   const [ files, setFiles ]= useState([])
   const [ dirs, setDirs ]= useState([])
@@ -67,7 +61,6 @@ export function FileExplorer() {
   const [ selectedTag, setSelectedTag ] = useState({})
   const [ progress, setProgress ] = useState(0)
   const [ uploadError, setUploadError ] = useState(null)
-  const { logout } = useContext(AuthenticationContext)
   const [ popupContent, setPopupContent ] = useState(null)
   const updateFileList = async (e) => {
     let result = await getFiles( e || '' , path)

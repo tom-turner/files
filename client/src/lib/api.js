@@ -1,5 +1,4 @@
 let { getApiBase } = require('./apiBase')
-let UpChunk = require('@mux/upchunk')
 
 class Http {
   constructor(base, headers) {
