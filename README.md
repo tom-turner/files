@@ -15,7 +15,7 @@
 	# Your back end port, this should match your back end .env.
 	REACT_APP_SERVER_PORT=5001
 3. run 'npm run build' in the apps root directory - this should install and build the back end and front end with all their dependancies.
-4. migrate the database with 'npx db-migrate up'
+4. migrate the database with 'npx db-migrate up -e production'
 
 ## Adding Database Migration
 

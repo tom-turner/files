@@ -27,5 +27,6 @@ export function getApiBase(hostname, protocol){
 	if(isPublicIP(hostname))
 		return `${protocol}//${hostname}:${backEndPort}`
 
-	return `${protocol}//api.${hostname}`
+	//return `${protocol}//api.${hostname}`
+	return `${protocol}//${hostname}:${backEndPort}`
 }
