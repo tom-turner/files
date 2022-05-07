@@ -47,7 +47,7 @@ let Register = () => {
 	        		<input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="p-2 rounded-md border bg-gray-100" />
 	        		<input type="password" onChange={(e) => setMatch(e.target.value === password ? true : false)} placeholder="Password" className="p-2 rounded-md border bg-gray-100" />
 	        		<input type="password" onChange={(e) => setToken(e.target.value)} placeholder="Register Token" title="hello" className="p-2 rounded-md border bg-gray-100" />
-	        		<button onClick={handleSubmit} class="font-bold hover:bg-indigo-500 border w-full rounded-md border bg-green-500 text-white px-4 py-2 ">Let's Go!</button>
+	        		<button onClick={handleSubmit} className="font-bold hover:bg-indigo-500 border w-full rounded-md border bg-green-500 text-white px-4 py-2 ">Let's Go!</button>
 	      		</div>
 	      		<Link to="/login" className="text-gray-600"> Or Login </Link>
       		</div>

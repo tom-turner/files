@@ -1,11 +1,11 @@
 const { Users } = require('../../models')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const tokenSecret = process.env.TOKEN_SECRET
+const registerSecret = process.env.REGISTER_SECRET
 
 module.exports = async function (req, res) {
   let user = await Users.findBy({ username: req.body.username })
-  let match = await bcrypt.compare(req.body.token, tokenSecret);
+  let match = req.body.token === registerSecret
 
   if (user)
     return res.status(500).json({error: 'Username exists'})

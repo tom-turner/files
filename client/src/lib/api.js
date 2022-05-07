@@ -252,7 +252,7 @@ let removeTag = async (fileId, tagId) => {
 }
 
 let deleteDir = async (id) => {
-  const response = http.delete(`/deletedir/${id}`)
+  return http.delete(`/deletedir/${id}`)
     .then(res => res.json())
 }
 

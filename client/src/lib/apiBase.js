@@ -15,14 +15,17 @@ let isLocal = (hostname) => {
 }
 
 export function getApiBase(hostname, protocol){
+	let backEndPort = process.env.REACT_APP_SERVER_PORT
 	hostname = hostname || window.location.hostname
 	protocol = protocol || window.location.protocol
 
+	console.log(process.env.REACT_APP_SERVER_PORT)
+
 	if(isLocal(hostname))
-		return `${protocol}//${hostname}:5001`
+		return `${protocol}//${hostname}:${backEndPort}`
 
 	if(isPublicIP(hostname))
-		return `${protocol}//${hostname}:5001`
+		return `${protocol}//${hostname}:${backEndPort}`
 
 	return `${protocol}//api.${hostname}`
 }
