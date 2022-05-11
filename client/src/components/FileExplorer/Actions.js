@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { deleteFiles, createTag, deleteTag, createShare } from '../../lib/api'
+import { getFiles, deleteFiles, createTag, deleteTag, createShare } from '../../lib/api'
 import { downloadAllFromUrl } from '../../lib/download'
 import {ReactComponent as Exit}  from '../../assets/exit.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
@@ -142,14 +142,14 @@ let ToggleViewMode = ({setViewMode, viewMode}) => {
 	)
 }
 
-let Actions = ({className, selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh, setPopupContent }) => {
+let Actions = ({ state, setState, handleFileUpload, setData }) => {
 	return (
-		<div className={`max-w-screen border-b flex w-full justify-between space-x-3 p-3 sm:px-6 bg-zinc-50 ` + className}>
+		<div className={`max-w-screen border-b flex w-full justify-between space-x-3 p-3 sm:px-6 bg-zinc-50 `}>
 			<FileUploadButton onChange={handleFileUpload} />
 
 			<div className={'flex flex-grow justify-end space-x-3'}>
-				<ActionsMenu selectedFiles={selectedFiles} selectedTag={selectedTag} refresh={refresh} setPopupContent={setPopupContent} />
-				<ToggleViewMode setViewMode={setViewMode} viewMode={viewMode} />
+				<ActionsMenu selectedFiles={state.selectedFiles} selectedTag={state.selectedTag} refresh={setData} setPopupContent={ (e) => setState({ popupContent: e }) } />
+				<ToggleViewMode setViewMode={ (e) => setState({ viewMode: e })} viewMode={state.viewMode} />
 			</div>
 		</div>
 	)

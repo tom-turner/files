@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Component } from "react";
 import { uploadFiles, getFiles } from "../../lib/api"
 import useStickyState from "../../lib/useStickyState"
 import Header from "./Header"
@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { Popup } from "../Popup"
 import { Loading, Error } from "../Alerts"
 
+/*
 export function FileExplorer() {
   const params = useParams()
   const path = params['*']
@@ -19,7 +20,7 @@ export function FileExplorer() {
   const [ selectedTag, setSelectedTag ] = useState(null)
   const [ progress, setProgress ] = useState(0)
   const [ popupContent, setPopupContent ] = useState(null)
-  const updateData = async (e) => {
+  const setData = async (e) => {
     let result = await getFiles( e || '' , path)
     setData(result)
     setSelectedFiles([])
@@ -27,7 +28,7 @@ export function FileExplorer() {
     setPopupContent(null)
   }
 
-  useEffect( () => { updateData() } , [path]);
+  useEffect( () => { setData() } , [path]);
 
   if(!data) {
     return <Loading />
@@ -51,7 +52,7 @@ export function FileExplorer() {
       
       if(e.success){
         setProgress({message:'Finishing up'})
-        updateData()
+        setData()
         setProgress(0)
       }
      
@@ -76,7 +77,7 @@ export function FileExplorer() {
   let handleTagClick = (e) => {
       setSelectedFiles([])
       if(e.clicked){
-        return updateData(e.tag.tag_name)
+        return setData(e.tag.tag_name)
       }
       if(e.active){
         setSelectedTag({})
@@ -96,12 +97,72 @@ export function FileExplorer() {
 
   return (
     <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => handleDrop(e) } className="w-full relative min-h-screen max-h-screen overflow-clip mx-auto flex flex-col">
-      <Header search={updateData} />
-      <Actions selectedFiles={selectedFiles} selectedTag={selectedTag} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={updateData} setPopupContent={setPopupContent} />
-      <Tags data={data} selectedTag={selectedTag} handleTagClick={handleTagClick} search={updateData} />
-      <Files data={data} selectedFiles={selectedFiles} viewMode={viewMode} handleFileClick={handleFileClick} search={updateData} progress={progress} />
+      <Header search={setData} />
+      <Actions selectedFiles={selectedFiles} selectedTag={selectedTag} setViewMode={setViewMode} viewMode={viewMode} handleFileUpload={handleFileUpload} refresh={setData} setPopupContent={setPopupContent} />
+      <Tags data={data} selectedTag={selectedTag} handleTagClick={handleTagClick} search={setData} />
+      <Files data={data} selectedFiles={selectedFiles} viewMode={viewMode} handleFileClick={handleFileClick} search={setData} progress={progress} />
       <ServerCheck />
       <Popup content={popupContent} setPopupContent={setPopupContent} />
     </div>
   )
 }
+
+*/
+
+class FileExplorerTwo extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      viewMode: 'grid',
+      data : null,
+      selectedFiles: null,
+      selectedTag: null,
+      uploadProgress: 0,
+      popupContent: null,
+    }
+    this.setData()
+  }
+
+
+  async setData(event) {
+    this.setState({ data: await getFiles( event || '') })
+  }
+
+  async handleFileUpload(event) {
+    let files = event.target.files
+    if(files.length === 0)
+      return
+
+    this.setState({ uploadProgress: { message:'Upload starting' } })
+    uploadFiles(files, async (e) => {
+      if(e.error){
+        alert(e.error)
+        this.setState({ uploadProgress: { error: e.error } })
+      }
+      this.setState({ uploadProgress: { percent: e.progress, message:`${ Math.round(e.progress * 100) / 100}% done`} })
+      if(e.success){
+        this.setState({ uploadProgress: {message:'Finishing up'} })
+        this.setData()
+        this.setState({ uploadProgress: 0 })
+      }
+    })
+  }
+
+  render(){
+    if(!this.state.data)
+      return <Loading />
+  
+    if(this.state.data.error)
+      return <Error error={this.state.data.error} />
+
+    return (
+      <div className="w-full relative min-h-screen max-h-screen overflow-clip mx-auto flex flex-col">
+        <Header search={ (e) => this.setData(e) } />
+        <Actions state={this.state} setState={ (e) => { this.setState(e) }} handleFileUpload={ (e) => this.handleFileUpload(e) } setData={(e) => this.setData(e)} />
+        <Files state={this.state} setState={ (e) => { this.setState(e) }} handleFileClick={handleFileClick} search={ (e) => this.setData(e) } />
+      </div>
+    )
+  }
+}
+
+export default FileExplorerTwo

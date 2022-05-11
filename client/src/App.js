@@ -1,4 +1,4 @@
-import { FileExplorer } from "./components/FileExplorer/FileExplorer"
+import FileExplorerTwo from "./components/FileExplorer/FileExplorer"
 import { SharedFileExplorer } from "./components/FileExplorer/SharedFileExplorer"
 import { FilePreview, SharedFilePreview } from "./components/FilePreview"
 import Login from "./components/Login"
@@ -17,7 +17,7 @@ function App() {
 
       <Route element={ <AuthenticatedOutlet />}>
         <Route path="/file:/*" element={ <FilePreview /> } />
-        <Route path="/*" root element={ <FileExplorer /> } />
+        <Route path="/*" root element={ <FileExplorerTwo /> } />
       </Route>
     </Routes>
   </BrowserRouter>
