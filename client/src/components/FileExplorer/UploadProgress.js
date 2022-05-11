@@ -11,8 +11,8 @@ let ProgressBar = ({progress, message, className }) => {
 	)
 }
 
-let UploadProgress = ({ progress, viewMode, error }) => {
-	if(error)
+let UploadProgress = ({ progress, viewMode }) => {
+	if(progress.error)
 		return 
 
 	if (!progress)

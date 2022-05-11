@@ -121,10 +121,10 @@ let FileActions = ({selectedFiles, refresh, setPopupContent}) => {
 }
 
 let ActionsMenu = ({ selectedFiles, selectedTag, refresh, setPopupContent }) => {
-	if(selectedFiles.length !== 0)
+	if(selectedFiles && selectedFiles.length !== 0)
 		return <FileActions selectedFiles={selectedFiles} refresh={refresh} setPopupContent={setPopupContent} />
 
-	if(Object.keys(selectedTag).length !== 0)
+	if(selectedTag)
 		return <TagActions selectedTag={selectedTag} refresh={refresh} setPopupContent={setPopupContent} />
 
 	return
@@ -144,7 +144,7 @@ let ToggleViewMode = ({setViewMode, viewMode}) => {
 
 let Actions = ({className, selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh, setPopupContent }) => {
 	return (
-		<div className={`max-w-screen flex w-full justify-between space-x-3 p-3 sm:px-6 bg-zinc-50 ` + className}>
+		<div className={`max-w-screen border-b flex w-full justify-between space-x-3 p-3 sm:px-6 bg-zinc-50 ` + className}>
 			<FileUploadButton onChange={handleFileUpload} />
 
 			<div className={'flex flex-grow justify-end space-x-3'}>

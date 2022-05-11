@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import {ReactComponent as Avatar}  from '../../assets/avatar.svg';
 import {ReactComponent as SearchIcon}  from '../../assets/searchicon.svg';
-import { AuthenticationContext } from "../../lib/withAuthentication"
+import { AuthenticationContext } from "../../context/withAuthentication"
 import { Dropdown, DropdownItem } from '../Dropdown.js'
 
 let SearchBar = ({className, search, tagsList}) => {

@@ -4,7 +4,7 @@ import { FilePreview, SharedFilePreview } from "./components/FilePreview"
 import Login from "./components/Login"
 import Register from "./components/Register"
 import { Routes, Route, BrowserRouter, Outlet } from "react-router-dom";
-import {withAuthentication} from "./lib/withAuthentication";
+import {withAuthentication} from "./context/withAuthentication";
 const AuthenticatedOutlet = withAuthentication(Outlet)
 
 function App() {
