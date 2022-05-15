@@ -19,8 +19,6 @@ export function getApiBase(hostname, protocol){
 	hostname = hostname || window.location.hostname
 	protocol = protocol || window.location.protocol
 
-	console.log(process.env.REACT_APP_SERVER_PORT)
-
 	if(isLocal(hostname))
 		return `${protocol}//${hostname}:${backEndPort}`
 

@@ -24,7 +24,7 @@ let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPop
 			let share = await createShare({ id: body.tag.tagId })	
 			alert(`share url: ${window.location.protocol}//${window.location.host}/share/${share.slug}/${body.fileId}`)
 		}
-
+		setPopupContent(null)
 		refresh()
 	})
 }
