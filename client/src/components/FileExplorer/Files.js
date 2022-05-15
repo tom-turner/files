@@ -44,20 +44,23 @@ export function FileComponent({file, selectedFiles, handleFileClick,  viewMode})
 }
 
 
-export function Files({ data, selectedFiles, selectedTag, viewMode, handleFileClick, search, progress}){
-	let files = data.files
+export function Files({ state, setState, handleFileClick }){
+	let files = state.data.files
+
+	if(!files)
+		return 
 
   const listFiles = files.map((file) => {
     return (
-      <FileComponent key={file.id} file={file} selectedFiles={selectedFiles} viewMode={viewMode} handleFileClick={handleFileClick}  />
+      <FileComponent key={file.id} file={file} selectedFiles={state.selectedFiles} viewMode={state.viewMode} handleFileClick={handleFileClick}  />
     )
   });
 
   return (
     <div className="overflow-y-scroll flex-grow px-3 sm:px-6 py-3 flex flex-col space-y-6 z-20">
-        <div className={"w-full grid " + ( viewMode === "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
+        <div className={"w-full grid " + ( state.viewMode === "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
           {listFiles}
-          <UploadProgress progress={progress} viewMode={viewMode} />
+          <UploadProgress progress={state.uploadProgress} viewMode={state.viewMode} />
         </div>
     </div>
   )

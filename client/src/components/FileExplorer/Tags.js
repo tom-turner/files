@@ -7,14 +7,10 @@ export function TagComponent({tag, selectedTag, handleTagClick, className, searc
 	let [ clicked, setClicked ] = useState(false)
 
 	useEffect(() => {
-		if (!selectedTag)
-			return 
-
 		selectedTag.id === tag.id ? setActive(true) : setActive(false)
 	}, [selectedTag] )
 
 	let clickFunc = () => {
-			console.log(clicked)
       handleTagClick({ tag, clicked, active })
       setClicked(true)
       setTimeout(() => {
@@ -33,22 +29,6 @@ export function TagComponent({tag, selectedTag, handleTagClick, className, searc
 	)
 }
 
-export function Tags({data, selectedTag, handleTagClick, search}){
-  let tags = data.tags
-  
-  const listTags = tags.map((tag) => {
-    return (
-        <TagComponent key={tag.id} tag={tag} selectedTag={selectedTag} handleTagClick={handleTagClick} search={search} />
-    )
-  });
-
-  return (
-    <div className="my-auto px-3 sm:px-6 py-3 flex space-x-1 overflow-x-clip z-20">
-      {listTags}
-    </div>
-  )
-}
-
 export function Tag({tag, file}){
 	if(!tag)
 		return
@@ -60,4 +40,24 @@ export function Tag({tag, file}){
 		</div>
 	)
 }
+
+export function Tags({ state, setState, handleTagClick }){
+  let tags = state.data.tags
+
+  if(!tags)
+  	return
+  
+  const listTags = tags.map((tag) => {
+    return (
+        <TagComponent key={tag.id} tag={tag} selectedTag={ state.selectedTag } handleTagClick={ (e) => handleTagClick(e) } search={ (e) => state.setData(e) } />
+    )
+  });
+
+  return (
+    <div className="my-auto px-3 sm:px-6 py-3 flex space-x-1 overflow-x-clip z-20">
+      {listTags}
+    </div>
+  )
+}
+
 

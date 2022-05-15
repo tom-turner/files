@@ -8,8 +8,9 @@ import {ReactComponent as DownloadIcon}  from '../assets/download.svg';
 let { getApiBase } = require('../lib/apiBase')
 
 let Audio = ({fileData, url, className}) => {
+	console.log(url)
 	return (
-		<audio controls  src={url} className={className}/>
+		<audio controls src={url} className={className}/>
 	)	
 }
 

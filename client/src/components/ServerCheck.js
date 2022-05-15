@@ -24,9 +24,9 @@ let ServerCheck = () => {
   }, []);
 
   if(error){
-    return <ServerMsg className="bg-red-400" message={`Error Connecting To Server - ${error}`} />
+    return <ServerMsg className="bg-red-500" message={`Error Connecting To Server - ${error}`} />
   } else {
-    return <ServerMsg className="bg-green-400" message={`${data}`} />
+    return <ServerMsg className="bg-green-500" message={`${data}`} />
   }
 }
 

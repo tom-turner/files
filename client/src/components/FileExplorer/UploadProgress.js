@@ -12,11 +12,11 @@ let ProgressBar = ({progress, message, className }) => {
 }
 
 let UploadProgress = ({ progress, viewMode }) => {
-	if(progress.error)
-		return 
-
 	if (!progress)
 		return
+	
+	if(progress.error)
+		return 
 	
 	return(
 			<div className={"relative flex overflow-hidden break-words cursor-pointer " + (viewMode === 'grid' ? 'flex-col ' : 'flex-row ') } >
