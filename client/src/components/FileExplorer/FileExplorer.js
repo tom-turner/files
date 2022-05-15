@@ -83,6 +83,12 @@ class FileExplorer extends Component {
       }    
   }
 
+  handleDrop = (e) => {
+    e.target = e.dataTransfer
+    e.preventDefault()
+    this.handleFileUpload(e)
+  }
+
   render(){
     if(!this.state.data)
       return <Loading />
@@ -91,7 +97,7 @@ class FileExplorer extends Component {
       return <Error error={this.state.data.error} />
 
     return (
-      <div className="w-full relative min-h-screen max-h-screen overflow-clip mx-auto flex flex-col">
+      <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => this.handleDrop(e) } className="w-full relative min-h-screen max-h-screen overflow-clip mx-auto flex flex-col">
         <Header search={ (e) => this.setData(e) } />
         <Actions state={this.state} setState={ (e) => { this.setState(e) }} handleFileUpload={ (e) => this.handleFileUpload(e) } />
         <Tags state={this.state} setState={ (e) => { this.setState(e) }} handleTagClick={ (e) => this.handleTagClick(e) } />
