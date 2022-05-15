@@ -1,4 +1,4 @@
-import { FileExplorer } from "./components/FileExplorer/FileExplorer"
+import FileExplorer from "./components/FileExplorer/FileExplorer"
 import { SharedFileExplorer } from "./components/FileExplorer/SharedFileExplorer"
 import { FilePreview, SharedFilePreview } from "./components/FilePreview"
 import Login from "./components/Login"

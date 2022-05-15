@@ -13,20 +13,20 @@ let handleTagShare = ({ slug }) => {
 	alert(`share url: ${window.location.protocol}//${window.location.host}/share/${slug}`)
 }
 
-let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPopupContent ) => {
+let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPopupContent, shareing ) => {
 	createTag(selectedFiles, tagName, tagColour, async result => {
 		let body = await result
 		
 		if(!body.tag.tagId)
 			return
 
-		let share = await createShare({ id: body.tag.tagId })
-
-		alert(`share url: ${window.location.protocol}//${window.location.host}/share/${share.slug}/${body.fileId}`)
+		if(shareing){
+			let share = await createShare({ id: body.tag.tagId })	
+			alert(`share url: ${window.location.protocol}//${window.location.host}/share/${share.slug}/${body.fileId}`)
+		}
 
 		refresh()
 	})
-
 }
 
 let FileShareForm = ({selectedFiles, refresh, setPopupContent}) =>{
@@ -48,7 +48,7 @@ let FileShareForm = ({selectedFiles, refresh, setPopupContent}) =>{
 				<div className="w-full flex justify-center">
 					<BlockPicker width="75%" type="color" color={tagColour} onChange={ (e) => { setTagColour(e.hex) } } />
 				</div>
-				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent) } >Create</button>
+				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent, true) } >Create</button>
 			</div>
 			
 		</div>
@@ -75,7 +75,7 @@ export function NewTagForm({ selectedFiles, refresh, setPopupContent }){
 				<div className="w-full flex justify-center">
 					<BlockPicker width="75%" type="color" color={tagColour} onChange={ (e) => { setTagColour(e.hex) } } />
 				</div>
-				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent) } >Create</button>
+				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () => handleFileShare(selectedFiles, tagName, tagColour , refresh, setPopupContent, false) } >Create</button>
 			</div>
 		</div>
 	)
@@ -124,7 +124,7 @@ let ActionsMenu = ({ selectedFiles, selectedTag, refresh, setPopupContent }) => 
 	if(selectedFiles && selectedFiles.length !== 0)
 		return <FileActions selectedFiles={selectedFiles} refresh={refresh} setPopupContent={setPopupContent} />
 
-	if(selectedTag)
+	if(selectedTag && Object.entries(selectedTag).length !== 0)
 		return <TagActions selectedTag={selectedTag} refresh={refresh} setPopupContent={setPopupContent} />
 
 	return
@@ -142,14 +142,14 @@ let ToggleViewMode = ({setViewMode, viewMode}) => {
 	)
 }
 
-let Actions = ({className, selectedFiles, selectedTag, setViewMode, viewMode, handleFileUpload, refresh, setPopupContent }) => {
+let Actions = ({ state, setState, handleFileUpload }) => {
 	return (
-		<div className={`max-w-screen border-b flex w-full justify-between space-x-3 p-3 sm:px-6 bg-zinc-50 ` + className}>
+		<div className={`max-w-screen border-b flex w-full justify-between space-x-3 p-3 sm:px-6 bg-zinc-50 `}>
 			<FileUploadButton onChange={handleFileUpload} />
 
 			<div className={'flex flex-grow justify-end space-x-3'}>
-				<ActionsMenu selectedFiles={selectedFiles} selectedTag={selectedTag} refresh={refresh} setPopupContent={setPopupContent} />
-				<ToggleViewMode setViewMode={setViewMode} viewMode={viewMode} />
+				<ActionsMenu selectedFiles={state.selectedFiles} selectedTag={state.selectedTag} refresh={ (e) => { state.setData(e) }} setPopupContent={ (e) => setState({ popupContent: e }) } />
+				<ToggleViewMode setViewMode={ (e) =>  state.setViewMode(e) } viewMode={state.viewMode} />
 			</div>
 		</div>
 	)
