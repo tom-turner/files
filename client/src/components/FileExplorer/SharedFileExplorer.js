@@ -13,7 +13,7 @@ export function SharedFileExplorer() {
   const slug = params['slug']
   const [ error, setError ] = useState(null)
   const [ files, setFiles ] = useState([])
-  const [ viewMode, setViewMode]= useStickyState('list', 'viewMode')
+  const viewMode = 'grid'
   const updateFileList = async () => {
     let result = await getSharedFiles(slug)
 

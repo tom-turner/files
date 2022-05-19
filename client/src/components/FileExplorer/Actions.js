@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { deleteFiles, createTag, deleteTag, createShare } from '../../lib/api'
+import { deleteFiles, createTag, deleteTag, createShare, getSharedFiles } from '../../lib/api'
 import { downloadAllFromUrl } from '../../lib/download'
 import {ReactComponent as Exit}  from '../../assets/exit.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
@@ -9,8 +9,27 @@ import {ReactComponent as Menu}  from '../../assets/menu.svg';
 import { Dropdown, DropdownItem, DropdownSplit } from '../Dropdown.js'
 import { BlockPicker } from 'react-color';
 
+
+let CopyLink = ({ url, setPopupContent }) => {
+	return(
+		<div className="flex flex-col">
+			<div className="flex justify-between w-full border bg-zinc-50 py-3 px-6">
+				<h2 className="text-2xl">Your Link</h2>
+				<Exit onClick={ () => setPopupContent(null) } className="my-auto w-3 h-3 fill-gray-800 cursor-pointer" />
+			</div>
+
+			<div className="flex flex-col space-y-6 p-6 max-w-md">
+				<p> {url} </p>
+				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () =>  { navigator.clipboard.writeText(url); setPopupContent(null) } } >Copy</button>
+			</div>
+			
+		</div>
+
+	)
+}
+
 let handleTagShare = ({ slug }) => {
-	alert(`share url: ${window.location.protocol}//${window.location.host}/share/${slug}`)
+	return `${window.location.protocol}//${window.location.host}/share/${slug}`
 }
 
 let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPopupContent, shareing ) => {
@@ -22,9 +41,11 @@ let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPop
 
 		if(shareing){
 			let share = await createShare({ id: body.tag.tagId })	
-			alert(`share url: ${window.location.protocol}//${window.location.host}/share/${share.slug}/${body.fileId}`)
+			setPopupContent( <CopyLink url={`${window.location.protocol}//${window.location.host}/share/${share.slug}/${body.fileId}`} setPopupContent={setPopupContent}/> )
+		} else {
+			setPopupContent(null)
 		}
-		setPopupContent(null)
+		
 		refresh()
 	})
 }
@@ -32,7 +53,6 @@ let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPop
 let FileShareForm = ({selectedFiles, refresh, setPopupContent}) =>{
 	let [tagName, setTagName ] = useState('')
 	let [tagColour, setTagColour ] = useState('#6365f1')
-
 	let title = selectedFiles.length > 1 ? 'Share these files' : 'Share this file'
 
 	return(
@@ -102,7 +122,7 @@ let TagActions = ({selectedTag, refresh, setPopupContent}) => {
 	return (
 
 		<Dropdown title="Actions" img={Menu}>
-			<DropdownItem title='Share' onClick={ async () => handleTagShare( await createShare(selectedTag) ) } />
+			<DropdownItem title='Share' onClick={ async () => setPopupContent( <CopyLink url={handleTagShare(await createShare(selectedTag))} setPopupContent={setPopupContent} /> ) } />
 			<DropdownItem title='Rename' />
 			<DropdownItem title='Delete' onClick={ async () => deleteTag(selectedTag, async result => refresh()) } />
 		</ Dropdown>	
