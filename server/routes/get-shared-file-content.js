@@ -18,6 +18,11 @@ module.exports = async (req,res) => {
   if(!file)
     return res.status(401).send()
 
-  res.set('Content-Disposition', `attachment; filename="${file.user_file_name}"`)
-  res.download( __dirname + `/../../file_storage/${file.checksum}`)
+  console.log(file)
+
+  var src = __dirname + `/../../file_storage/${file.checksum}`;
+
+  res.setHeader('Content-disposition', 'attachment; filename=' + file.user_file_name);
+  res.setHeader('Content-type', file.file_type);
+  res.download(src, file.user_file_name)
 }
