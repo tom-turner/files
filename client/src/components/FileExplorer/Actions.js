@@ -8,7 +8,7 @@ import {ReactComponent as UploadIcon}  from '../../assets/upload.svg';
 import {ReactComponent as Menu}  from '../../assets/menu.svg';
 import { Dropdown, DropdownItem, DropdownSplit } from '../Dropdown.js'
 import { BlockPicker } from 'react-color';
-
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 let CopyLink = ({ url, setPopupContent }) => {
 	return(
@@ -20,7 +20,10 @@ let CopyLink = ({ url, setPopupContent }) => {
 
 			<div className="flex flex-col space-y-6 p-6 max-w-md">
 				<p> {url} </p>
-				<button className={"bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2"} onClick={ () =>  { navigator.clipboard.writeText(url); setPopupContent(null) } } >Copy</button>
+				<CopyToClipboard text={url}
+				onCopy={() => setPopupContent(null) }>
+				<button className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg py-2">Copy To Clipboard</button>
+				</CopyToClipboard>
 			</div>
 			
 		</div>
