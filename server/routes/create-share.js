@@ -1,4 +1,4 @@
-const { Shares, JoinSharesTags, Tags } = require('../../models')
+const { Shares, JoinSharesTags, Tags, Sharing } = require('../../models')
 
 module.exports = async (req,res) => {
   let tagId = req.params.id
@@ -13,12 +13,15 @@ module.exports = async (req,res) => {
 
   let slug = `share-${tag.id}`
 
-  if(tag.shared && tag.share_slug === slug )
-      return res.json({ slug: tag.share_slug})
+  let sharing = Sharing.findBy({ tag_id: tag.id })
 
-  await Tags.update( tag.id, {
+  if(sharing && sharing.share_slug === slug )
+      return res.json({ slug: sharing.share_slug})
+
+  await Sharing.create({
+    tag_id: tag.id,
     share_slug: slug,
-    shared: 1
+    public: req.params.public || 0
   })
 
   return res.json({ slug: slug })

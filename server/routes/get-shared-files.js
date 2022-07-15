@@ -1,9 +1,14 @@
-const { Files, Directories, JoinFilesTags, Tags } = require('../../models')
+const { Files, Directories, JoinFilesTags, Tags, Sharing } = require('../../models')
 
 module.exports = async (req,res) => {
   console.log('get shared files')
 
-  let tag = await Tags.findBy({ share_slug : req.params.slug })
+  let sharing = await Sharing.findBy({ share_slug : req.params.slug })
+
+  if(!sharing)
+    return res.status(401).json({ error: 'File is not shared' })
+
+  let tag = await Tags.findBy({ id : sharing.tag_id })
 
   if(!tag)
     return res.status(401).json({ error: 'File is not shared' })
