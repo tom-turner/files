@@ -180,7 +180,7 @@ class FileUploader {
 
 let uploadFileContent = async (file, serverData, callback) => {
   const uploader = new FileUploader({
-    url: `/uploadFile/${serverData.id}/content`,
+    url: `/upload-file/${serverData.id}/content`,
     // chunkSize: 2.5e+6,
     callback,
     retryLimit: 5,
@@ -190,13 +190,16 @@ let uploadFileContent = async (file, serverData, callback) => {
 }
 
 let uploadFile = async (file, callback) =>{
-  let data = await http.post('/uploadFile', null, JSON.stringify({
+  let data = await http.post('/upload-file', null, JSON.stringify({
     fileName: file.name,
     path: window.location.pathname,
     fileType: file.type,
     size: file.size,
     lastModified: file.lastModifiedDate,
   })).then(res => res.json())
+
+  if(data)
+    callback({ data: data })
 
   uploadFileContent(file, data, (e) => {
     callback(e)
@@ -211,18 +214,9 @@ let uploadFiles = async (files, callback) => {
   })
 }
 
-let createDir = (fileName) => {
-  http.post('/createDir', null, JSON.stringify({
-    fileName: fileName,
-    path: window.location.pathname,
-  }))
-    .then((res) => res.json())
-    .then((data) => { return window.location.reload() })
-    .catch((error) => { return alert(`error: ${error}`) })
-}
 
 let deleteFile = async (id) => {
-  const response = http.delete(`/deleteFile/${id}`)
+  const response = http.delete(`/delete-file/${id}`)
     .then(res => res.json())
 
   if (response)
@@ -231,64 +225,91 @@ let deleteFile = async (id) => {
 }
 
 let deleteFiles = async (files, callback) => {
+  console.log(files)
    Array.prototype.forEach.call(files, async (file) => {
-     http.delete(`/deleteFile/${file.id}`)
+     http.delete(`/delete-file/${file.id}`)
        .then(res => callback(res.json()) )
   });
 }
 
 let deleteTag = async (tag, callback) => {
   console.log(tag.id)
-  http.delete(`/deleteTag/${tag.id}`)
+  http.delete(`/delete-tag/${tag.id}`)
     .then(res => callback(res.json()) )
 }
 
 let removeTag = async (fileId, tagId) => {
-  http.post(`/removeTag/${fileId}`, null, JSON.stringify({
+  http.post(`/remove-tag`, null, JSON.stringify({
       fileId: fileId,
       tagId: tagId,
     }))
     .then(res => res.json() )
 }
 
-let deleteDir = async (id) => {
-  return http.delete(`/deletedir/${id}`)
-    .then(res => res.json())
-}
 
 let getFiles = async (query) => {
-  return http.get(`/searchFiles/?search=${query}`)
+  return http.get(`/search-files/?search=${query}`)
     .then(res => res.json())
 }
 
 let getFileData = async (fileId) => {
-  return http.get(`/getFile/${fileId}`)
+  return http.get(`/get-file/${fileId}`)
     .then(res => res.json())
 }
 
 let getFileContent = async (fileId) => {
-  return http.get(`/getFile/${fileId}/content`)
+  return http.get(`/get-file/${fileId}/content`)
     .then(res => res.body)
 }
 
 let getSharedFiles = async (slug) => {
-  return http.get(`/getShare/${slug}`)
+  return http.get(`/get-share/${slug}`)
     .then(res => res.json())
 }
 
 let getSharedFileData = async (slug, id) => {
-  return http.get(`/getShare/${slug}/${id}`)
+  return http.get(`/get-share/${slug}/${id}`)
     .then(res => res.json())
 }
 
 let getSharedFileContent = async (slug, id) => {
-  return http.get(`/getShare/${slug}/${id}/content`)
+  return http.get(`/get-share/${slug}/${id}/content`)
     .then(res => res.body)
 }
 
-let createTag = async (files, tagName, tagColour, callback) => {
+let getSharedTagsByUser = async (query) => {
+  return http.get(`/get-shared-tags-by-user`)
+    .then(res => res.json())
+}
+
+let getUsersBySharedTag = async (shareId) => {
+  return http.get(`/get-users-by-shared-tag/${shareId}`)
+    .then(res => res.json())
+}
+
+let getFilesBySharedTag = async (shareId) => {
+  return http.get(`/get-files-by-shared-tag/${shareId}`)
+    .then(res => res.json())
+}
+
+let getFilesByTag = async (tagId) => {
+  return http.get(`/get-files-by-tag/${tagId}`)
+    .then(res => res.json())
+}
+
+let getSharedTagById = async (shareId) => {
+  return http.get(`/get-tag-by-sharing-id/${shareId}`)
+    .then(res => res.json())
+}
+
+let getTagById = async (id) => {
+  return http.get(`/get-tag-by-id/${id}`)
+    .then(res => res.json())
+}
+
+let createTagFileJoin = async (files, tagName, tagColour, callback) => {
   Array.prototype.forEach.call(files, async (file) => {
-    return http.post(`/createTag/${file.id}`, null, JSON.stringify({
+    return http.post(`/create-tag-file-join`, null, JSON.stringify({
       fileId: file.id,
       tagName: tagName,
       tagColour: tagColour 
@@ -296,19 +317,32 @@ let createTag = async (files, tagName, tagColour, callback) => {
   })
 }
 
-let createShare = async (tag) => {
-  return http.post(`/createShare/${tag.id}`)
-    .then( res =>  res.json() ) 
+let createTagFileJoinByTagId = async (files, tagId, callback) => {
+  Array.prototype.forEach.call(files, async (file) => {
+    return http.post(`/create-tag-file-join`, null, JSON.stringify({
+      fileId: file.id,
+      tagId: tagId
+    })).then( async res => callback({ fileId: file.id, tag: await res.json() }) )
+  })
+}
+
+let createSharedTag = async (tagName, tagColour) => {
+  return http.post(`/create-shared-tag/`, null, JSON.stringify({
+      tagName: tagName,
+      tagColour: tagColour 
+  })).then( res =>  res.json() ) 
 }
 
 let renameFile = async (fileId, fileName) => {
-  return http.post(`/renameFile/${fileId}`, null, JSON.stringify({
+  return http.post(`/rename-file`, null, JSON.stringify({
+    fileId: fileId,
     fileName: fileName
   })).then(res => res.json())
 }
 
 let renameTag = async (tagId, tagName, tagColour ) => {
-  return http.post(`/renameTag/${tagId}`, null, JSON.stringify({
+  return http.post(`/rename-tag`, null, JSON.stringify({
+    tagId: tagId,
     tagName: tagName,
     tagColour: tagColour
   })).then(res => res.json())
@@ -332,10 +366,8 @@ let session = async (input) => {
 module.exports.serverCheck = serverCheck
 module.exports.uploadFile = uploadFile
 module.exports.uploadFiles = uploadFiles
-module.exports.createDir = createDir
 module.exports.deleteFiles = deleteFiles
 module.exports.deleteTag = deleteTag
-module.exports.deleteDir = deleteDir
 module.exports.removeTag = removeTag
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
@@ -343,11 +375,18 @@ module.exports.getFileContent = getFileContent
 module.exports.getSharedFiles = getSharedFiles
 module.exports.getSharedFileData = getSharedFileData
 module.exports.getSharedFileContent = getSharedFileContent
-module.exports.createTag = createTag
-module.exports.createShare = createShare
+module.exports.createTagFileJoin = createTagFileJoin
+module.exports.createTagFileJoinByTagId = createTagFileJoinByTagId
+module.exports.createSharedTag = createSharedTag
 module.exports.renameFile = renameFile
 module.exports.renameTag = renameTag
 module.exports.register = register
 module.exports.session = session
+module.exports.getSharedTagsByUser = getSharedTagsByUser
+module.exports.getUsersBySharedTag = getUsersBySharedTag
+module.exports.getFilesBySharedTag = getFilesBySharedTag
+module.exports.getFilesByTag = getFilesByTag
+module.exports.getSharedTagById = getSharedTagById
+module.exports.getTagById = getTagById
 
 

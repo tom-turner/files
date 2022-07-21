@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { deleteFiles, createTag, deleteTag, createShare, getSharedFiles } from '../../lib/api'
+import { deleteFiles, createTagFileJoin, deleteTag, createSharedTag, getSharedFiles } from '../../lib/api'
 import { downloadAllFromUrl } from '../../lib/download'
 import {ReactComponent as Exit}  from '../../assets/exit.svg';
 import {ReactComponent as Grid}  from '../../assets/grid.svg';
@@ -36,14 +36,14 @@ let handleTagShare = ({ slug }) => {
 }
 
 let handleFileShare = async ( selectedFiles, tagName, tagColour, refresh, setPopupContent, shareing ) => {
-	createTag(selectedFiles, tagName, tagColour, async result => {
+	createTagFileJoin(selectedFiles, tagName, tagColour, async result => {
 		let body = await result
 		
 		if(!body.tag.tagId)
 			return
 
 		if(shareing){
-			let share = await createShare({ id: body.tag.tagId })	
+			let share = await createSharedTag({ id: body.tag.tagId })	
 			setPopupContent( <CopyLink url={`${window.location.protocol}//${window.location.host}/share/${share.slug}/${body.fileId}`} setPopupContent={setPopupContent}/> )
 		} else {
 			setPopupContent(null)
@@ -125,7 +125,7 @@ let TagActions = ({selectedTag, refresh, setPopupContent}) => {
 	return (
 
 		<Dropdown title="Actions" img={Menu}>
-			<DropdownItem title='Share' onClick={ async () => setPopupContent( <CopyLink url={handleTagShare(await createShare(selectedTag))} setPopupContent={setPopupContent} /> ) } />
+			<DropdownItem title='Share' onClick={ async () => setPopupContent( <CopyLink url={handleTagShare(await createSharedTag(selectedTag))} setPopupContent={setPopupContent} /> ) } />
 			<DropdownItem title='Rename' />
 			<DropdownItem title='Delete' onClick={ async () => deleteTag(selectedTag, async result => refresh()) } />
 		</ Dropdown>	
@@ -167,7 +167,7 @@ let ToggleViewMode = ({setViewMode, viewMode}) => {
 
 let Actions = ({ state, setState, handleFileUpload }) => {
 	return (
-		<div className={`max-w-screen border-b flex w-full justify-between space-x-3 p-3 sm:px-6 bg-zinc-50 `}>
+		<div className={`max-w-screen flex w-full justify-between space-x-3 `}>
 			<FileUploadButton onChange={handleFileUpload} />
 
 			<div className={'flex flex-grow justify-end space-x-3'}>

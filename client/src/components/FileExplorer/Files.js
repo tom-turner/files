@@ -57,7 +57,7 @@ export function Files({ state, setState, handleFileClick }){
   });
 
   return (
-    <div className="overflow-y-scroll flex-grow px-3 sm:px-6 py-3 flex flex-col space-y-6 z-20">
+    <div className=" flex-grow flex flex-col space-y-6 z-20">
         <div className={"w-full grid " + ( state.viewMode === "list" ? "gap-1 grid-cols-1" : "gap-6 grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7")}>
           {listFiles}
           <UploadProgress progress={state.uploadProgress} viewMode={state.viewMode} />

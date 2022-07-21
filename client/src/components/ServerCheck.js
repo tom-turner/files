@@ -3,8 +3,8 @@ import { serverCheck } from '../lib/api'
 
 let ServerMsg = (props) => {
   return (
-    <div className={"z-50 w-full duration-300 p-3 " }>
-      <p className={`rounded-lg p-2 text-center mx-auto text-white text-lg ${props.className}`}> {props.message} </p>
+    <div className={"z-50 w-full duration-300" }>
+      <p className={`rounded-lg p-2 text-center mx-auto text-white ${props.className}`}> {props.message} </p>
     </div>
   )
 }

@@ -23,8 +23,8 @@ export function TagComponent({tag, selectedTag, handleTagClick, className, searc
 	}
 
 	return (
-		<div draggable="true" onDragStart={dragFunc} onClick={clickFunc} className={"truncate flex px-4 py-1 rounded-full rounded-tl-md text-sm text-white space-x-3 cursor-pointer border-4 " + ( active ? "border-green-500 " : "border-white" )} style={{backgroundColor: tag.tag_colour}}>
-      <p> {tag.tag_name} </p>
+		<div draggable="true" onDragStart={dragFunc} onClick={clickFunc} className={" font-extrabold flex px-3 py-2 rounded-lg text-sm text-white space-x-3 cursor-pointer border-2 " + ( active ? "border-green-500 " : "border-stone-400" )} style={{backgroundColor: tag.tag_colour}}>
+      <p className="truncate"> {tag.tag_name} </p>
     </div>
 	)
 }
@@ -54,7 +54,7 @@ export function Tags({ state, setState, handleTagClick }){
   });
 
   return (
-    <div className="my-auto px-3 sm:px-6 py-3 flex space-x-1 overflow-x-clip z-20">
+    <div className="flex flex-col w-64 bg-stone-700 p-6 space-y-3 overflow-x-clip">
       {listTags}
     </div>
   )

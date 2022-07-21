@@ -19,6 +19,7 @@ exports.setup = function(options, seedLink) {
 exports.up = async function(db) {
   await db.createTable('sharing', {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
+    user_id:'int',
     tag_id:'int',
     public:'int',
     share_slug:'string',

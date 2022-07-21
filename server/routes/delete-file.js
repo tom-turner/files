@@ -2,10 +2,10 @@ const { Files, JoinFilesTags } = require('../../models')
 const fs = require('fs');
 
 module.exports = async (req,res) => {
-  let file = await Files.findBy({ id: req.params.id, user_id: res.locals.user.id })
+  let file = await Files.findBy({ id: req.params.id || req.body.fileId , user_id: res.locals.user.id })
   
-  Files.delete({ id: req.params.id })
-  JoinFilesTags.delete({ file_id: req.params.id })
+  Files.delete({ id: file.id })
+  JoinFilesTags.delete({ file_id: file.id })
 
   fs.unlink(__dirname + `/../../file_storage/${file.checksum}`, (error) => {
     if(error)  

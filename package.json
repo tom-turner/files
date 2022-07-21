@@ -20,7 +20,7 @@
     "cookie-parser": "^1.4.6",
     "db-migrate": "^0.11.13",
     "db-migrate-sqlite3": "^0.4.0",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",

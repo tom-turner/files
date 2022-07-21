@@ -1,10 +1,10 @@
 import { Component } from "react";
 import { uploadFiles, getFiles } from "../../lib/api"
-import Header from "./Header"
+import Search from "../Search"
 import Actions from "./Actions"
 import { Files } from "./Files"
 import { Tags } from "./Tags"
-import ServerCheck from "../ServerCheck"
+
 import { Popup } from "../Popup"
 import { Loading, Error } from "../Alerts"
 
@@ -96,17 +96,28 @@ class FileExplorer extends Component {
     if(this.state.data.error)
       return <Error error={this.state.data.error} />
 
+    console.log(1, this.state.showTags)
+
     return (
-      <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => this.handleDrop(e) } className="w-full relative min-h-screen max-h-screen overflow-clip mx-auto flex flex-col">
-        <Header search={ (e) => this.setData(e) } />
-        <Actions state={this.state} setState={ (e) => { this.setState(e) }} handleFileUpload={ (e) => this.handleFileUpload(e) } />
-        <Tags state={this.state} setState={ (e) => { this.setState(e) }} handleTagClick={ (e) => this.handleTagClick(e) } />
-        <Files state={this.state} setState={ (e) => { this.setState(e) }} handleFileClick={ (e) => this.handleFileClick(e) } />
-        <ServerCheck />
-        <Popup content={this.state.popupContent} setPopupContent={ (e) => this.setState({ popupContent: e }) } />
-      </div>
+        <div onDragOver={ (e) => e.preventDefault() } onDrop={ (e) => this.handleDrop(e) } className="w-full relative min-h-screen max-h-screen flex flex-col">
+          <Search search={ (e) => this.setData(e) } />
+          <div className="space-y-3 p-3 flex flex-col">
+            <Actions state={this.state} setState={ (e) => { this.setState(e) }} handleFileUpload={ (e) => this.handleFileUpload(e) } />
+            <Files state={this.state} setState={ (e) => { this.setState(e) }} handleFileClick={ (e) => this.handleFileClick(e) } />
+            <Popup content={this.state.popupContent} setPopupContent={ (e) => this.setState({ popupContent: e }) } />
+          </div>
+        </div>
     )
   }
 }
 
-export default FileExplorer
+let Explorer = ({showTags}) => {
+  return( 
+    <div className="flex justify-between w-full">
+      { showTags ? <Tags state={this.state} setState={ (e) => { this.setState(e) }} handleTagClick={ (e) => this.handleTagClick(e) } /> : '' }
+      <FileExplorer />
+    </div>
+  )
+}
+
+export default Explorer

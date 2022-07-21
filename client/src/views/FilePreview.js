@@ -2,8 +2,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getFileData, getSharedFileData } from '../lib/api'
 import { downloadFromUrl } from '../lib/download'
-import { Loading, Error } from "./Alerts"
-import IconByType from './IconByType'
+import { Loading, Error } from "../components/Alerts"
+import IconByType from '../components/IconByType'
 import {ReactComponent as DownloadIcon}  from '../assets/download.svg';
 let { getApiBase } = require('../lib/apiBase')
 

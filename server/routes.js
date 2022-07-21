@@ -1,98 +1,137 @@
 let express = require('express');
 let routes = express.Router();
 
-routes.get('/servercheck',
+routes.get('/server-check',
   require('./middleware/is-authenticated'),
   require('./routes/server-check')
 );
 
-routes.get('/getFiles/*',
+routes.get('/get-files/*',
   require('./middleware/is-authenticated'),
   require('./routes/get-files')
 );
 
-routes.get('/getFile/:id',
+routes.get('/get-file/:id',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
   require('./middleware/is-file-owner'),
   require('./routes/get-file')
 );
 
-routes.get('/getFile/:id/content',
+routes.get('/get-file/:id/content',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
   require('./middleware/is-file-owner'),
   require('./routes/get-file-content')
 );
 
-routes.get('/getShare/:slug',
+routes.get('/get-shared-tags-by-user',
+  require('./middleware/is-authenticated'),
+  require('./routes/get-shared-tags-by-user')
+);
+
+routes.get('/get-share/:slug',
   require('./routes/get-shared-files')
 );
 
-routes.get('/getShare/:slug/:id',
+routes.get('/get-share/:slug/:id',
   require('./routes/get-shared-file')
 );
 
-routes.get('/getShare/:slug/:id/content',
+routes.get('/get-share/:slug/:id/content',
   require('./routes/get-shared-file-content')
 );
 
-routes.get('/searchFiles/*',
+routes.get('/search-files/*',
   require('./middleware/is-authenticated'),
   require('./routes/search-files')
 );
 
-routes.delete('/deleteFile/:id',
+routes.get('/get-tag-by-sharing-id/:id',
+  require('./middleware/is-authenticated'),
+  require('./routes/get-tag-by-sharing-id')
+);
+
+routes.get('/get-tag-by-id/:id',
+  require('./middleware/is-authenticated'),
+  require('./routes/get-tag-by-id')
+);
+
+routes.get('/get-users-by-shared-tag/:id',
+  require('./middleware/is-authenticated'),
+  require('./routes/get-users-by-shared-tag')
+);
+
+routes.get('/get-files-by-shared-tag/:id',
+  require('./middleware/is-authenticated'),
+  require('./routes/get-files-by-shared-tag')
+);
+
+routes.get('/get-files-by-tag/:id',
+  require('./middleware/is-authenticated'),
+  require('./routes/get-files-by-tag')
+);
+
+routes.get('/chat-history/:id', 
+  require('./middleware/is-authenticated'),
+  require('./routes/chat-history')
+);
+
+routes.delete('/delete-file/:id',
   require('./middleware/file-with-id-exists'),
   require('./middleware/is-authenticated'),
   require('./middleware/is-file-owner'),
   require('./routes/delete-file')
 );
 
-routes.delete('/deleteTag/:id',
+routes.delete('/delete-tag/:id',
   require('./middleware/is-authenticated'),
   require('./middleware/is-tag-owner'),
   require('./routes/delete-tag')
 );
 
-routes.put('/uploadFile/:id/content',
+routes.put('/upload-file/:id/content',
   require('./middleware/is-authenticated'),
   require('./routes/upload-file-content')
 );
 
-routes.post('/removeTag/:id',
+routes.post('/remove-tag',
   require('./middleware/is-authenticated'),
   require('./middleware/is-file-owner'),
   require('./routes/remove-tag')
 );
 
-routes.post('/renameFile/:id',
+routes.post('/rename-file',
   require('./middleware/is-authenticated'),
   require('./middleware/is-file-owner'),
   require('./routes/rename-file')
 );
 
-routes.post('/renameTag/:id',
+routes.post('/rename-tag',
   require('./middleware/is-authenticated'),
   require('./middleware/is-file-owner'),
   require('./routes/rename-tag')
 );
 
-routes.post('/uploadFile',
+routes.post('/upload-file',
   require('./middleware/is-authenticated'),
   require('./routes/upload-file')
 );
 
-routes.post('/createTag/:id',
+routes.post('/create-tag',
   require('./middleware/is-authenticated'),
-  require('./middleware/is-file-owner'),
   require('./routes/create-tag')
 );
 
-routes.post('/createShare/:id',
+routes.post('/create-tag-file-join',
   require('./middleware/is-authenticated'),
-  require('./middleware/is-tag-owner'),
-  require('./routes/create-share')
+  require('./middleware/is-file-owner'),
+  require('./routes/create-tag-file-join')
+);
+
+routes.post('/create-shared-tag',
+  require('./middleware/is-authenticated'),
+  require('./routes/create-shared-tag')
 );
 
 routes.post('/session',

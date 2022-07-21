@@ -16,7 +16,7 @@ export function Dropdown(props) {
 
 	return (
 		<div className={`rounded-lg text-white flex overflow-hidden z-50 ${style.outer} ${props.className}`} >
-			<div onClick={ () => { setToggle(!toggle)} } className={`flex cursor-pointer h-full my-auto p-2 hover:bg-green-600 min-w-full ${style.inner}`}>
+			<div onClick={ () => { setToggle(!toggle)} } className={`flex cursor-pointer h-full my-auto p-2 min-w-full ${style.inner}`}>
 				<props.img className={`w-6 h-6 fill-white ${style.img}`} />
 				{ props.title ? <p className="my-auto pl-1 font-semibold pr-3 hidden sm:inline">{props.title}</p> : ''}
 			</div>

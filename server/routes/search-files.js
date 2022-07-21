@@ -45,11 +45,11 @@ module.exports = async (req,res) => {
     return {...file, fileTags : fileTags}
   }))
 
-  let answer = {
-    files: fileList.sort((a,b) => { return a.id - b.id }),
-    dirs: dirsInSearch.sort((a,b) => { return a.id - b.id }),
-    tags: tagsInSearch.sort((a,b) => { return a.id - b.id })
-  }
 
-  return res.json(answer)
+  let files = fileList.sort((a,b) => { return a.id - b.id })
+  let dirs = dirsInSearch.sort((a,b) => { return a.id - b.id })
+  let tags = tagsInSearch.sort((a,b) => { return a.id - b.id })
+
+
+  return res.json({files: files, tags:tags})
 }

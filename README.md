@@ -23,3 +23,29 @@
 2. then add the sql to make the change to the up file then npx db-migrate up locally and heroku run bash
 3. followed by  npx db-migrate up or npx db-migrate up -e production 
 
+
+Open database in terminal: sqlite3 development.db or production.db
+
+Shares are done through tags, when sharing a file what happens is a tag is created for that file, the share url then links back to the tag so file within that tag can be changed 
+
+Pipline tasks for files:
+- upload file to share on share view
+- add exisiting file to share on share view
+- remove file from share on share view
+- file view
+- tag view ( tags and files in that tag, plus tag share/delete )
+- add move file ( change file tag ) by select and dragdrop
+- fix scrollbar css
+- add files to share on home view
+- grid/list layouts
+- my account section
+- add date created to file list
+- add recursive folder structures ( add directory column to tags e.g upper level tag id )
+- give shared users edit/view privileges, add column to joinsharesusers
+- deal with multi file uploads on client side API, callbacks need to return array of file upload progress instead of an object of the last progress returned from upload function.
+- deal with switching pages on file upload
+- update ui when tag/files are deleted/changed
+
+Bug report
+- closing upload dialog prevents it opening again without page refresh
+- 
