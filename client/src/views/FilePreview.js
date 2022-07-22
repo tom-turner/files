@@ -83,10 +83,11 @@ export function PageLayout({fileData, fileContentUrl}) {
 }
 
 export function FilePreview() {
-	const params = useParams()
-	const fileId = params['*']
+	const fileId = useParams()['id']
 	const [ fileData, setFileData ] = useState(null)
-	const fileContentUrl = `${getApiBase()}/getFile/${fileId}/content`
+	const fileContentUrl = `${getApiBase()}/get-file/${fileId}/content`
+
+	console.log(fileId)
 
 	useEffect(() => {
 		;(async () => {
@@ -105,7 +106,7 @@ export function SharedFilePreview() {
 	const id = params['fileId']
 	const [ fileData, setFileData ] = useState(null)
 	const [ error, setError ] = useState(null)
-	const fileContentUrl = `${getApiBase()}/getShare/${slug}/${id}/content`
+	const fileContentUrl = `${getApiBase()}/get-share/${slug}/${id}/content`
 	const getFile = async () => {
 		let result = await getSharedFileData(slug, id)
 		if(result.error)
