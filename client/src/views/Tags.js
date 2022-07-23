@@ -30,19 +30,22 @@ export function SharedTag() {
   let id = useParams()['tagId']
   let [ tag, setTag ] = useState(null)
   let [ files, setFiles ] = useState([])
+  let [ childTags, setChildTags ] = useState([])
 
   useEffect( () => {
     ( async () => {
-      setTag( await getTagById(id) )
+      let tag = await getTagById(id)
+      setTag(tag)
       setFiles( await getFilesByTag(id) )
+      setChildTags( await getChildTags(tag.id) )
     } )()
   },[id])
 
-  return <TagLayout tag={tag} files={files}/>
+  return <TagLayout tag={tag} files={files} childTags={childTags} />
 }
 
 
-export function TagLayout({tag, childTags = [] , files}) {  
+export function TagLayout({tag, childTags , files}) {  
   let navigate = useNavigate()
   let [selectActive, setSelectActive] = useState(false)
   let [selectedFiles, setSelectedFiles] = useState([])
