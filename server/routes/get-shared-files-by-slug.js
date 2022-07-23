@@ -27,5 +27,5 @@ module.exports = async (req,res) => {
 
   let sortedFilesList = files.sort((a,b) => { return a.id - b.id})
 
-  return res.json({ files: sortedFilesList })
+  return res.json(sortedFilesList)
 }

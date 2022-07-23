@@ -4,12 +4,10 @@ import IconByType from './IconByType'
 import Navbar from "./Navbar"
 
 
-export function Files({ files }) {
-  let navigate = useNavigate()
-
-  let FileComponent = ({file, onClick}) => {
+export function Files({ files, onClick }) {
+  let FileComponent = ({file}) => {
     return (
-      <div draggable="true" onDragStart={() => {}} className={"relative flex overflow-hidden break-words cursor-pointer flex-row " } onClick={onClick}>
+      <div draggable="true" onDragStart={() => {}} className={"relative flex overflow-hidden break-words cursor-pointer flex-row " } onClick={() => { onClick(file.id) } }>
         <IconByType filetype={file.file_type} className={"mx-auto w-12 md:w-24 rounded-lg w-20 md:w-36 "} />
         
         <p className={"my-auto w-full underline px-4 text-left "}>{file.user_file_name }</p>
@@ -24,7 +22,7 @@ export function Files({ files }) {
 
   const listFiles = files.map((file) => {
     return (
-      <FileComponent key={file.id} file={file} onClick={ () => { navigate(`/file/${file.id}`) }} />
+      <FileComponent key={file.id} file={file} />
     )
   });
 
@@ -35,11 +33,11 @@ export function Files({ files }) {
   )
 }
 
-export function FileSelector({ files, selectedFiles, setSelectedFiles}) {
-  let FileComponent = ({file, onClick}) => {
+export function FileSelector({ files, selectedFiles, setSelectedFiles, className}) {
+  let FileComponent = ({file}) => {
     let selected = selectedFiles.includes(file)
     return (
-      <div onClick={ () => setSelectedFiles(file) } draggable="true" onDragStart={() => {}} className={"relative flex overflow-hidden break-words cursor-pointer flex-row " } >
+      <div onClick={ () => setSelectedFiles(file) } draggable="true" onDragStart={() => {}} className={`relative flex overflow-hidden break-words cursor-pointer flex-row` } >
         <IconByType filetype={file.file_type} className={"mx-auto w-12 md:w-24 rounded-lg md:w-36 "} />    
         <p className={"my-auto w-full underline px-4 text-left "}>{file.user_file_name }</p>
         <p className={"text-right my-auto mx-auto w-full p-4 hidden md:block"}>{'Last Modified: ' +  new Date(file.last_modified).toLocaleDateString() }</p>
@@ -56,12 +54,12 @@ export function FileSelector({ files, selectedFiles, setSelectedFiles}) {
   const listFiles = files.map((file) => {
     
     return (
-      <FileComponent key={file.id} file={file} onClick={ () => { }} />
+      <FileComponent key={file.id} file={file} />
     )
   });
 
   return( 
-      <div className={"flex flex-col text-white space-y-3 bg-stone-800 rounded-xl"}>
+      <div className={`flex flex-col space-y-3 rounded-xl ${className}`}>
         {listFiles}
       </div>
   )

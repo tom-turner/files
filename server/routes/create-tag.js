@@ -11,7 +11,6 @@ module.exports = async (req,res) => {
       user_id: res.locals.user.id,
       tag_name: tagName,
       tag_colour: tagColour,
-      shared: 0,
       created_at: new Date().toString()
     })
 

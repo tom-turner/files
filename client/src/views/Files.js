@@ -82,8 +82,8 @@ export function PageLayout({fileData, fileContentUrl}) {
 	)
 }
 
-export function FilePreview() {
-	const fileId = useParams()['id']
+export function File() {
+	const fileId = useParams()['fileId']
 	const [ fileData, setFileData ] = useState(null)
 	const fileContentUrl = `${getApiBase()}/get-file/${fileId}/content`
 
@@ -100,7 +100,7 @@ export function FilePreview() {
 
 }
 
-export function SharedFilePreview() {
+export function FilePublic() {
 	const params = useParams()
 	const slug = params['slug']
 	const id = params['fileId']

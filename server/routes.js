@@ -30,8 +30,8 @@ routes.get('/get-shared-tags-by-user',
   require('./routes/get-shared-tags-by-user')
 );
 
-routes.get('/get-share/:slug',
-  require('./routes/get-shared-files')
+routes.get('/get-shared-files-by-slug/:slug',
+  require('./routes/get-shared-files-by-slug')
 );
 
 routes.get('/get-share/:slug/:id',
@@ -55,6 +55,14 @@ routes.get('/get-tag-by-sharing-id/:id',
 routes.get('/get-tag-by-id/:id',
   require('./middleware/is-authenticated'),
   require('./routes/get-tag-by-id')
+);
+
+routes.get('/get-tag-by-slug/:slug',
+  require('./routes/get-tag-by-slug')
+);
+
+routes.get('/get-child-tags/:id',
+  require('./routes/get-child-tags')
 );
 
 routes.get('/get-users-by-shared-tag/:id',
@@ -95,10 +103,10 @@ routes.put('/upload-file/:id/content',
   require('./routes/upload-file-content')
 );
 
-routes.post('/remove-tag',
+routes.post('/remove-tag-from-file',
   require('./middleware/is-authenticated'),
   require('./middleware/is-file-owner'),
-  require('./routes/remove-tag')
+  require('./routes/remove-tag-from-file')
 );
 
 routes.post('/rename-file',
@@ -121,6 +129,11 @@ routes.post('/upload-file',
 routes.post('/create-tag',
   require('./middleware/is-authenticated'),
   require('./routes/create-tag')
+);
+
+routes.post('/create-child-tag',
+  require('./middleware/is-authenticated'),
+  require('./routes/create-child-tag')
 );
 
 routes.post('/create-tag-file-join',

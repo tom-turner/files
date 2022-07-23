@@ -238,12 +238,13 @@ let deleteTag = async (tag, callback) => {
     .then(res => callback(res.json()) )
 }
 
-let removeTag = async (fileId, tagId) => {
-  http.post(`/remove-tag`, null, JSON.stringify({
-      fileId: fileId,
+let removeTagFromFile = async (files, tagId) => {
+  files.map( file => {
+    http.post(`/remove-tag-from-file`, null, JSON.stringify({
+      fileId: file.id,
       tagId: tagId,
     }))
-    .then(res => res.json() )
+  }).then(res => res.json() )
 }
 
 
@@ -262,8 +263,8 @@ let getFileContent = async (fileId) => {
     .then(res => res.body)
 }
 
-let getSharedFiles = async (slug) => {
-  return http.get(`/get-share/${slug}`)
+let getSharedFilesBySlug = async (slug) => {
+  return http.get(`/get-shared-files-by-slug/${slug}`)
     .then(res => res.json())
 }
 
@@ -287,23 +288,18 @@ let getUsersBySharedTag = async (shareId) => {
     .then(res => res.json())
 }
 
-let getFilesBySharedTag = async (shareId) => {
-  return http.get(`/get-files-by-shared-tag/${shareId}`)
-    .then(res => res.json())
-}
-
 let getFilesByTag = async (tagId) => {
   return http.get(`/get-files-by-tag/${tagId}`)
     .then(res => res.json())
 }
 
-let getSharedTagById = async (shareId) => {
-  return http.get(`/get-tag-by-sharing-id/${shareId}`)
+let getTagById = async (id) => {
+  return http.get(`/get-tag-by-id/${id}`)
     .then(res => res.json())
 }
 
-let getTagById = async (id) => {
-  return http.get(`/get-tag-by-id/${id}`)
+let getTagBySlug = async (slug) => {
+  return http.get(`/get-tag-by-slug/${slug}`)
     .then(res => res.json())
 }
 
@@ -324,6 +320,25 @@ let createTagFileJoinByTagId = async (files, tagId, callback) => {
       tagId: tagId
     })).then( async res => callback({ fileId: file.id, tag: await res.json() }) )
   })
+}
+
+let createTag = async (tagName, tagColour) => {
+  return http.post(`/create-tag/`, null, JSON.stringify({
+      tagName: tagName,
+      tagColour: tagColour 
+  })).then( res =>  res.json() ) 
+}
+
+let createChildTag = async (childId, parentId) => {
+  return http.post(`/create-child-tag/`, null, JSON.stringify({
+      childId: childId,
+      parentId: parentId 
+  })).then( res =>  res.json() ) 
+}
+
+let getChildTags = async (tagId) => {
+  return http.get(`/get-child-tags/${tagId}`)
+    .then( res =>  res.json() ) 
 }
 
 let createSharedTag = async (tagName, tagColour) => {
@@ -368,25 +383,26 @@ module.exports.uploadFile = uploadFile
 module.exports.uploadFiles = uploadFiles
 module.exports.deleteFiles = deleteFiles
 module.exports.deleteTag = deleteTag
-module.exports.removeTag = removeTag
+module.exports.removeTagFromFile = removeTagFromFile
 module.exports.getFiles = getFiles
 module.exports.getFileData = getFileData
 module.exports.getFileContent = getFileContent
-module.exports.getSharedFiles = getSharedFiles
+module.exports.getSharedFilesBySlug = getSharedFilesBySlug
 module.exports.getSharedFileData = getSharedFileData
 module.exports.getSharedFileContent = getSharedFileContent
 module.exports.createTagFileJoin = createTagFileJoin
 module.exports.createTagFileJoinByTagId = createTagFileJoinByTagId
 module.exports.createSharedTag = createSharedTag
+module.exports.createTag = createTag
 module.exports.renameFile = renameFile
 module.exports.renameTag = renameTag
 module.exports.register = register
 module.exports.session = session
 module.exports.getSharedTagsByUser = getSharedTagsByUser
 module.exports.getUsersBySharedTag = getUsersBySharedTag
-module.exports.getFilesBySharedTag = getFilesBySharedTag
 module.exports.getFilesByTag = getFilesByTag
-module.exports.getSharedTagById = getSharedTagById
 module.exports.getTagById = getTagById
-
+module.exports.getTagBySlug = getTagBySlug
+module.exports.createChildTag = createChildTag
+module.exports.getChildTags = getChildTags
 

@@ -1,12 +1,11 @@
-import { Home } from "./views/Home"
-import { TagView } from "./views/Tags"
-import { SharedFilesRoot, SharedFilesTag } from "./views/Sharing"
-import { FilePreview, SharedFilePreview } from "./views/FilePreview"
 import Login from "./views/Login"
 import Register from "./views/Register"
-import { SharedFileExplorer } from "./components/FileExplorer/SharedFileExplorer"
+import { Home } from "./views/Home"
+import { Sharing } from "./views/Sharing"
+import { File , FilePublic } from "./views/Files"
+import { Tag, SharedTag, TagPublic } from "./views/Tags"
 import { Routes, Route, BrowserRouter, Outlet } from "react-router-dom";
-import {withAuthentication} from "./context/withAuthentication";
+import { withAuthentication } from "./context/withAuthentication";
 const AuthenticatedOutlet = withAuthentication(Outlet)
 
 function App() {
@@ -14,15 +13,19 @@ function App() {
     <Routes>
       <Route path="/login" element={ <Login /> } />
       <Route path="/register" element={ <Register /> } />
-      <Route path="/share/:slug" element={ <SharedFileExplorer /> } />
-      <Route path="/share/:slug/:fileId" element={ <SharedFilePreview /> } />
+      <Route path="/public/:slug" element={ <TagPublic /> } />
+      <Route path="/public/:slug/:fileId" element={ <FilePublic /> } />
 
       <Route element={ <AuthenticatedOutlet />}>
         <Route path="/*" root element={ <Home /> } />
-        <Route path="/tag/:id" element={ <TagView /> } />
-        <Route path="/file/:id" element={ <FilePreview /> } />
-        <Route path="/sharing" element={ <SharedFilesRoot /> } />
-        <Route path="/sharing/:id" element={ <SharedFilesTag /> } />
+  
+        <Route path="/tag/:tagId" element={ <Tag /> } />
+        <Route path="/file/:fileId" element={ <File/> } />
+  
+        <Route path="/sharing" element={ <Sharing /> } >
+          <Route path="/sharing/:tagId" element={ <SharedTag /> } />
+        </Route>
+
       </Route>
     </Routes>
 
