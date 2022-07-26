@@ -1,4 +1,4 @@
-import { getFilesByTag, getTagById, removeTagFromFile, createTagFileJoinByTagId, getTagBySlug, getSharedFilesBySlug, getChildTags } from "../lib/api"
+import { getFilesByTag, getTagById, removeTagFromFile, createTagFileJoin, getTagBySlug, getSharedFilesBySlug, getChildTags } from "../lib/api"
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
@@ -9,24 +9,6 @@ import { FileSelector } from "../components/Files"
 
 
 export function Tag() {
-  let id = useParams()['tagId']
-  let [ tag, setTag ] = useState(null)
-  let [ files, setFiles ] = useState([])
-  let [ childTags, setChildTags ] = useState([])
-
-  useEffect( () => {
-    ( async () => {
-      let tag = await getTagById(id)
-      setTag(tag)
-      setFiles( await getFilesByTag(id) )
-      setChildTags( await getChildTags(tag.id) )
-    } )()
-  },[id])
-
-  return <TagLayout tag={tag} files={files} childTags={childTags} />
-}
-
-export function SharedTag() {
   let id = useParams()['tagId']
   let [ tag, setTag ] = useState(null)
   let [ files, setFiles ] = useState([])
@@ -67,7 +49,7 @@ export function TagLayout({tag, childTags , files}) {
           requestShare={ () => { setSelectActive(false) } } 
           selectActive={selectActive} 
           setSelectActive={setSelectActive}
-          setFileData={data => { createTagFileJoinByTagId( data, tag.id) }}
+          setFileData={data => { createTagFileJoin( data, tag.id) }}
           /> 
         { childTags.length > 0 && <TagsList tags={childTags} onClick={ (e) => { navigate(`/tag/${e}`) } } /> }
         { selectActive ? 
@@ -126,7 +108,7 @@ export function TagLayoutPublic({tag, slug, files, permissions}) {
           <PublicTagActionsBar 
           selectActive={selectActive} 
           setSelectActive={setSelectActive}
-          setFileData={data => { createTagFileJoinByTagId([data], tag.id) }}
+          setFileData={data => { createTagFileJoin([data], tag.id) }}
           permissions={permissions}
           /> 
         { childTags.length > 0 && <TagsList tags={childTags} /> }

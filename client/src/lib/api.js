@@ -283,6 +283,11 @@ let getSharedTagsByUser = async (query) => {
     .then(res => res.json())
 }
 
+let getUserById = async (id) => {
+  return http.get(`/get-user-by-id/${id}`)
+    .then(res => res.json())
+}
+
 let getUsersBySharedTag = async (shareId) => {
   return http.get(`/get-users-by-shared-tag/${shareId}`)
     .then(res => res.json())
@@ -303,17 +308,7 @@ let getTagBySlug = async (slug) => {
     .then(res => res.json())
 }
 
-let createTagFileJoin = async (files, tagName, tagColour, callback) => {
-  Array.prototype.forEach.call(files, async (file) => {
-    return http.post(`/create-tag-file-join`, null, JSON.stringify({
-      fileId: file.id,
-      tagName: tagName,
-      tagColour: tagColour 
-    })).then( async res => callback({ fileId: file.id, tag: await res.json() }) )
-  })
-}
-
-let createTagFileJoinByTagId = async (files, tagId, callback) => {
+let createTagFileJoin = async (files, tagId, callback) => {
   Array.prototype.forEach.call(files, async (file) => {
     return http.post(`/create-tag-file-join`, null, JSON.stringify({
       fileId: file.id,
@@ -322,10 +317,9 @@ let createTagFileJoinByTagId = async (files, tagId, callback) => {
   })
 }
 
-let createTag = async (tagName, tagColour) => {
+let createTag = async (args) => {
   return http.post(`/create-tag/`, null, JSON.stringify({
-      tagName: tagName,
-      tagColour: tagColour 
+      ...args
   })).then( res =>  res.json() ) 
 }
 
@@ -341,25 +335,18 @@ let getChildTags = async (tagId) => {
     .then( res =>  res.json() ) 
 }
 
-let createSharedTag = async (tagName, tagColour) => {
-  return http.post(`/create-shared-tag/`, null, JSON.stringify({
-      tagName: tagName,
-      tagColour: tagColour 
-  })).then( res =>  res.json() ) 
-}
-
-let renameFile = async (fileId, fileName) => {
-  return http.post(`/rename-file`, null, JSON.stringify({
+let updateFile = async (fileId, fileName) => {
+  return http.post(`/updateFile-file`, null, JSON.stringify({
     fileId: fileId,
     fileName: fileName
   })).then(res => res.json())
 }
 
-let renameTag = async (tagId, tagName, tagColour ) => {
-  return http.post(`/rename-tag`, null, JSON.stringify({
+let updateTag = async (tagId, args ) => {
+  console.log(tagId, args)
+  return http.post(`/update-tag`, null, JSON.stringify({
     tagId: tagId,
-    tagName: tagName,
-    tagColour: tagColour
+    args: args
   })).then(res => res.json())
 }
 
@@ -391,15 +378,14 @@ module.exports.getSharedFilesBySlug = getSharedFilesBySlug
 module.exports.getSharedFileData = getSharedFileData
 module.exports.getSharedFileContent = getSharedFileContent
 module.exports.createTagFileJoin = createTagFileJoin
-module.exports.createTagFileJoinByTagId = createTagFileJoinByTagId
-module.exports.createSharedTag = createSharedTag
 module.exports.createTag = createTag
-module.exports.renameFile = renameFile
-module.exports.renameTag = renameTag
+module.exports.updateFile = updateFile
+module.exports.updateTag = updateTag
 module.exports.register = register
 module.exports.session = session
 module.exports.getSharedTagsByUser = getSharedTagsByUser
 module.exports.getUsersBySharedTag = getUsersBySharedTag
+module.exports.getUserById = getUserById
 module.exports.getFilesByTag = getFilesByTag
 module.exports.getTagById = getTagById
 module.exports.getTagBySlug = getTagBySlug

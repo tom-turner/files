@@ -75,7 +75,7 @@ export function ActionsBar({selectActive, setSelectActive, requestDelete, reques
               </button>
               
               <Dropdown title="" img={Menu} style={{ outer: 'bg-green-500', inner:'', img: '' }}>
-                <DropdownItem title='Share' onClick={ () => { requestShare()} } />
+                <DropdownItem title='New Share' onClick={ () => { requestShare() } } />
                 <DropdownItem title='Cancel' onClick={ () => { setSelectActive(false)} } />
               </Dropdown>
 
@@ -106,7 +106,6 @@ export function TagActionsBar({ selectActive, setSelectActive, requestDelete, re
               </button>
               
               <Dropdown title="" img={Menu} style={{ outer: 'bg-green-500', inner:'', img: '' }}>
-                <DropdownItem title='Share' onClick={ () => { requestShare()} } />
                 <DropdownItem title='Cancel' onClick={ () => { setSelectActive(false)} } />
               </Dropdown>
 

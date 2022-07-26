@@ -1,6 +1,8 @@
 import Login from "./views/Login"
 import Register from "./views/Register"
+import { OldPublicUrl } from "./views/Redirects"
 import { Home } from "./views/Home"
+import { MyAccount } from "./views/MyAccount"
 import { Sharing } from "./views/Sharing"
 import { File , FilePublic } from "./views/Files"
 import { Tag, SharedTag, TagPublic } from "./views/Tags"
@@ -13,6 +15,7 @@ function App() {
     <Routes>
       <Route path="/login" element={ <Login /> } />
       <Route path="/register" element={ <Register /> } />
+      <Route path="/share/*" element={ <OldPublicUrl /> } />
       <Route path="/public/:slug" element={ <TagPublic /> } />
       <Route path="/public/:slug/:fileId" element={ <FilePublic /> } />
 
@@ -23,8 +26,10 @@ function App() {
         <Route path="/file/:fileId" element={ <File/> } />
   
         <Route path="/sharing" element={ <Sharing /> } >
-          <Route path="/sharing/:tagId" element={ <SharedTag /> } />
+          <Route path="/sharing/:tagId" element={ <Tag /> } />
         </Route>
+
+        <Route path="/my-account" element={ <MyAccount /> } />
 
       </Route>
     </Routes>

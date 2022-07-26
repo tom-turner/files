@@ -47,11 +47,6 @@ routes.get('/search-files/*',
   require('./routes/search-files')
 );
 
-routes.get('/get-tag-by-sharing-id/:id',
-  require('./middleware/is-authenticated'),
-  require('./routes/get-tag-by-sharing-id')
-);
-
 routes.get('/get-tag-by-id/:id',
   require('./middleware/is-authenticated'),
   require('./routes/get-tag-by-id')
@@ -68,6 +63,11 @@ routes.get('/get-child-tags/:id',
 routes.get('/get-users-by-shared-tag/:id',
   require('./middleware/is-authenticated'),
   require('./routes/get-users-by-shared-tag')
+);
+
+routes.get('/get-user-by-id/:id',
+  require('./middleware/is-authenticated'),
+  require('./routes/get-user-by-id')
 );
 
 routes.get('/get-files-by-shared-tag/:id',
@@ -109,16 +109,16 @@ routes.post('/remove-tag-from-file',
   require('./routes/remove-tag-from-file')
 );
 
-routes.post('/rename-file',
+routes.post('/update-file',
   require('./middleware/is-authenticated'),
   require('./middleware/is-file-owner'),
-  require('./routes/rename-file')
+  require('./routes/update-file')
 );
 
-routes.post('/rename-tag',
+routes.post('/update-tag',
   require('./middleware/is-authenticated'),
-  require('./middleware/is-file-owner'),
-  require('./routes/rename-tag')
+  require('./middleware/is-tag-owner'),
+  require('./routes/update-tag')
 );
 
 routes.post('/upload-file',
@@ -142,10 +142,6 @@ routes.post('/create-tag-file-join',
   require('./routes/create-tag-file-join')
 );
 
-routes.post('/create-shared-tag',
-  require('./middleware/is-authenticated'),
-  require('./routes/create-shared-tag')
-);
 
 routes.post('/session',
   require('./routes/session')

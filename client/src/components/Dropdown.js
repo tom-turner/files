@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {ReactComponent as DropdownArrow}  from '../assets/dropdown-arrow.svg';
 let defaultStyle = { outer: 'bg-green-500 ', inner: 'hover:bg-green-600 hover:bg-opacity-40 ', img: 'fill-white' }
 
 let HiddenList = ({ children, toggle, setToggle }) =>{
 	return (
-		<div onClick={ () => setToggle(false) } className={'z-50 absolute bg-white border flex flex-col rounded-lg text-gray-800 space-y-2 translate-y-10  ' + ( toggle ? '' : 'hidden') } > 
+		<div onClick={ () => setToggle(false) } className={`z-50 absolute bg-white border flex flex-col rounded-lg text-gray-800 space-y-2 translate-y-10 -translate-x-5  ${( toggle ? '' : 'hidden')} `} > 
 			{children}
 		</div>
 	)
@@ -36,7 +36,7 @@ export function DropdownSplit(props) {
 				<props.img className={`w-6 h-6 fill-white ${style.img}`} />
 				{ props.title ? <p className="my-auto font-semibold pl-3 hidden sm:inline">{props.title}</p> : ''}
 			</div>
-			<div className="flex z-50">
+			<div className="flex">
 				<DropdownArrow className={`cursor-pointer w-8 h-full hover:bg-green-600 my-auto ${style.img} ${style.inner}`} onClick={ () => { setToggle(!toggle) }} />
 				<HiddenList children={props.children} toggle={toggle} setToggle={setToggle} />
 			</div>

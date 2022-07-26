@@ -1,10 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
-import {ReactComponent as Avatar}  from '../assets/avatar.svg';
-import {ReactComponent as SearchIcon}  from '../assets/searchicon.svg';
-import { AuthenticationContext } from "../context/withAuthentication"
 import { Dropdown, DropdownItem } from './Dropdown'
-
+import { Avatar } from './Avatar'
 
 import {ReactComponent as Home}  from '../assets/home.svg';
 import {ReactComponent as Plus}  from '../assets/plus.svg';
@@ -45,29 +42,15 @@ let NavbarActionButton = () => {
   )
 }
 
-let Profile = () => {
-  const { logout } = useContext(AuthenticationContext)
-  let navigate = useNavigate();
-  let path = window.location.pathname
-
-  return (
-    <Dropdown title="" img={Avatar} style={{ outer: `bg-stone-900 hover:bg-indigo-500 p-2 rounded-full hover:rounded-xl ${path === '/my-account' ? 'rounded-xl bg-indigo-500' : ' hover:bg-indigo-500 rounded-full '}`, inner:'', img: '' }}>
-      <DropdownItem title='My Account' onClick={ () => { navigate('/my-account') }} />
-      <DropdownItem title='Logout' onClick={logout} />
-    </Dropdown>
-  )
-}
-
 let Navbar = () => {
   let navigate = useNavigate();
   let path = window.location.pathname
-
 
   return (
       <div className="flex min-h-screen">
         <div className="flex flex-col bg-stone-800 p-3 space-y-3">
 
-          <Profile />
+          <NavbarItem Icon={Avatar} selected={ path === '/my-account' } fn={ () => { navigate('/my-account')}} />
           <div className="bg-stone-600 h-[0.15rem] rounded-full"></div>
           <div className="flex flex-col space-y-3 text-xl">
             <NavbarItem Icon={Home} selected={ path === '/' } fn={ () => { navigate('/')}} />

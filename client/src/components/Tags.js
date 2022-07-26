@@ -1,16 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { deleteTag, getTagById, getSharedTagsByUser } from "../lib/api"
+import { deleteTag, getTagById, getSharedTagsByUser, getShareByTagId } from "../lib/api"
 import { Dropdown, DropdownItem } from './Dropdown.js'
 import { ReactComponent as Plus }  from '../assets/plus.svg';
 import { ReactComponent as Menu }  from '../assets/menu.svg';
 import { ReactComponent as Back }  from '../assets/dropdown-arrow.svg';
 import { UserAvatar } from "./User"
+import { EditSharing } from "./Modals"
 import Search from "../components/Search"
 import { CreateSharedTag } from "../components/Modals"
 
 export function TagTitle({ tag }) {
   let navigate = useNavigate()
+  let [ shareModal, setShareModal ] = useState(false)
 
   if(!tag)
     return
@@ -22,10 +24,12 @@ export function TagTitle({ tag }) {
         <p className="text-3xl font-bold my-auto">{tag.tag_name}</p>
       </div>
       <Dropdown title="" img={Menu} style={{ outer: `my-auto`, inner:'', img: '' }}>
+        <DropdownItem title='Sharing' onClick={ () => { setShareModal(true) }} /> 
         <DropdownItem title='Download' onClick={ () => { }} /> 
         <DropdownItem title='Delete' onClick={ () => { deleteTag(tag); navigate(-1) }} />
         <DropdownItem title='Rename' onClick={ () => { }} />
       </Dropdown>
+      { shareModal && <EditSharing tag={tag} dismount={ () => setShareModal(false) } /> }
     </div>
   )
 }
@@ -61,7 +65,7 @@ export function TagsList({tags, className, onClick}){
   })
 
   return (
-    <div className={`flex space-x-3 font-bold w-full ${className}`}>
+    <div className={`flex overflow-x-scroll overflow-y-hidden max-h-32 flex-shrink-0 w-full space-x-3 font-bold ${className}`}>
       {tagsList}
     </div>
   )
@@ -75,7 +79,7 @@ export function TagButton({tag, className, onClick}){
     return 
 
   return (
-    <div onClick={onClick} className={`rounded-xl overflow-hidden text-white cursor-pointer bg-stone-800 hover:scale-110 border border-stone-900 shadow-md ${className}`}> 
+    <div onClick={onClick} className={`flex-shrink-0 rounded-xl overflow-hidden text-white cursor-pointer bg-stone-800 hover:scale-110 border border-stone-900 shadow-md ${className}`}> 
       <p style={{backgroundColor: tag.tag_colour}} className="px-3 py-1 truncate">{tag.tag_name}</p>
 
       <div className="flex p-1 overflow-hidden">
