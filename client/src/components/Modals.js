@@ -266,11 +266,11 @@ export function EditSharing({tag, dismount}){
 	let [ sharedWith, setSharedWith ] = useState(['You'])
 
 	let handleSubmit = () => {
-		console.log(tag.id)
 		updateTag(tag.id, {
 			public: isPublic,
 			sharedWith: sharedWith.filter( e => e !== 'You')
 		})
+		dismount()
 	}
 
 	console.log(tag)
